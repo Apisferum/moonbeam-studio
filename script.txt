@@ -1,0 +1,23 @@
+cd ~/moonbeam-studio
+export PYTHONPATH="${PYTHONPATH}:/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/recipes/inference/custom_music_generation"
+export PYTHONPATH="${PYTHONPATH}:/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/src"
+python run_pipeline.py --prompt "A happy 1-minute jazz piano track in C major"
+
+cd ~/moonbeam-studio
+uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+
+
+curl -X POST "http://localhost:8000/generate" \
+     -H "Content-Type: application/json" \
+     -d '{"prompt": "A sad 1-minute piano track in A minor", "use_mock_llm": true}'
+
+     curl "http://localhost:8000/status/abc-123-xyz"
+
+     curl -O "http://localhost:8000/download/abc-123-xyz"
+
+
+     sudo sysctl vm.overcommit_memory=1
+
+     redis-server
+
+     uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
