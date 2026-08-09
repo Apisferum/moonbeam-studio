@@ -1,0 +1,222 @@
+import json
+import os
+import sys
+import glob
+import argparse
+import logging
+from dotenv import load_dotenv
+
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+
+from engine.HarmonyRouter import HarmonyRouter
+from engine.agentic_composer import AgenticComposer
+from shared.music_theory_constants import logger
+
+
+def _select_device(requested: str) -> str:
+    if requested == "cpu":
+        return "cpu"
+    try:
+        import torch
+        if torch.cuda.is_available():
+            return "cuda"
+        logger.warning("⚠️ CUDA requested but not available — falling back to CPU.")
+        return "cpu"
+    except ImportError:
+        return "cpu"
+
+
+def _autodiscover_checkpoints():
+    """
+    Search common roots for the checkpoint set, so you don't have to hardcode
+    a Kaggle dataset slug that changes every time you re-upload or re-attach
+    a dataset. Search order:
+      1. Explicit env vars (BASE_MODEL_PATH etc.) — always wins if set.
+      2. /kaggle/input/**  — any attached Kaggle Dataset.
+      3. /kaggle/working/** — anything downloaded into the working dir this session.
+      4. The original hardcoded local dev path (GIDEON) — last resort.
+    Returns a dict of the four paths, best-effort. Missing entries stay None
+    and get caught by _require_paths with a clear message, instead of
+    silently falling through to a wrong machine's path.
+    """
+    search_roots = ["/kaggle/input", "/kaggle/working"]
+    local_fallback = "/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model"
+
+    targets = {
+        "BASE_MODEL_PATH": "moonbeam_839M.pt",
+        "LORA_DIR": "multi_task_lora",
+        "CONFIG_PATH": "model_config_multi_task.json",
+        "MASTER_DICT_PATH": "indexed_tokens_dict.json",
+    }
+
+    resolved = {}
+    for env_key, filename in targets.items():
+        # 1. Explicit env var always wins.
+        if os.environ.get(env_key):
+            resolved[env_key] = os.environ[env_key]
+            continue
+
+        found = None
+        # 2 & 3. Search Kaggle roots recursively for the target file/dir.
+        for root in search_roots:
+            if not os.path.isdir(root):
+                continue
+            matches = glob.glob(os.path.join(root, "**", filename), recursive=True)
+            if matches:
+                found = matches[0]
+                break
+
+        if found:
+            resolved[env_key] = found
+        else:
+            # 4. Fall back to the original local dev path as a last resort,
+            # so behavior on your actual dev machine (GIDEON) is unchanged.
+            local_guess = {
+                "BASE_MODEL_PATH": f"{local_fallback}/moonbeam_checkpoint/moonbeam_839M.pt",
+                "LORA_DIR": f"{local_fallback}/moonbeam_checkpoint/multi_task_lora",
+                "CONFIG_PATH": f"{local_fallback}/src/llama_recipes/configs/model_config_multi_task.json",
+                "MASTER_DICT_PATH": f"{local_fallback}/processed/ComMU/indexed_tokens_dict.json",
+            }[env_key]
+            resolved[env_key] = local_guess
+
+    return resolved
+
+
+def _require_paths(paths: dict) -> None:
+    missing = {k: v for k, v in paths.items() if not os.path.exists(v)}
+    if missing:
+        lines = [f"  - {k}: {v}" for k, v in missing.items()]
+        msg = (
+            "❌ Missing required checkpoint/config path(s):\n" + "\n".join(lines) +
+            "\n\nOn Kaggle: run `!ls /kaggle/input/` to see attached datasets, confirm "
+            "the checkpoint files are actually inside one of them, or set the matching "
+            "env var explicitly (BASE_MODEL_PATH, LORA_DIR, CONFIG_PATH, MASTER_DICT_PATH) "
+            "before running this script."
+        )
+        logger.error(msg)
+        sys.exit(msg)
+
+
+def main():
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
+    load_dotenv()
+
+    parser = argparse.ArgumentParser(description="Moonbeam AI Record Label Pipeline")
+    parser.add_argument("--prompt", type=str, default="Generate a 2-minute epic cinematic track.", help="The user prompt")
+    parser.add_argument("--output", type=str, default="masterpiece.mid", help="Output MIDI filename")
+    parser.add_argument("--mock_llm", action="store_true", help="Use mock LLM instead of live API tiers")
+    parser.add_argument("--device", type=str, default="cuda", choices=["cuda", "cpu"], help="Compute device")
+    parser.add_argument("--continue_midi", type=str, default=None, help="Path to a seed MIDI file to continue generating from.")
+    parser.add_argument("--skip_render", action="store_true", help="Skip the DDSP neural audio render, MIDI only")
+    args = parser.parse_args()
+
+    device = _select_device(args.device)
+
+    # Resolve checkpoint paths: explicit env vars > Kaggle auto-discovery > local dev fallback.
+    paths = _autodiscover_checkpoints()
+    print("📂 Resolved checkpoint paths:")
+    for k, v in paths.items():
+        status = "✅" if os.path.exists(v) else "❌"
+        print(f"   {status} {k} = {v}")
+
+    _require_paths(paths)
+
+    print("\n🚀 Booting HarmonyRouter...")
+    try:
+        harmony_router = HarmonyRouter(
+            base_model_path=paths["BASE_MODEL_PATH"],
+            lora_checkpoint_dir=paths["LORA_DIR"],
+            model_config_path=paths["CONFIG_PATH"],
+            master_dict_path=paths["MASTER_DICT_PATH"],
+            device=device,
+        )
+    except Exception as e:
+        logger.error(f"❌ Failed to boot HarmonyRouter: {e}")
+        sys.exit(1)
+
+    print("\n🎼 Initializing AgenticComposer...")
+    composer = AgenticComposer(harmonyrouter=harmony_router, acceptance_threshold=0.75)
+    composer.llm.use_mock = args.mock_llm
+
+    print(f"\n🎤 USER PROMPT: '{args.prompt}'\n")
+    if args.continue_midi:
+        print(f"🎧 OUTPAINTING MODE: Continuing from seed '{args.continue_midi}'\n")
+
+    try:
+        llm_intent = composer.llm.generate_intent(args.prompt)
+        blueprint = composer.planner.plan(llm_intent)
+    except Exception as e:
+        logger.error(f"❌ Failed during intent generation / planning: {e}")
+        sys.exit(1)
+
+    output_path = args.output
+    output_dir = os.path.dirname(output_path)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+
+    stem, _ = os.path.splitext(output_path)
+    blueprint_filename = f"{stem}_blueprint.json"
+    with open(blueprint_filename, "w") as f:
+        json.dump({"llm_intent": llm_intent, "dense_blueprint": blueprint}, f, indent=2)
+    print(f"📝 Song Blueprint saved to: {blueprint_filename}")
+
+    try:
+        final_song_midi = composer.compose_full_song(blueprint["timeline"], primer_midi_path=args.continue_midi)
+    except Exception as e:
+        logger.error(f"❌ Composition failed: {e}")
+        sys.exit(1)
+
+    final_song_midi.write(output_path)
+    print(f"\n🏆 SUCCESS! Final masterpiece saved to: {output_path}")
+
+    # --- 6. THE HYBRID NEURAL AUDIO RENDERER ---
+    if args.skip_render:
+        print("\n⏭️ Skipping neural audio render (--skip_render set). Done.")
+        return
+
+    print("\n🎧 INITIALIZING HYBRID NEURAL RENDERER...")
+    wav_path = f"{stem}.wav"
+
+    try:
+        import subprocess
+        import shutil
+        from pydub import AudioSegment
+        from pydub import effects
+    except ImportError as e:
+        print(f"⚠️ Neural renderer dependencies not installed ({e}). Skipping DDSP render.")
+    else:
+        try:
+            ddsp_output_dir = "./ddsp_stems"
+            if os.path.exists(ddsp_output_dir):
+                shutil.rmtree(ddsp_output_dir)
+            os.makedirs(ddsp_output_dir, exist_ok=True)
+
+            print("   🎻 Running Magenta DDSP (Neural Physics Synthesis)...")
+            subprocess.run([
+                "midi_ddsp_synthesize", "--midi_path", output_path,
+                "--output_dir", ddsp_output_dir, "--skip_expression_generator",
+            ], check=True, capture_output=True, text=True, timeout=600)
+
+            print("   🎛️ Mixing Neural Stems...")
+            stem_files = sorted(f for f in os.listdir(ddsp_output_dir) if f.endswith(".wav"))
+            if not stem_files:
+                print(f"⚠️ DDSP produced no .wav stems. Skipping mix.")
+            else:
+                master_mix = AudioSegment.silent(duration=0)
+                for stem_file in stem_files:
+                    stem_audio = AudioSegment.from_wav(os.path.join(ddsp_output_dir, stem_file))
+                    master_mix = master_mix.overlay(stem_audio - 3)
+                master_mix = effects.normalize(master_mix)
+                master_mix.export(wav_path, format="wav")
+                print(f"🏆 NEURAL MASTERPIECE RENDERED: {wav_path}")
+
+        except FileNotFoundError:
+            print("⚠️ midi_ddsp_synthesize CLI not found in PATH.")
+        except subprocess.TimeoutExpired:
+            print("⚠️ DDSP synthesis timed out.")
+        except Exception as e:
+            print(f"⚠️ DDSP rendering failed ({e}).")
+
+
+if __name__ == "__main__":
+    main()

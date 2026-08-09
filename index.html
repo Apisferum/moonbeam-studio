@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonbeam AI Studio</title>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 20px; background: #0f0f13; color: #e0e0e0; }
+        h1 { text-align: center; background: linear-gradient(90deg, #ff8a00, #e52e71); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        label { font-weight: bold; display: block; margin-top: 20px; color: #aaa; }
+        input, textarea { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #333; background: #1a1a24; color: #fff; font-size: 16px; box-sizing: border-box; }
+        textarea { min-height: 100px; resize: vertical; }
+        button { width: 100%; padding: 15px; margin-top: 25px; border-radius: 8px; border: none; background: linear-gradient(90deg, #00c6ff, #0072ff); color: white; font-size: 18px; font-weight: bold; cursor: pointer; transition: transform 0.1s; }
+        button:active { transform: scale(0.98); }
+        button:disabled { background: #444; cursor: not-allowed; }
+        #status { margin-top: 25px; padding: 20px; background: #1a1a24; border-radius: 8px; border-left: 4px solid #0072ff; display: none; line-height: 1.6; }
+        a { color: #00c6ff; text-decoration: none; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>🎹 Moonbeam AI Record Label</h1>
+    
+    <label for="apiUrl">Kaggle API URL (from Cloudflared):</label>
+    <input type="text" id="apiUrl" placeholder="https://xxx-xxx-xxx.trycloudflare.com">
+    
+    <label for="prompt">Creative Prompt:</label>
+    <textarea id="prompt">Generate a 2-minute epic cinematic track. Starts very sad and sparse in A minor, then explodes into a massive, heroic orchestral chorus.</textarea>
+    
+    <button id="generateBtn" onclick="generate()">🚀 Commission Masterpiece</button>
+    
+    <div id="status"></div>
+    
+    <script>
+        async function generate() {
+            const apiUrl = document.getElementById('apiUrl').value.replace(/\/$/, '');
+            const prompt = document.getElementById('prompt').value;
+            const btn = document.getElementById('generateBtn');
+            const statusDiv = document.getElementById('status');
+            
+            if (!apiUrl) { alert("Please enter the Kaggle API URL!"); return; }
+            
+            btn.disabled = true;
+            statusDiv.style.display = 'block';
+            statusDiv.innerHTML = '⏳ <b>Queuing task...</b> Sending to Kaggle GPU worker.';
+            
+            try {
+                const res = await fetch(`${apiUrl}/generate`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({prompt: prompt, use_mock_llm: false})
+                });
+                const data = await res.json();
+                const taskId = data.celery_task_id;
+                
+                const poll = setInterval(async () => {
+                    const statusRes = await fetch(`${apiUrl}/status/${taskId}`);
+                    const statusData = await statusRes.json();
+                    
+                    if (statusData.status === 'completed') {
+                        clearInterval(poll);
+                        statusDiv.innerHTML = `✅ <b>Masterpiece Rendered!</b><br><br>
+                            📥 <a href="${apiUrl}${statusData.midi_download_url}" download>Download MIDI</a><br>
+                            📜 <a href="${apiUrl}${statusData.blueprint_download_url}" download>Download JSON Blueprint</a>`;
+                        btn.disabled = false;
+                    } else if (statusData.status === 'failed') {
+                        clearInterval(poll);
+                        statusDiv.innerHTML = `❌ <b>Worker Failed:</b> ${statusData.error}`;
+                        btn.disabled = false;
+                    } else {
+                        statusDiv.innerHTML = `⏳ <b>${statusData.status}</b>: ${statusData.progress || 'Working...'}`;
+                    }
+                }, 2000);
+            } catch (e) {
+                statusDiv.innerHTML = `❌ <b>Network Error:</b> ${e.message}. Check your URL and Kaggle connection.`;
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
