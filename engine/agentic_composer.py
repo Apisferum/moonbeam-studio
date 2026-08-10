@@ -16,8 +16,6 @@ from critic.midi_polisher import MIDIPolisher
 from critic.soft_refiner import SoftRefiner
 from engine.motif_memory import MotifMemoryFAISS
 from shared.music_theory_constants import logger, TICKS_PER_SECOND
-import yaml
-from models.physics_failsafe import PhysicsFailsafe
 
 def _cuda_available() -> bool:
     try: return torch.cuda.is_available()
@@ -79,23 +77,9 @@ class AgenticComposer:
         self.polisher = MIDIPolisher()
         self.refiner = SoftRefiner()
         self.motif_memory = MotifMemoryFAISS()
-        # Load SCMoE default configurations
-        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "default.yaml")
-        config = {}
-        if os.path.exists(config_path):
-            try:
-                with open(config_path, "r") as f:
-                    config = yaml.safe_load(f)
-            except Exception as e:
-                logger.error(f"Failed to read default.yaml: {e}")
-
-        failsafe_cfg = config.get("physics_failsafe", {})
-        self.acceptance_threshold = failsafe_cfg.get("acceptance_threshold", acceptance_threshold)
-        self.max_attempts = failsafe_cfg.get("max_transformer_attempts", 3)
+        self.acceptance_threshold = acceptance_threshold
+        self.max_attempts = 3
         self.max_primer_tokens = max_primer_tokens
-
-        device = getattr(harmonyrouter, "device", torch.device("cuda" if torch.cuda.is_available() else "cpu"))
-        self.physics_failsafe = PhysicsFailsafe(config, device=str(device))
 
     def _map_mood_to_emo_token(self, mood: str) -> int:
         quadrant_map = {
@@ -556,61 +540,6 @@ class AgenticComposer:
                     if total > 0: weights = {k: v / total for k, v in weights.items()}
                     self.harmonyrouter.set_weights(weights)
 
-            # 🚀 DYNAMIC SEQUENCING FIX (Replaces the rigid grid padding)
-            if not accepted and self.physics_failsafe.enabled:
-                logger.warning(
-                    f"⚠️ Section '{section_name}' failed to pass threshold after {self.max_attempts} attempts. "
-                    f"Invoking Physics Failsafe."
-                )
-                try:
-                    failsafe_midi = self.physics_failsafe.generate_section(section, last_accepted_midi)
-                    
-                    # Refine and score the failsafe MIDI
-                    bpm = section.get("bpm", 120)
-                    bars = section.get("bars", 8)
-                    beats_per_bar = section.get("beats_per_bar", 4) or 4
-                    
-                    polished_failsafe = self.polisher.polish(
-                        failsafe_midi, bpm=bpm, chord_timeline=section["chord_timeline"],
-                        ties_weights=section.get("ties_weights"),
-                        density_curve=section.get("density_curve"), mood=section.get("mood", "calm"),
-                        bars=bars, beats_per_bar=beats_per_bar
-                    )
-                    
-                    failsafe_score, failsafe_feedback = self.scorer.score(polished_failsafe, section, section_name=section_name)
-                    logger.info(f"   ↳ [Physics Failsafe] Generated backup | Re-evaluated Score: {failsafe_score:.2f}")
-                    
-                    if failsafe_score >= self.acceptance_threshold:
-                        best_midi = polished_failsafe
-                        best_score = failsafe_score
-                        best_feedback = failsafe_feedback
-                        last_accepted_midi = polished_failsafe
-                        
-                        # Tokenize the polished failsafe MIDI into SCMoE compound tokens
-                        failsafe_tokens = []
-                        try:
-                            buffer = io.BytesIO()
-                            polished_failsafe.write(buffer)
-                            buffer.seek(0)
-                            import mido
-                            mido_midi = mido.MidiFile(file=buffer)
-                            failsafe_tokens = self.tokenizer.midi_to_compound(mido_midi)
-                        except Exception as token_err:
-                            logger.error(f"⚠️ Failed to tokenize failsafe MIDI: {token_err}")
-
-                        self.motif_memory.save_section(polished_failsafe, section, tokens=failsafe_tokens)
-                        accepted = True
-                    else:
-                        logger.warning(f"⚠️ Physics Failsafe did not reach the acceptance threshold ({self.acceptance_threshold:.2f}).")
-                        # If failsafe also failed, keep the best overall (either failsafe or best of Transformer attempts)
-                        if failsafe_score > best_score:
-                            best_midi = polished_failsafe
-                            best_score = failsafe_score
-                            best_feedback = failsafe_feedback
-                except Exception as e:
-                    logger.error(f"❌ Physics Failsafe failed for '{section_name}': {e}")
-                    logger.error(traceback.format_exc())
-
             if best_midi is None:
                 logger.error(f"⚠️ Section '{section_name}' failed. Skipping.")
                 current_time_offset += 2.0
@@ -630,7 +559,7 @@ class AgenticComposer:
                 logger.warning(
                     f"⚠️ Section '{section_name}' never reached acceptance_threshold "
                     f"({self.acceptance_threshold}) in {self.max_attempts} attempts — "
-                    f"using best-of-all (score={best_score:.2f}) instead."
+                    f"using best-of-{self.max_attempts} (score={best_score:.2f}) instead."
                 )
                 last_accepted_midi = best_midi
 
