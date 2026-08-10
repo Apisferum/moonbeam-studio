@@ -1,0 +1,9 @@
+# SCMoE Generation & Physics Failsafe Configurations
+physics_failsafe:
+  enabled: true
+  model_path: "models/wave_pinn.pt"       # Path to trained WavePINNModel weights
+  guitar_program: 25                     # GM Acoustic Guitar (steel)
+  latent_dim: 16
+  wave_dim: 32
+  step_seconds: 0.5                      # Duration step size for melody generation
+  polyphony: 3                           # Polyphony degree for pads

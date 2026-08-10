@@ -16,6 +16,8 @@ from critic.midi_polisher import MIDIPolisher
 from critic.soft_refiner import SoftRefiner
 from engine.motif_memory import MotifMemoryFAISS
 from shared.music_theory_constants import logger, TICKS_PER_SECOND
+import yaml
+from models.physics_failsafe import PhysicsFailsafe
 
 def _cuda_available() -> bool:
     try: return torch.cuda.is_available()
@@ -80,6 +82,19 @@ class AgenticComposer:
         self.acceptance_threshold = acceptance_threshold
         self.max_attempts = 3
         self.max_primer_tokens = max_primer_tokens
+
+        # Load SCMoE default configurations
+        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "default.yaml")
+        config = {}
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, "r") as f:
+                    config = yaml.safe_load(f)
+            except Exception as e:
+                logger.error(f"Failed to read default.yaml: {e}")
+
+        device = getattr(harmonyrouter, "device", torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+        self.physics_failsafe = PhysicsFailsafe(config, device=str(device))
 
     def _map_mood_to_emo_token(self, mood: str) -> int:
         quadrant_map = {
@@ -541,6 +556,39 @@ class AgenticComposer:
                     self.harmonyrouter.set_weights(weights)
 
             # 🚀 DYNAMIC SEQUENCING FIX (Replaces the rigid grid padding)
+            if not accepted and self.physics_failsafe.enabled:
+                logger.warning(
+                    f"⚠️ Section '{section_name}' failed to pass threshold after {self.max_attempts} attempts. "
+                    f"Invoking Physics Failsafe."
+                )
+                try:
+                    failsafe_midi = self.physics_failsafe.generate_section(section, last_accepted_midi)
+                    
+                    # Refine and score the failsafe MIDI
+                    bpm = section.get("bpm", 120)
+                    bars = section.get("bars", 8)
+                    beats_per_bar = section.get("beats_per_bar", 4) or 4
+                    
+                    polished_failsafe = self.polisher.polish(
+                        failsafe_midi, bpm=bpm, chord_timeline=section["chord_timeline"],
+                        ties_weights=section.get("ties_weights"),
+                        density_curve=section.get("density_curve"), mood=section.get("mood", "calm"),
+                        bars=bars, beats_per_bar=beats_per_bar
+                    )
+                    
+                    score, feedback = self.scorer.score(polished_failsafe, section, section_name=section_name)
+                    logger.info(f"   ↳ [Physics Failsafe] Generated backup | Re-evaluated Score: {score:.2f}")
+                    
+                    best_midi = polished_failsafe
+                    best_score = score
+                    best_feedback = feedback
+                    last_accepted_midi = polished_failsafe
+                    self.motif_memory.save_section(polished_failsafe, section, tokens=None)
+                    accepted = True
+                except Exception as e:
+                    logger.error(f"❌ Physics Failsafe failed for '{section_name}': {e}")
+                    logger.error(traceback.format_exc())
+
             if best_midi is None:
                 logger.error(f"⚠️ Section '{section_name}' failed. Skipping.")
                 current_time_offset += 2.0
