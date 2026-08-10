@@ -79,10 +79,6 @@ class AgenticComposer:
         self.polisher = MIDIPolisher()
         self.refiner = SoftRefiner()
         self.motif_memory = MotifMemoryFAISS()
-        self.acceptance_threshold = acceptance_threshold
-        self.max_attempts = 3
-        self.max_primer_tokens = max_primer_tokens
-
         # Load SCMoE default configurations
         config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "default.yaml")
         config = {}
@@ -92,6 +88,11 @@ class AgenticComposer:
                     config = yaml.safe_load(f)
             except Exception as e:
                 logger.error(f"Failed to read default.yaml: {e}")
+
+        failsafe_cfg = config.get("physics_failsafe", {})
+        self.acceptance_threshold = failsafe_cfg.get("acceptance_threshold", acceptance_threshold)
+        self.max_attempts = failsafe_cfg.get("max_transformer_attempts", 3)
+        self.max_primer_tokens = max_primer_tokens
 
         device = getattr(harmonyrouter, "device", torch.device("cuda" if torch.cuda.is_available() else "cpu"))
         self.physics_failsafe = PhysicsFailsafe(config, device=str(device))
@@ -576,15 +577,23 @@ class AgenticComposer:
                         bars=bars, beats_per_bar=beats_per_bar
                     )
                     
-                    score, feedback = self.scorer.score(polished_failsafe, section, section_name=section_name)
-                    logger.info(f"   ↳ [Physics Failsafe] Generated backup | Re-evaluated Score: {score:.2f}")
+                    failsafe_score, failsafe_feedback = self.scorer.score(polished_failsafe, section, section_name=section_name)
+                    logger.info(f"   ↳ [Physics Failsafe] Generated backup | Re-evaluated Score: {failsafe_score:.2f}")
                     
-                    best_midi = polished_failsafe
-                    best_score = score
-                    best_feedback = feedback
-                    last_accepted_midi = polished_failsafe
-                    self.motif_memory.save_section(polished_failsafe, section, tokens=None)
-                    accepted = True
+                    if failsafe_score >= self.acceptance_threshold:
+                        best_midi = polished_failsafe
+                        best_score = failsafe_score
+                        best_feedback = failsafe_feedback
+                        last_accepted_midi = polished_failsafe
+                        self.motif_memory.save_section(polished_failsafe, section, tokens=None)
+                        accepted = True
+                    else:
+                        logger.warning(f"⚠️ Physics Failsafe did not reach the acceptance threshold ({self.acceptance_threshold:.2f}).")
+                        # If failsafe also failed, keep the best overall (either failsafe or best of Transformer attempts)
+                        if failsafe_score > best_score:
+                            best_midi = polished_failsafe
+                            best_score = failsafe_score
+                            best_feedback = failsafe_feedback
                 except Exception as e:
                     logger.error(f"❌ Physics Failsafe failed for '{section_name}': {e}")
                     logger.error(traceback.format_exc())
@@ -608,7 +617,7 @@ class AgenticComposer:
                 logger.warning(
                     f"⚠️ Section '{section_name}' never reached acceptance_threshold "
                     f"({self.acceptance_threshold}) in {self.max_attempts} attempts — "
-                    f"using best-of-{self.max_attempts} (score={best_score:.2f}) instead."
+                    f"using best-of-all (score={best_score:.2f}) instead."
                 )
                 last_accepted_midi = best_midi
 

@@ -2,6 +2,8 @@
 physics_failsafe:
   enabled: true
   model_path: "models/wave_pinn.pt"       # Path to trained WavePINNModel weights
+  max_transformer_attempts: 3            # Exactly 3 Transformer attempts per section
+  acceptance_threshold: 0.55             # Coherence acceptance threshold
   guitar_program: 25                     # GM Acoustic Guitar (steel)
   latent_dim: 16
   wave_dim: 32

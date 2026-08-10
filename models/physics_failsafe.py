@@ -116,15 +116,21 @@ class PhysicsFailsafe:
         self.model = WavePINNModel(input_dim=8, wave_dim=wave_dim, latent_dim=latent_dim)
         
         model_path = self.config.get("model_path")
-        if model_path and os.path.exists(model_path):
-            try:
-                self.model.load_state_dict(torch.load(model_path, map_location=device))
-                logger.info(f"Loaded Physics Failsafe model from {model_path}")
-            except Exception as e:
-                logger.error(f"Failed to load Physics Failsafe weights: {e}. Running procedurally snaped PINN fallback.")
-        else:
-            logger.info("Physics Failsafe checkpoint not found. Running procedurally snaped PINN fallback.")
-            
+        if self.enabled:
+            if not model_path:
+                logger.warning("⚠️ Physics Failsafe is enabled but model_path is not specified in default.yaml. Disabling failsafe.")
+                self.enabled = False
+            elif not os.path.exists(model_path):
+                logger.warning(f"⚠️ Physics Failsafe is enabled but checkpoint '{model_path}' was not found. Disabling failsafe.")
+                self.enabled = False
+            else:
+                try:
+                    self.model.load_state_dict(torch.load(model_path, map_location=device))
+                    logger.info(f"Loaded Physics Failsafe model from {model_path}")
+                except Exception as e:
+                    logger.error(f"Failed to load Physics Failsafe weights: {e}. Disabling failsafe.")
+                    self.enabled = False
+
         self.model.to(device)
 
     def generate_section(self, section: dict, primer_midi: pretty_midi.PrettyMIDI = None) -> pretty_midi.PrettyMIDI:
