@@ -14,6 +14,12 @@ class MotifMemoryFAISS:
         self.index = faiss.IndexFlatIP(self.dim)
         self.store = []
 
+    def clear(self):
+        """Resets the FAISS index and clears the store to prevent cross-song context leaks and memory growth."""
+        self.index.reset()
+        self.store.clear()
+        logger.info("🧹 [FAISS] Cleared motif memory database.")
+
     def _normalize(self, vec: np.ndarray) -> np.ndarray:
         norm = np.linalg.norm(vec)
         return vec / norm if norm > 0 else vec
@@ -24,10 +30,7 @@ class MotifMemoryFAISS:
         total_notes = 0
         pitch_sum, vel_sum, dur_sum = 0.0, 0.0, 0.0
 
-        all_notes = []
-        for inst in midi_obj.instruments:
-            if not inst.is_drum:
-                all_notes.extend(inst.notes)
+        all_notes = [note for inst in midi_obj.instruments if not inst.is_drum for note in inst.notes]
         all_notes.sort(key=lambda x: x.start)
 
         prev_pitch = -1

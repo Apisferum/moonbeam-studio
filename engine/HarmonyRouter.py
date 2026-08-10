@@ -98,7 +98,9 @@ class HarmonyRouter:
         for mn in self._module_names:
             key = f"{mn}.weight"
             if key in self._temp_base_sd:
-                self._base_sd[key] = self._temp_base_sd[key].clone()
+                # Pre-convert to flat float32 numpy array.
+                # This frees CPU tensors and avoids converting to numpy on every set_weights() call.
+                self._base_sd[key] = self._temp_base_sd[key].float().numpy().flatten()
 
         del self._temp_base_sd
         gc.collect()
@@ -107,6 +109,10 @@ class HarmonyRouter:
         print("🦀 [4/5] Initializing Rust TIES Core...")
         task_arrays = [[delta.float().numpy().flatten() for delta in self._task_vectors[mn]] for mn in self._module_names]
         self._merger = ties_core.TIESMerger(task_arrays, self.density)
+
+        # Free task vectors immediately after merging setup
+        del self._task_vectors
+        gc.collect()
 
         if self._cuda_ok:
             print(f"   ↳ Moving model to cuda, dtype={self.dtype} (auto-selected for this GPU's compute capability)")
@@ -174,6 +180,10 @@ class HarmonyRouter:
                     if mn not in self._module_shapes:
                         self._module_shapes[mn] = tuple(delta.shape)
 
+            # Free adapter weights from CPU memory immediately inside the loop
+            del lora_sd, modules
+            gc.collect()
+
         module_task_vectors = {}
         module_names = []
 
@@ -197,7 +207,8 @@ class HarmonyRouter:
             weights_dict = {k: v / total_weight for k, v in weights_dict.items()}
 
         weights = [weights_dict.get(k, 0.0) for k in ADAPTERS]
-        base_arrays = [self._base_sd[f"{mn}.weight"].float().cpu().numpy().flatten() for mn in self._module_names]
+        # self._base_sd arrays are already pre-flattened float32 numpy arrays!
+        base_arrays = [self._base_sd[f"{mn}.weight"] for mn in self._module_names]
         merged_arrays = self._merger.merge(base_arrays, weights)
 
         with torch.no_grad():
