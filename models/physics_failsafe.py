@@ -123,16 +123,20 @@ class PhysicsFailsafe:
             if not model_path:
                 logger.warning("⚠️ Physics Failsafe is enabled but model_path is not specified in default.yaml. Disabling failsafe.")
                 self.enabled = False
-            elif not os.path.exists(model_path):
-                logger.warning(f"⚠️ Physics Failsafe is enabled but checkpoint '{model_path}' was not found. Disabling failsafe.")
-                self.enabled = False
             else:
-                try:
-                    self.model.load_state_dict(torch.load(model_path, map_location=device))
-                    logger.info(f"Loaded Physics Failsafe model from {model_path}")
-                except Exception as e:
-                    logger.error(f"Failed to load Physics Failsafe weights: {e}. Disabling failsafe.")
+                if not os.path.is_absolute(model_path):
+                    studio_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+                    model_path = os.path.abspath(os.path.join(studio_root, model_path))
+                if not os.path.exists(model_path):
+                    logger.warning(f"⚠️ Physics Failsafe is enabled but checkpoint '{model_path}' was not found. Disabling failsafe.")
                     self.enabled = False
+                else:
+                    try:
+                        self.model.load_state_dict(torch.load(model_path, map_location=device))
+                        logger.info(f"Loaded Physics Failsafe model from {model_path}")
+                    except Exception as e:
+                        logger.error(f"Failed to load Physics Failsafe weights: {e}. Disabling failsafe.")
+                        self.enabled = False
 
         self.model.to(device)
 
