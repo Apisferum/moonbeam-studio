@@ -585,7 +585,20 @@ class AgenticComposer:
                         best_score = failsafe_score
                         best_feedback = failsafe_feedback
                         last_accepted_midi = polished_failsafe
-                        self.motif_memory.save_section(polished_failsafe, section, tokens=None)
+                        
+                        # Tokenize the polished failsafe MIDI into SCMoE compound tokens
+                        failsafe_tokens = []
+                        try:
+                            buffer = io.BytesIO()
+                            polished_failsafe.write(buffer)
+                            buffer.seek(0)
+                            import mido
+                            mido_midi = mido.MidiFile(file=buffer)
+                            failsafe_tokens = self.tokenizer.midi_to_compound(mido_midi)
+                        except Exception as token_err:
+                            logger.error(f"⚠️ Failed to tokenize failsafe MIDI: {token_err}")
+
+                        self.motif_memory.save_section(polished_failsafe, section, tokens=failsafe_tokens)
                         accepted = True
                     else:
                         logger.warning(f"⚠️ Physics Failsafe did not reach the acceptance threshold ({self.acceptance_threshold:.2f}).")

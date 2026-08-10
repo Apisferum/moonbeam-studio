@@ -2,7 +2,10 @@ import os
 import random
 import torch
 import torch.nn as nn
-import pretty_midi
+try:
+    import pretty_midi
+except ImportError:
+    pretty_midi = None
 from shared.music_theory_constants import logger, TICKS_PER_SECOND
 
 # ----------------------------
@@ -30,8 +33,8 @@ class WavePINNModel(nn.Module):
 # ----------------------------
 # Helper Helpers
 # ----------------------------
-def get_seed_pitch(key: str, mode: str, primer_midi: pretty_midi.PrettyMIDI = None) -> int:
-    if primer_midi and primer_midi.instruments:
+def get_seed_pitch(key: str, mode: str, primer_midi: "pretty_midi.PrettyMIDI" = None) -> int:
+    if primer_midi and pretty_midi is not None and primer_midi.instruments:
         notes = []
         for inst in primer_midi.instruments:
             if not getattr(inst, "is_drum", False):
@@ -47,11 +50,11 @@ def get_seed_pitch(key: str, mode: str, primer_midi: pretty_midi.PrettyMIDI = No
     pc = pc_map.get(key, 0)
     return 60 + pc  # Default to middle octave
 
-def make_seed_tensor(pitch: int, amp: float = 0.65, dur: float = 0.5, emotion=None) -> torch.Tensor:
+def make_seed_tensor(pitch: int, amp: float = 0.65, dur: float = 0.5, emotion=None, instrument: int = 25) -> torch.Tensor:
     if emotion is None:
         emotion = [0.8, 0.1, 0.2, 0.1]
-    hz = float(pretty_midi.note_number_to_hz(pitch))
-    data = [hz, float(amp), float(dur)] + list(map(float, emotion)) + [1.0]
+    hz = float(440.0 * (2.0 ** ((pitch - 69.0) / 12.0)))
+    data = [hz, float(amp), float(dur)] + list(map(float, emotion)) + [instrument / 127.0]
     return torch.tensor([data], dtype=torch.float32)
 
 def parse_chord_pcs(chord_str: str) -> list[int]:
@@ -133,11 +136,48 @@ class PhysicsFailsafe:
 
         self.model.to(device)
 
-    def generate_section(self, section: dict, primer_midi: pretty_midi.PrettyMIDI = None) -> pretty_midi.PrettyMIDI:
+    def generate_section(self, section: dict, primer_midi: "pretty_midi.PrettyMIDI" = None) -> "pretty_midi.PrettyMIDI":
+        if pretty_midi is None:
+            raise ImportError("pretty_midi is not installed. generate_section requires pretty_midi.")
         pm = pretty_midi.PrettyMIDI()
         
+        # Resolve instrument programs from note_events if available
+        note_events = section.get("note_events", [])
         guitar_program = self.config.get("guitar_program", 25)
-        piano = pretty_midi.Instrument(program=guitar_program)
+        melody_program = guitar_program
+        pad_program = guitar_program
+        bass_program = guitar_program
+        arp_program = guitar_program
+        
+        if note_events:
+            def get_pitch(e):
+                if "pitch" in e:
+                    return e["pitch"]
+                return e.get("octave", 5) * 12 + e.get("pitch_class", 0)
+                
+            bass_events = [e for e in note_events if get_pitch(e) < 45]
+            melody_events = [e for e in note_events if get_pitch(e) >= 60]
+            pad_events = [e for e in note_events if 45 <= get_pitch(e) < 60]
+            
+            def get_most_common_program(events, fallback):
+                progs = [e.get("instrument_program") for e in events if e.get("instrument_program") is not None]
+                if progs:
+                    return max(set(progs), key=progs.count)
+                return fallback
+                
+            bass_program = get_most_common_program(bass_events, guitar_program)
+            melody_program = get_most_common_program(melody_events, guitar_program)
+            pad_program = get_most_common_program(pad_events, guitar_program)
+            arp_program = melody_program
+            
+        instruments_dict = {}
+        def get_instrument_track(program: int, is_drum: bool = False) -> "pretty_midi.Instrument":
+            key = (program, is_drum)
+            if key not in instruments_dict:
+                inst = pretty_midi.Instrument(program=program, is_drum=is_drum)
+                instruments_dict[key] = inst
+                pm.instruments.append(inst)
+            return instruments_dict[key]
         
         bpm = section.get("bpm", 120)
         bars = section.get("bars", 8)
@@ -254,7 +294,7 @@ class PhysicsFailsafe:
             
             pad_notes = chord_notes[:3]
             for p in pad_notes:
-                piano.notes.append(
+                get_instrument_track(pad_program).notes.append(
                     pretty_midi.Note(
                         velocity=pad_vel,
                         pitch=clamp_int(p, 21, 108),
@@ -268,7 +308,7 @@ class PhysicsFailsafe:
                 bt = start_t + beat * beat_seconds
                 if bt >= seconds: continue
                 bass_pitch = pitch_for_pc_near(root_pc, bass_near, 21, 60)
-                piano.notes.append(
+                get_instrument_track(bass_program).notes.append(
                     pretty_midi.Note(
                         velocity=bass_vel,
                         pitch=bass_pitch,
@@ -293,7 +333,7 @@ class PhysicsFailsafe:
                     t0 = start_t + s * arp_step
                     if t0 >= end_t or t0 >= seconds: break
                     p = clamp_int(arp_chord[idx % len(arp_chord)], 48, 96)
-                    piano.notes.append(
+                    get_instrument_track(arp_program).notes.append(
                         pretty_midi.Note(
                             velocity=arp_vel,
                             pitch=p,
@@ -309,7 +349,7 @@ class PhysicsFailsafe:
         seed_pitch = get_seed_pitch(key, mode, primer_midi)
         
         # Try to parse emotional quadrants if present in timeline
-        seed_tensor = make_seed_tensor(seed_pitch, amp=0.65, dur=step_seconds)
+        seed_tensor = make_seed_tensor(seed_pitch, amp=0.65, dur=step_seconds, instrument=melody_program)
         current_input = seed_tensor.to(self.device)
         
         melody_min, melody_max = (44, 82) if style == "cinematic" else (40, 88)
@@ -393,7 +433,7 @@ class PhysicsFailsafe:
                 end_t = float(min(seconds, current_time + dur))
                 
                 if pitch is not None:
-                    piano.notes.append(
+                    get_instrument_track(melody_program).notes.append(
                         pretty_midi.Note(
                             velocity=velocity,
                             pitch=int(pitch),
@@ -407,11 +447,11 @@ class PhysicsFailsafe:
                 if current_time >= seconds: break
                 
                 next_input = out.clone()
-                next_input[0, 0] = float(pretty_midi.note_number_to_hz(prev_melody))
+                next_input[0, 0] = float(440.0 * (2.0 ** ((prev_melody - 69.0) / 12.0)))
                 next_input[0, 1] = amp
                 next_input[0, 2] = float(dur)
-                next_input[0, 3:] = current_input[0, 3:]
+                next_input[0, 3:-1] = current_input[0, 3:-1]
+                next_input[0, -1] = melody_program / 127.0
                 current_input = next_input
                 
-        pm.instruments.append(piano)
         return pm

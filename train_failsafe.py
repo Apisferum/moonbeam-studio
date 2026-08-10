@@ -1,7 +1,10 @@
 import os
 import glob
 import argparse
-import pretty_midi
+try:
+    import pretty_midi
+except ImportError:
+    pretty_midi = None
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -20,76 +23,142 @@ def get_emotion_from_path(file_path: str) -> list[float]:
         return [0.2, 0.1, 0.2, 0.8]  # Calm / Q4
     return [0.5, 0.2, 0.3, 0.3]      # Default fallback
 
-def midi_to_tensor(file_path: str, instrument: int = 25) -> torch.Tensor:
+def midi_to_tensors(file_path: str) -> list[torch.Tensor]:
     """
-    Convert MIDI file -> tensor of [frequency, amplitude, duration, happy, sad, calm, tense, instrument]
+    Convert MIDI file -> list of tensors, one for each instrument/program.
+    Each tensor contains note data: [frequency, amplitude, duration, happy, sad, calm, tense, instrument_program/127.0]
     """
+    if pretty_midi is None:
+        print(f"   ⚠️ Cannot process MIDI '{file_path}': pretty_midi is not installed.")
+        return None
     try:
         pm = pretty_midi.PrettyMIDI(file_path)
     except Exception as e:
         print(f"   ⚠️ Failed to parse MIDI '{file_path}': {e}")
         return None
         
-    notes_data = []
     emotion = get_emotion_from_path(file_path)
+    tensors = []
 
-    # Filter tracks: prefer guitar or requested instrument
-    non_drum = [inst for inst in pm.instruments if not getattr(inst, "is_drum", False)]
-    if instrument is None:
-        candidates = non_drum
-    else:
-        candidates = [inst for inst in non_drum if inst.program == instrument]
-        if len(candidates) == 0:
-            candidates = non_drum
+    # Get non-drum instruments
+    instruments = [inst for inst in pm.instruments if not getattr(inst, "is_drum", False)]
+    for inst in instruments:
+        if not inst.notes:
+            continue
+            
+        # Ensure notes are sorted chronologically
+        notes = sorted(inst.notes, key=lambda n: (n.start, n.pitch))
+        notes_data = []
+        for note in notes:
+            freq = 440.0 * (2.0 ** ((note.pitch - 69.0) / 12.0))
+            amp = note.velocity / 127.0
+            dur = max(0.0, note.end - note.start)
+            data = [freq, amp, dur] + emotion + [inst.program / 127.0]
+            notes_data.append(data)
+            
+        if len(notes_data) >= 2:
+            tensors.append(torch.tensor(notes_data, dtype=torch.float32))
+            
+    return tensors
 
-    if len(candidates) == 0:
+def npy_to_tensors(file_path: str) -> list[torch.Tensor]:
+    """
+    Convert preprocessed .npy token file -> list of tensors, one for each instrument/program.
+    """
+    try:
+        import numpy as np
+        tokens = np.load(file_path)
+    except Exception as e:
+        print(f"   ⚠️ Failed to parse numpy file '{file_path}': {e}")
         return None
 
-    # Pick the track with the most notes
-    inst = max(candidates, key=lambda i: len(i.notes) if i.notes is not None else 0)
-    if not inst.notes:
+    if len(tokens.shape) != 2 or tokens.shape[1] < 6:
+        print(f"   ⚠️ Invalid token shape {tokens.shape} in '{file_path}'")
         return None
 
-    # Ensure notes are sorted chronologically
-    notes = sorted(inst.notes, key=lambda n: (n.start, n.pitch))
-    for note in notes:
-        freq = pretty_midi.note_number_to_hz(note.pitch)
-        amp = note.velocity / 127.0
-        dur = max(0.0, note.end - note.start)
-        data = [freq, amp, dur] + emotion + [1.0]
-        notes_data.append(data)
+    emotion = get_emotion_from_path(file_path)
+    tensors = []
 
-    if len(notes_data) == 0:
-        return None
-    return torch.tensor(notes_data, dtype=torch.float32)
+    # Filter out drums (program 128)
+    non_drum = tokens[tokens[:, 4] != 128]
+    unique_insts = np.unique(non_drum[:, 4])
+    
+    for inst_prog in unique_insts:
+        inst_tokens = non_drum[non_drum[:, 4] == inst_prog]
+        if len(inst_tokens) < 2:
+            continue
+            
+        # Sort notes chronologically: onset (col 0) first, then pitch (octave * 12 + pitch_class)
+        pitches = inst_tokens[:, 2] * 12 + inst_tokens[:, 3]
+        sort_indices = np.lexsort((pitches, inst_tokens[:, 0]))
+        sorted_tokens = inst_tokens[sort_indices]
+        sorted_pitches = pitches[sort_indices]
+
+        notes_data = []
+        for idx, token in enumerate(sorted_tokens):
+            pitch = int(sorted_pitches[idx])
+            freq = 440.0 * (2.0 ** ((pitch - 69.0) / 12.0))
+            amp = token[5] / 127.0
+            dur = max(0.0, token[1] / 100.0)
+            data = [freq, amp, dur] + emotion + [inst_prog / 127.0]
+            notes_data.append(data)
+            
+        if len(notes_data) >= 2:
+            tensors.append(torch.tensor(notes_data, dtype=torch.float32))
+            
+    return tensors
 
 def main():
     parser = argparse.ArgumentParser(description="Train the SCMoE Physics Failsafe Model")
     parser.add_argument("--dataset-dir", default="d:/scmoe/Moonbeam Multi-Task Data", help="Directory containing training MIDI files")
     parser.add_argument("--output-path", default="models/wave_pinn.pt", help="Path to save the trained model checkpoint")
-    parser.add_argument("--instrument", type=int, default=25, help="MIDI program number to filter for training")
+    parser.add_argument("--instrument", type=int, default=None, help="MIDI program number to filter for training (default: train on all instruments)")
     parser.add_argument("--epochs", type=int, default=50, help="Number of training epochs")
     parser.add_argument("--batch-size", type=int, default=4096, help="Batch size for training")
     parser.add_argument("--lr", type=float, default=0.001, help="Learning rate")
     args = parser.parse_args()
 
-    # Search for all midi files recursively
-    print(f"🔍 Searching for MIDI files in '{args.dataset_dir}'...")
+    # Search for all training files recursively
+    print(f"🔍 Searching for training files in '{args.dataset_dir}'...")
     midi_files = glob.glob(os.path.join(args.dataset_dir, "**", "*.mid"), recursive=True)
-    print(f"   ↳ Found {len(midi_files)} MIDI files.")
+    midi_files += glob.glob(os.path.join(args.dataset_dir, "**", "*.midi"), recursive=True)
+    npy_files = glob.glob(os.path.join(args.dataset_dir, "**", "*.npy"), recursive=True)
+    # Exclude chord metadata files
+    npy_files = [f for f in npy_files if not f.endswith("_bar_beat_chord.npy")]
+    all_files = midi_files + npy_files
+    print(f"   ↳ Found {len(midi_files)} MIDI files and {len(npy_files)} numpy files (total: {len(all_files)} files).")
 
     dataset = []
     skipped = 0
     
-    print("📦 Preprocessing MIDI files to training tensors...")
-    for idx, f in enumerate(midi_files):
+    print("📦 Preprocessing files to training tensors...")
+    for idx, f in enumerate(all_files):
         if idx > 0 and idx % 200 == 0:
-            print(f"   ↳ Processed {idx}/{len(midi_files)} files...")
-        tensor = midi_to_tensor(f, instrument=args.instrument)
-        if tensor is None or tensor.shape[0] < 2:
+            print(f"   ↳ Processed {idx}/{len(all_files)} files...")
+        
+        if f.lower().endswith(".npy"):
+            tensors = npy_to_tensors(f)
+        else:
+            if pretty_midi is None:
+                skipped += 1
+                continue
+            tensors = midi_to_tensors(f)
+            
+        if not tensors:
             skipped += 1
             continue
-        dataset.append(tensor)
+            
+        # Optional instrument filter
+        if args.instrument is not None:
+            tensors = [t for t in tensors if abs(t[0, -1].item() * 127.0 - args.instrument) < 1e-4]
+            if not tensors:
+                skipped += 1
+                continue
+
+        for tensor in tensors:
+            if tensor.shape[0] < 2:
+                continue
+            dataset.append(tensor)
 
     print(f"   ↳ Done. Loaded {len(dataset)} valid sequences, skipped {skipped}.")
     if len(dataset) == 0:
