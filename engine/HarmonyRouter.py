@@ -79,15 +79,26 @@ class HarmonyRouter:
         print("🎹 [1/5] Loading Base Model Architecture...")
         self.config = LlamaConfig.from_pretrained(model_config_path)
         self.model = LlamaForCausalLM_Conditional_Generation(self.config)
+        
+        # 🚀 FIX: Move the empty model shell to GPU BEFORE loading weights
+        if self._cuda_ok:
+            self.model.to("cuda")
 
         print("🧠 [2/5] Loading Base Weights...")
-        ckpt = torch.load(base_model_path, map_location="cpu", weights_only=True)
+        # 🚀 FIX: Load directly to GPU to prevent CPU RAM duplication (the 12GB+ spike)
+        map_loc = "cuda" if self._cuda_ok else "cpu"
+        ckpt = torch.load(base_model_path, map_location=map_loc, weights_only=True)
         sd = ckpt.get("model_state_dict", ckpt)
         base_sd = {k.replace("module.", ""): v for k, v in sd.items()}
         self.model.load_state_dict(base_sd, strict=False)
 
+        # Cast to target dtype immediately while on GPU
+        if self._cuda_ok:
+            self.model.to(dtype=self.dtype)
+
         self._temp_base_sd = base_sd
-        del ckpt, sd
+        del ckpt, sd, base_sd
+        gc.collect()
         if self._cuda_ok:
             torch.cuda.empty_cache()
 
@@ -98,19 +109,26 @@ class HarmonyRouter:
         for mn in self._module_names:
             key = f"{mn}.weight"
             if key in self._temp_base_sd:
-                self._base_sd[key] = self._temp_base_sd[key].clone()
+                # 🚀 FIX: Move to CPU ONLY for the specific LoRA modules needed for TIES
+                self._base_sd[key] = self._temp_base_sd[key].float().cpu().numpy().flatten()
 
         del self._temp_base_sd
         gc.collect()
-        print(f"🧹 Freed ~3GB RAM by filtering base weights to {len(self._base_sd)} LoRA modules.")
+        if self._cuda_ok:
+            torch.cuda.empty_cache()
+        print(f"🧹 Freed VRAM/RAM by filtering base weights to {len(self._base_sd)} LoRA modules.")
 
         print("🦀 [4/5] Initializing Rust TIES Core...")
         task_arrays = [[delta.float().numpy().flatten() for delta in self._task_vectors[mn]] for mn in self._module_names]
         self._merger = ties_core.TIESMerger(task_arrays, self.density)
 
+        # Free task vectors immediately after merging setup
+        del self._task_vectors
+        gc.collect()
+
         if self._cuda_ok:
-            print(f"   ↳ Moving model to cuda, dtype={self.dtype} (auto-selected for this GPU's compute capability)")
-            self.model.to(device="cuda", dtype=self.dtype)
+            print(f"   ↳ Model already on cuda, dtype={self.dtype} (bypassed CPU RAM duplication)")
+            # No need to call .to("cuda") again, it's already there!
             torch.cuda.empty_cache()
 
         self._param_map = {mn: self.model.get_parameter(f"{mn}.weight") for mn in self._module_names}
@@ -174,6 +192,10 @@ class HarmonyRouter:
                     if mn not in self._module_shapes:
                         self._module_shapes[mn] = tuple(delta.shape)
 
+            # Free adapter weights from CPU memory immediately inside the loop
+            del lora_sd, modules
+            gc.collect()
+
         module_task_vectors = {}
         module_names = []
 
@@ -197,7 +219,8 @@ class HarmonyRouter:
             weights_dict = {k: v / total_weight for k, v in weights_dict.items()}
 
         weights = [weights_dict.get(k, 0.0) for k in ADAPTERS]
-        base_arrays = [self._base_sd[f"{mn}.weight"].float().cpu().numpy().flatten() for mn in self._module_names]
+        # self._base_sd arrays are already pre-flattened float32 numpy arrays!
+        base_arrays = [self._base_sd[f"{mn}.weight"] for mn in self._module_names]
         merged_arrays = self._merger.merge(base_arrays, weights)
 
         with torch.no_grad():

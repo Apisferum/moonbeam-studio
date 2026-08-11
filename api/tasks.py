@@ -25,6 +25,7 @@ OUTPUT_DIR = os.environ.get(
 # Optional: hard ceiling so a stuck generation doesn't block a worker forever.
 celery_app.conf.task_time_limit = int(os.environ.get("MOONBEAM_TASK_TIME_LIMIT", 1800))       # hard kill
 celery_app.conf.task_soft_time_limit = int(os.environ.get("MOONBEAM_TASK_SOFT_TIME_LIMIT", 1700))  # raises SoftTimeLimitExceeded first
+celery_app.conf.worker_max_tasks_per_child = 2  # Recycle worker process to release CUDA/system memory completely
 
 # --- GLOBAL ENGINE INSTANCES (Loaded ONCE per Celery Worker PROCESS) ---
 # CRITICAL DEPLOYMENT NOTE: Celery's default pool is "prefork" — one OS
@@ -88,6 +89,13 @@ def generate_song_task(self, task_id: str, prompt: str, use_mock_llm: bool):
 
         midi_path = os.path.join(OUTPUT_DIR, f"{task_id}.mid")
         final_song_midi.write(midi_path)
+        
+        # Force resource cleanup
+        import gc
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+            torch.cuda.ipc_collect()
 
         return {
             "status": "completed",

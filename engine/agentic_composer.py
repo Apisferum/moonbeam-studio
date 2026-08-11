@@ -426,6 +426,9 @@ class AgenticComposer:
     def compose_full_song(self, timeline: List[Dict[str, Any]],
                           primer_midi_path: Optional[str] = None) -> pretty_midi.PrettyMIDI:
 
+        # Reset motif memory at the start of each new song generation to avoid memory leakage and context contamination
+        self.motif_memory.clear()
+
         primer_tokens = None
         primer_midi_obj = None
         primer_duration_sec = 0.0
@@ -537,7 +540,6 @@ class AgenticComposer:
                     if total > 0: weights = {k: v / total for k, v in weights.items()}
                     self.harmonyrouter.set_weights(weights)
 
-            # 🚀 DYNAMIC SEQUENCING FIX (Replaces the rigid grid padding)
             if best_midi is None:
                 logger.error(f"⚠️ Section '{section_name}' failed. Skipping.")
                 current_time_offset += 2.0
@@ -606,9 +608,13 @@ class AgenticComposer:
                     f"forward by the same huge amount. The section's actual notes are unaffected; only "
                     f"where the NEXT section starts is."
                 )
-                actual_end_time = max_reasonable_end
-
             current_time_offset += actual_end_time + 0.2
+
+            # Clean up TIES cache, GPU VRAM, and trigger garbage collection between section runs
+            self.harmonyrouter.clear_ties_cache()
+            if _cuda_available():
+                torch.cuda.empty_cache()
+            gc.collect()
 
         if primer_midi_obj is not None:
             logger.info("🧵 Stitching user primer with generated continuation...")
