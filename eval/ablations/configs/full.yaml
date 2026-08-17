@@ -1,0 +1,6 @@
+name: "Full System"
+use_planner: true
+use_motif_memory: true
+use_ties: true
+use_soft_refiner: true
+use_hard_scorer: true

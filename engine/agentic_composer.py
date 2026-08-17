@@ -17,6 +17,18 @@ from critic.soft_refiner import SoftRefiner
 from engine.motif_memory import MotifMemoryFAISS
 from shared.music_theory_constants import logger, TICKS_PER_SECOND
 
+try:
+    from eval.instrumentation.hooks import (
+        hook_initialize_piece, hook_start_section,
+        hook_log_ties_weights, hook_log_attempt, hook_end_section
+    )
+except ImportError:
+    def hook_initialize_piece(*args, **kwargs): pass
+    def hook_start_section(*args, **kwargs): pass
+    def hook_log_ties_weights(*args, **kwargs): pass
+    def hook_log_attempt(*args, **kwargs): pass
+    def hook_end_section(*args, **kwargs): pass
+
 def _cuda_available() -> bool:
     try: return torch.cuda.is_available()
     except Exception: return False
@@ -424,7 +436,8 @@ class AgenticComposer:
             return None
 
     def compose_full_song(self, timeline: List[Dict[str, Any]],
-                          primer_midi_path: Optional[str] = None) -> pretty_midi.PrettyMIDI:
+                          primer_midi_path: Optional[str] = None,
+                          prompt: Optional[str] = None) -> pretty_midi.PrettyMIDI:
 
         # Reset motif memory at the start of each new song generation to avoid memory leakage and context contamination
         self.motif_memory.clear()
@@ -470,6 +483,18 @@ class AgenticComposer:
         # downstream (a DAW, a tempo-aware renderer) reads this file's own
         # declared tempo instead of just trusting raw seconds.
         song_bpm = timeline[0].get("bpm", 120) if timeline else 120
+        
+        global_key = timeline[0].get("key", "C") if timeline else "C"
+        global_mode = timeline[0].get("mode", "major") if timeline else "major"
+        global_ts = timeline[0].get("time_signature", "4/4") if timeline else "4/4"
+        hook_initialize_piece(
+            prompt or getattr(self, "current_prompt", "Unknown Prompt"),
+            global_key,
+            global_mode,
+            song_bpm,
+            global_ts
+        )
+
         final_midi = pretty_midi.PrettyMIDI(initial_tempo=song_bpm)
         current_time_offset = 0.0
         last_accepted_midi = None
@@ -477,6 +502,8 @@ class AgenticComposer:
         for section_idx, section in enumerate(timeline):
             section_name = section["section_name"]
             logger.info(f"🎼 Composing Section: {section_name}...")
+
+            hook_start_section(section_idx, section_name, section)
 
             metadata_ids = []
             mood = section.get("mood", "calm")
@@ -497,15 +524,25 @@ class AgenticComposer:
             current_temp = 0.85
             accepted = False
 
+            # Initialize weights for this section (Bugfix: start fresh for each section)
+            weights = section.get("ties_weights", {"commu_lora": 0.35, "emopia_lora": 0.25, "slakh_lora": 0.40}).copy()
+            self.harmonyrouter.set_weights(weights)
+
             for attempt in range(1, self.max_attempts + 1):
+                hook_log_ties_weights(weights)
                 result = self._generate_and_score(
                     section, section_name, metadata_ids, active_primer, current_temp
                 )
 
-                if result is None: continue
+                if result is None:
+                    hook_log_attempt(attempt, current_temp, 0.0, {"metrics": {}, "feedback": "Attempt crashed/failed"}, False, 0)
+                    continue
 
                 polished_midi, score, feedback, gen_tokens = result
                 logger.info(f"   ↳ Attempt {attempt} | Score: {score:.2f} | {feedback.get('feedback', '')}")
+
+                token_count = len(gen_tokens) if gen_tokens else 0
+                hook_log_attempt(attempt, current_temp, score, feedback, score >= self.acceptance_threshold, token_count)
 
                 if score >= self.acceptance_threshold:
                     best_midi = polished_midi
@@ -542,6 +579,11 @@ class AgenticComposer:
 
             if best_midi is None:
                 logger.error(f"⚠️ Section '{section_name}' failed. Skipping.")
+                hook_end_section(
+                    final_midi_path="",
+                    final_accept_attempt=-1,
+                    kv_cache_reused=False
+                )
                 current_time_offset += 2.0
                 continue
 
@@ -615,6 +657,13 @@ class AgenticComposer:
             if _cuda_available():
                 torch.cuda.empty_cache()
             gc.collect()
+
+            final_attempt_idx = attempt if accepted else -1
+            hook_end_section(
+                final_midi_path=f"section_{section_idx}.mid",
+                final_accept_attempt=final_attempt_idx,
+                kv_cache_reused=False
+            )
 
         if primer_midi_obj is not None:
             logger.info("🧵 Stitching user primer with generated continuation...")

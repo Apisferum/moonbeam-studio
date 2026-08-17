@@ -1,0 +1,6 @@
+name: "No Planner"
+use_planner: false
+use_motif_memory: true
+use_ties: true
+use_soft_refiner: true
+use_hard_scorer: true
