@@ -35,7 +35,12 @@ def _cuda_available() -> bool:
 
 class AgenticComposer:
     def __init__(self, harmonyrouter, acceptance_threshold: float = 0.55,
-                 max_primer_tokens: Optional[int] = None):
+                 max_primer_tokens: Optional[int] = None,
+                 use_planner: bool = True,
+                 use_motif_memory: bool = True,
+                 use_ties: bool = True,
+                 use_soft_refiner: bool = True,
+                 use_hard_scorer: bool = True):
         """
         max_primer_tokens: hard cap on how many compound tokens from a seed
         MIDI's primer are ever handed to HarmonyRouter.generate(). None
@@ -62,6 +67,13 @@ class AgenticComposer:
         self.tokenizer = harmonyrouter.tokenizer
         self.master_dict = getattr(harmonyrouter, 'master_dict', {})
         self.llm = LLMWrapper()
+        
+        self.use_planner = use_planner
+        self.use_motif_memory = use_motif_memory
+        self.use_ties = use_ties
+        self.use_soft_refiner = use_soft_refiner
+        self.use_hard_scorer = use_hard_scorer
+
         # BUGFIX: StructurePlanner (and the ChordRealizer it owns) was
         # being constructed with ZERO arguments, meaning it silently used
         # its own class defaults (octave_vocab_size=9, pitch_class_vocab_
@@ -341,37 +353,38 @@ class AgenticComposer:
             # another guess at the cause.
             pre_refine_abs_times = [t[0] for t in safe_tokens if len(t) == 6]
 
-            safe_tokens = self.refiner.refine_tokens(
-                safe_tokens, root_note=section.get("key", "C"), mode=section.get("mode", "major"),
-                max_section_ticks=max_ticks, mood=section.get("mood", "calm"),
-                ties_weights=section.get("ties_weights"),
-                protected_pcs=set(section.get("protected_pcs", []))
-            )
-
-            # BUGFIX: the previous empty-token check (right after stripping
-            # the primer) only caught the model generating literally zero
-            # new tokens. It DIDN'T catch this: refine_tokens legitimately
-            # drops every token whose abs_time >= max_section_ticks (see
-            # SoftRefiner's `dropped_notes` counter). If the primer-onset
-            # shift a few lines up left every generated token's onset past
-            # the section boundary — plausible with a long/self-similar
-            # FAISS primer, which is exactly what happened here (Cosine Sim
-            # 1.00) — refine_tokens can legitimately return an EMPTY list,
-            # and nothing re-checked for that before compound_to_midi([])
-            # produced a MIDI file with zero note events, which THEN
-            # crashed three calls later inside pretty_midi's own
-            # constructor ("max() iterable argument is empty") — the same
-            # symptom as before, but reached through refine_tokens instead
-            # of the strip. Checking again here, right after the step that
-            # can actually cause it this time.
-            if not safe_tokens or len(safe_tokens) == 0:
-                abs_range = f"min={min(pre_refine_abs_times)} max={max(pre_refine_abs_times)}" if pre_refine_abs_times else "no 6-tuple tokens at all"
-                raise ValueError(
-                    f"SoftRefiner dropped every token for this attempt (all onsets fell past "
-                    f"max_section_ticks={max_ticks}) — nothing left to convert to MIDI. "
-                    f"Pre-refine abs_time range: {abs_range}. primer_last_onset={primer_last_onset}. "
-                    f"primer_tokens length={len(primer_tokens) if primer_tokens else 0}."
+            if self.use_soft_refiner:
+                safe_tokens = self.refiner.refine_tokens(
+                    safe_tokens, root_note=section.get("key", "C"), mode=section.get("mode", "major"),
+                    max_section_ticks=max_ticks, mood=section.get("mood", "calm"),
+                    ties_weights=section.get("ties_weights"),
+                    protected_pcs=set(section.get("protected_pcs", []))
                 )
+
+                # BUGFIX: the previous empty-token check (right after stripping
+                # the primer) only caught the model generating literally zero
+                # new tokens. It DIDN'T catch this: refine_tokens legitimately
+                # drops every token whose abs_time >= max_section_ticks (see
+                # SoftRefiner's `dropped_notes` counter). If the primer-onset
+                # shift a few lines up left every generated token's onset past
+                # the section boundary — plausible with a long/self-similar
+                # FAISS primer, which is exactly what happened here (Cosine Sim
+                # 1.00) — refine_tokens can legitimately return an EMPTY list,
+                # and nothing re-checked for that before compound_to_midi([])
+                # produced a MIDI file with zero note events, which THEN
+                # crashed three calls later inside pretty_midi's own
+                # constructor ("max() iterable argument is empty") — the same
+                # symptom as before, but reached through refine_tokens instead
+                # of the strip. Checking again here, right after the step that
+                # can actually cause it this time.
+                if not safe_tokens or len(safe_tokens) == 0:
+                    abs_range = f"min={min(pre_refine_abs_times)} max={max(pre_refine_abs_times)}" if pre_refine_abs_times else "no 6-tuple tokens at all"
+                    raise ValueError(
+                        f"SoftRefiner dropped every token for this attempt (all onsets fell past "
+                        f"max_section_ticks={max_ticks}) — nothing left to convert to MIDI. "
+                        f"Pre-refine abs_time range: {abs_range}. primer_last_onset={primer_last_onset}. "
+                        f"primer_tokens length={len(primer_tokens) if primer_tokens else 0}."
+                    )
 
             # CORRECTION: compound_to_midi does not accept a bpm/tempo
             # parameter — confirmed from MusicTokenizer's actual source.
@@ -420,7 +433,11 @@ class AgenticComposer:
                 bars=bars, beats_per_bar=beats_per_bar
             )
 
-            score, feedback = self.scorer.score(polished_midi, section, section_name=section_name)
+            if self.use_hard_scorer:
+                score, feedback = self.scorer.score(polished_midi, section, section_name=section_name)
+            else:
+                score = 1.0
+                feedback = {"feedback": "HardScorer disabled", "metrics": {}}
             return polished_midi, score, feedback, safe_tokens
 
         except Exception as e:
@@ -514,7 +531,7 @@ class AgenticComposer:
             if section_idx == 0 and primer_tokens is not None:
                 active_primer = primer_tokens
                 logger.info("   ↳ Injecting user primer for outpainting continuation.")
-            elif last_accepted_midi is not None:
+            elif last_accepted_midi is not None and self.use_motif_memory:
                 active_primer = self.motif_memory.retrieve_primer(last_accepted_midi)
                 if active_primer: logger.info("   ↳ Injecting FAISS Primer.")
 
@@ -548,34 +565,37 @@ class AgenticComposer:
                     best_midi = polished_midi
                     best_score = score
                     last_accepted_midi = polished_midi
-                    self.motif_memory.save_section(polished_midi, section, tokens=gen_tokens)
+                    if self.use_motif_memory:
+                        self.motif_memory.save_section(polished_midi, section, tokens=gen_tokens)
                     accepted = True
                     break
                 else:
                     if score > best_score: best_score = score; best_midi = polished_midi; best_feedback = feedback
-                    weights = section.get("ties_weights", {"commu_lora": 0.35, "emopia_lora": 0.25, "slakh_lora": 0.40}).copy()
                     metrics = feedback.get("metrics", {})
-                    # IMPROVEMENT: this was an elif chain, so only the
-                    # single highest-priority weak metric got corrected per
-                    # retry even when several were bad at once — e.g. a
-                    # section with both a low inst_score AND a low
-                    # chord_score would only ever get the inst_score fix,
-                    # leaving the chord problem unaddressed for the whole
-                    # retry budget. Each weak metric now gets its own
-                    # independent nudge, and temperature reduction can
-                    # happen alongside the weight adjustments rather than
-                    # only when nothing else was already flagged.
-                    if metrics.get("inst_score", 1.0) < 0.75:
-                        weights["slakh_lora"] = weights.get("slakh_lora", 0.0) + 0.15
-                    if metrics.get("chord_score", 1.0) < 0.80:
-                        weights["commu_lora"] = weights.get("commu_lora", 0.0) + 0.15
-                    if metrics.get("voice_leading_score", 1.0) < 0.70:
-                        weights["emopia_lora"] = weights.get("emopia_lora", 0.0) + 0.15
+                    if self.use_ties:
+                        weights = section.get("ties_weights", {"commu_lora": 0.35, "emopia_lora": 0.25, "slakh_lora": 0.40}).copy()
+                        # IMPROVEMENT: this was an elif chain, so only the
+                        # single highest-priority weak metric got corrected per
+                        # retry even when several were bad at once — e.g. a
+                        # section with both a low inst_score AND a low
+                        # chord_score would only ever get the inst_score fix,
+                        # leaving the chord problem unaddressed for the whole
+                        # retry budget. Each weak metric now gets its own
+                        # independent nudge, and temperature reduction can
+                        # happen alongside the weight adjustments rather than
+                        # only when nothing else was already flagged.
+                        if metrics.get("inst_score", 1.0) < 0.75:
+                            weights["slakh_lora"] = weights.get("slakh_lora", 0.0) + 0.15
+                        if metrics.get("chord_score", 1.0) < 0.80:
+                            weights["commu_lora"] = weights.get("commu_lora", 0.0) + 0.15
+                        if metrics.get("voice_leading_score", 1.0) < 0.70:
+                            weights["emopia_lora"] = weights.get("emopia_lora", 0.0) + 0.15
+                        total = sum(weights.values())
+                        if total > 0: weights = {k: v / total for k, v in weights.items()}
+                        self.harmonyrouter.set_weights(weights)
+                    
                     if metrics.get("rhythm_score", 1.0) < 0.70:
                         current_temp = max(0.4, current_temp - 0.15)
-                    total = sum(weights.values())
-                    if total > 0: weights = {k: v / total for k, v in weights.items()}
-                    self.harmonyrouter.set_weights(weights)
 
             if best_midi is None:
                 logger.error(f"⚠️ Section '{section_name}' failed. Skipping.")
