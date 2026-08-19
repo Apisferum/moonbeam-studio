@@ -17,12 +17,23 @@ studio_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if studio_root not in sys.path:
     sys.path.insert(0, studio_root)
 
+# Moonbeam Foundation Model repository
 codebase_root = os.environ.get("MOONBEAM_CODEBASE_PATH")
+
 if not codebase_root:
-    codebase_root = os.path.abspath(os.path.join(studio_root, "..", "moonbeam-codebase"))
-if os.path.exists(codebase_root) and codebase_root not in sys.path:
+    codebase_root = os.path.expanduser(
+        "~/moon/Moonbeam-MIDI-Foundation-Model"
+    )
+
+if not os.path.isdir(codebase_root):
+    raise FileNotFoundError(
+        f"Moonbeam codebase not found: {codebase_root}"
+    )
+
+if codebase_root not in sys.path:
     sys.path.insert(0, codebase_root)
 
+print(f"🔗 Moonbeam codebase: {codebase_root}")
 # Import evaluation metrics
 from eval.metrics.local_quality import harmony_consistency
 from eval.metrics.structure import motif_recurrence_score
@@ -36,10 +47,10 @@ try:
     from brain.structure_planner import StructurePlanner
     from eval.instrumentation.hooks import TraceContext
 except ImportError as e:
-    print(f"⚠️ Warning during imports: {e}")
-    AgenticComposer = None
-    HarmonyRouter = None
-    StructurePlanner = None
+    import traceback
+    print(f"❌ Project import failed: {e}")
+    traceback.print_exc()
+    raise
 
 
 def _select_device(requested: str) -> str:
