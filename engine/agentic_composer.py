@@ -227,16 +227,60 @@ class AgenticComposer:
             # early, before even using all of it (remaining>0, meaning
             # something is cutting generation off — plausibly related to
             # the separate "No notes generated" failures also showing up
-            # on primer-continued sections, which the offset fix wasn't
-            # meant to address at all).
-            initial_queue_len = len(forced_streams[0]) if forced_streams else 0
+            # on primer-continued sections, which the offset fix wasn't            initial_queue_len = len(forced_streams[0]) if forced_streams else 0
+            all_generated_tokens = []
+            current_primer = primer_tokens
+            chunk_count = 0
+            max_chunks = 3
 
-            raw_tokens = self.harmonyrouter.generate(
-                metadata_ids=metadata_ids, primer_tokens=primer_tokens,
-                max_gen_len=section.get("max_tokens", 256), temperature=temperature, top_p=0.9,
-                bpm=section.get("bpm", 120), num_measures=section.get("bars", 8),
-                forced_token_streams=forced_streams
-            )
+            while True:
+                chunk_count += 1
+                logger.info(
+                    f"   ↳ [SlidingWindow] Generating chunk {chunk_count} for '{section_name}' "
+                    f"(queue size: {len(forced_streams[0]) if forced_streams else 0})"
+                )
+
+                raw_tokens = self.harmonyrouter.generate(
+                    metadata_ids=metadata_ids, primer_tokens=current_primer,
+                    max_gen_len=section.get("max_tokens", 256), temperature=temperature, top_p=0.9,
+                    bpm=section.get("bpm", 120), num_measures=section.get("bars", 8),
+                    forced_token_streams=forced_streams
+                )
+
+                safe_tokens = raw_tokens.tolist() if hasattr(raw_tokens, 'tolist') else raw_tokens
+
+                # 🚀 MERGE GROUPED TOKENS (workaround for instrument splitting)
+                if (safe_tokens and isinstance(safe_tokens, list) and len(safe_tokens) > 0
+                        and isinstance(safe_tokens[0], list) and len(safe_tokens[0]) > 0
+                        and isinstance(safe_tokens[0][0], list)):
+                    merged_tokens = []
+                    for group in safe_tokens:
+                        merged_tokens.extend(group)
+                    safe_tokens = merged_tokens
+
+                if not safe_tokens or len(safe_tokens) == 0:
+                    logger.warning(f"   ↳ [SlidingWindow] Chunk {chunk_count} generated empty tokens. Stopping chunk loop.")
+                    break
+
+                all_generated_tokens.extend(safe_tokens)
+
+                # Check if there are still notes remaining in the forced queue
+                remaining_in_queue = len(forced_streams[0]) if forced_streams else 0
+                if remaining_in_queue == 0:
+                    logger.info("   ↳ [SlidingWindow] All forced note events consumed. Stopping chunk loop.")
+                    break
+                if chunk_count >= max_chunks:
+                    logger.warning(f"   ↳ [SlidingWindow] Reached maximum chunk limit of {max_chunks}. Stopping chunk loop.")
+                    break
+
+                # Prepare the primer for the next chunk:
+                # The running context is the original primer plus the generated tokens so far.
+                running_context = (primer_tokens or []) + all_generated_tokens
+                # Keep only the last 255 tokens as the new primer, prepending the SOS token
+                sos_token = self.tokenizer.sos_token_compound
+                current_primer = [sos_token] + running_context[-255:]
+
+            safe_tokens = all_generated_tokens
 
             if forced_streams:
                 remaining_queue_len = len(forced_streams[0])
@@ -245,42 +289,6 @@ class AgenticComposer:
                     f"{initial_queue_len - remaining_queue_len} consumed, {remaining_queue_len} left unused."
                 )
 
-            safe_tokens = raw_tokens.tolist() if hasattr(raw_tokens, 'tolist') else raw_tokens
-
-            # 🚀 BUGFIX (was "3D Unbatching"): the old logic repeatedly took
-            # safe_tokens[0], discarding every other element, whenever it
-            # detected this list-of-lists-of-lists shape. That shape is
-            # NEVER actually a batch dimension in this pipeline — bsz is
-            # always 1 (AgenticComposer/HarmonyRouter never call generate()
-            # with more than one sequence). The only real source of this
-            # structure is MusicLlama.music_completion's own
-            # postprocess_split: any generation with more than 15 distinct
-            # instruments (exactly what a rich, heavily-forced orchestral
-            # section triggers constantly) gets SPLIT into multiple groups
-            # of <=15 instruments each — a GM channel-count workaround, not
-            # separate generations. Those groups are all part of the SAME
-            # single continuation and need to be MERGED back into one flat
-            # token list, not discarded. Keeping only group 0 was silently
-            # throwing away most of the actual generated content on every
-            # many-instrument section — confirmed directly: a 'Coda'
-            # section kept returning a deterministic, suspiciously-small
-            # 96-token result every single attempt (group 0's fixed length,
-            # not the real total), and multi-instrument sections were
-            # consistently showing only 1-2 of their 5-8 target instruments
-            # actually present in the final output — exactly what "keep
-            # only the first instrument group" would produce. This check
-            # (list of lists of lists) still correctly identifies the
-            # single-group case too (postprocess_split always returns a
-            # list, even when it only contains one flat group) — merging
-            # one group is a no-op that produces the same flat list as
-            # before, so this is safe for both cases.
-            if (safe_tokens and isinstance(safe_tokens, list) and len(safe_tokens) > 0
-                    and isinstance(safe_tokens[0], list) and len(safe_tokens[0]) > 0
-                    and isinstance(safe_tokens[0][0], list)):
-                merged_tokens = []
-                for group in safe_tokens:
-                    merged_tokens.extend(group)
-                safe_tokens = merged_tokens
             if not safe_tokens or len(safe_tokens) == 0:
                 raise ValueError("Model generated empty tokens.")
 
