@@ -37,7 +37,7 @@ print(f"🔗 Moonbeam codebase: {codebase_root}")
 # Import evaluation metrics
 from eval.metrics.local_quality import harmony_consistency
 from eval.metrics.structure import motif_recurrence_score
-from eval.metrics.blueprint_adherence import chord_match_rate, voice_leading_score
+from eval.metrics.blueprint_adherence import chord_match_rate, voice_leading_score, density_adherence_metrics
 from eval.metrics.efficiency import compute_efficiency_stats
 
 # Try to import the project's composer and router
@@ -533,13 +533,49 @@ def main():
                     
                 voice_leadings = [voice_leading_score(out_midi_path) for _ in prompt["sections"]]
                 
+                # Calculate density adherence metrics across sections
+                density_rmse_scores = []
+                density_mae_scores = []
+                density_r2_scores = []
+                
+                for idx, s_trace in enumerate(piece_trace["sections"]):
+                    target_template = s_trace.get("blueprint_rhythm_template", [])
+                    if idx < len(prompt["sections"]):
+                        p_sec = prompt["sections"][idx]
+                        bpm = prompt.get("global_bpm", 120)
+                        length_str = p_sec.get("length", "medium")
+                        bars = 8
+                        if length_str == "short":
+                            bars = 4
+                        elif length_str == "medium":
+                            bars = 8
+                        elif length_str == "long":
+                            bars = 16
+                    else:
+                        bpm = 120
+                        bars = 8
+                        
+                    res_density = density_adherence_metrics(
+                        out_midi_path, 
+                        target_template, 
+                        bpm=bpm, 
+                        bars=bars, 
+                        beats_per_bar=4
+                    )
+                    density_rmse_scores.append(res_density["rmse"])
+                    density_mae_scores.append(res_density["mae"])
+                    density_r2_scores.append(res_density["r2"])
+                
                 # Log metrics in trace dictionary for aggregation
                 piece_trace["metrics"] = {
                     "harmony_consistency": float(np.mean(harmonies)) if harmonies else 1.0,
                     "chord_match_rate": float(np.mean(chord_matches)) if chord_matches else 1.0,
                     "voice_leading_score": float(np.mean(voice_leadings)) if voice_leadings else 1.0,
                     "motif_recurrence": float(motif_recurrence_score(piece_trace)),
-                    "efficiency": compute_efficiency_stats(piece_trace["sections"])
+                    "efficiency": compute_efficiency_stats(piece_trace["sections"]),
+                    "density_rmse": float(np.mean(density_rmse_scores)) if density_rmse_scores else 1.0,
+                    "density_mae": float(np.mean(density_mae_scores)) if density_mae_scores else 1.0,
+                    "density_r2": float(np.mean(density_r2_scores)) if density_r2_scores else 0.0
                 }
                 
                 # Save trace file
