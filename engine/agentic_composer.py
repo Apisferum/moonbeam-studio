@@ -426,12 +426,7 @@ class AgenticComposer:
                             note.start *= ratio
                             note.end *= ratio
 
-            polished_midi = self.polisher.polish(
-                raw_midi, bpm=section["bpm"], chord_timeline=section["chord_timeline"],
-                ties_weights=section.get("ties_weights"),
-                density_curve=section.get("density_curve"), mood=section.get("mood", "calm"),
-                bars=bars, beats_per_bar=beats_per_bar
-            )
+            polished_midi = raw_midi
 
             if self.use_hard_scorer:
                 score, feedback = self.scorer.score(polished_midi, section, section_name=section_name)
