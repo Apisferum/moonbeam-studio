@@ -168,3 +168,60 @@ def orchestration_match(midi_path: str, blueprint_instruments: List[str]) -> Dic
         }
     except Exception:
         return {"precision": 0.0, "recall": 0.0, "f1": 0.0}
+
+
+def density_adherence_metrics(midi_path: str, blueprint_rhythm_template: List[float], bpm: float, bars: int, beats_per_bar: int = 4) -> Dict[str, float]:
+    """
+    Computes MSE, RMSE, MAE, and R^2 between the blueprint's target density/rhythm template (y_true)
+    and the actual generated MIDI's note density per bar (y_pred).
+    """
+    default_vals = {"mse": 1.0, "rmse": 1.0, "mae": 1.0, "r2": 0.0}
+    if pretty_midi is None or not os.path.exists(midi_path) or not blueprint_rhythm_template:
+        return default_vals
+        
+    try:
+        from eval.metrics.regression import calculate_mse, calculate_rmse, calculate_mae, calculate_r2
+        import numpy as np
+        
+        pm = pretty_midi.PrettyMIDI(midi_path)
+        beat_duration = 60.0 / bpm
+        bar_duration = beats_per_bar * beat_duration
+        
+        all_notes = []
+        for inst in pm.instruments:
+            if not inst.is_drum:
+                all_notes.extend(inst.notes)
+                
+        if not all_notes:
+            return default_vals
+            
+        # Segment actual notes into bars
+        actual_densities = []
+        n_steps = len(blueprint_rhythm_template)
+        # Calculate step duration (matching each element of the rhythm template)
+        step_duration = (bars * bar_duration) / max(1, n_steps)
+        
+        for i in range(n_steps):
+            start = i * step_duration
+            end = (i + 1) * step_duration
+            notes_in_step = sum(1 for n in all_notes if start <= n.start < end)
+            
+            # Normalize actual density: notes per beat, capped at 4.0 notes/beat (16th notes density)
+            notes_per_beat = notes_in_step / max(0.1, step_duration / beat_duration)
+            normalized_density = min(1.0, notes_per_beat / 4.0)
+            actual_densities.append(normalized_density)
+            
+        mse = calculate_mse(blueprint_rhythm_template, actual_densities)
+        rmse = calculate_rmse(blueprint_rhythm_template, actual_densities)
+        mae = calculate_mae(blueprint_rhythm_template, actual_densities)
+        r2 = calculate_r2(blueprint_rhythm_template, actual_densities)
+        
+        return {
+            "mse": float(mse),
+            "rmse": float(rmse),
+            "mae": float(mae),
+            "r2": float(r2)
+        }
+    except Exception:
+        return default_vals
+

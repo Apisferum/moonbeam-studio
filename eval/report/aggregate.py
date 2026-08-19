@@ -27,6 +27,8 @@ def build_summary_table(agg_json_path: str, output_md_path: str):
         "Harmony Adherence",
         "Voice Leading",
         "Motif Recurrence",
+        "Density RMSE",
+        "Density R^2",
         "Avg Attempts",
         "Avg Latency (s)"
     ]
@@ -39,6 +41,8 @@ def build_summary_table(agg_json_path: str, output_md_path: str):
         harmony_scores = []
         vl_scores = []
         motif_scores = []
+        density_rmse_scores = []
+        density_r2_scores = []
         attempts = []
         latencies = []
         
@@ -48,6 +52,8 @@ def build_summary_table(agg_json_path: str, output_md_path: str):
             harmony_scores.append(metrics.get("harmony_consistency", 1.0))
             vl_scores.append(metrics.get("voice_leading_score", 1.0))
             motif_scores.append(metrics.get("motif_recurrence", 1.0))
+            density_rmse_scores.append(metrics.get("density_rmse", 1.0))
+            density_r2_scores.append(metrics.get("density_r2", 0.0))
             
             efficiency = metrics.get("efficiency", {})
             attempts.append(efficiency.get("mean_attempts_per_section", 1.0))
@@ -59,6 +65,8 @@ def build_summary_table(agg_json_path: str, output_md_path: str):
             f"{np.mean(harmony_scores)*100:.1f}%" if harmony_scores else "N/A",
             f"{np.mean(vl_scores)*100:.2f}" if vl_scores else "N/A",
             f"{np.mean(motif_scores)*100:.1f}%" if motif_scores else "N/A",
+            f"{np.mean(density_rmse_scores):.4f}" if density_rmse_scores else "N/A",
+            f"{np.mean(density_r2_scores):.4f}" if density_r2_scores else "N/A",
             f"{np.mean(attempts):.2f}" if attempts else "N/A",
             f"{np.mean(latencies):.2f}s" if latencies else "N/A"
         ]
