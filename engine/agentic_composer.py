@@ -164,11 +164,7 @@ class AgenticComposer:
             duration_beats = event.get('duration_beats', 0.25)
             target_duration_ticks = max(1, int(round(duration_beats * beat_duration_ticks)))
             stream.append({
-                "octave_tok": self.tokenizer.octave_dict.get(event['octave'], 0),
-                "pitch_tok": self.tokenizer.pitch_dict.get(event['pitch_class'], 0),
                 "instrument_tok": self.tokenizer.instrument_dict.get(event['instrument_program'], 0),
-                "target_tick": target_tick,
-                "target_duration_ticks": target_duration_ticks,
             })
         return [stream]
 
