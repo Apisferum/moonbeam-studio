@@ -185,9 +185,7 @@ class AgenticComposer:
                 six_d_primer_toks_for_offset = [t for t in primer_tokens if len(t) == 6]
                 if six_d_primer_toks_for_offset:
                     primer_offset_ticks = six_d_primer_toks_for_offset[-1][0]
-            forced_streams = self._build_forced_streams(
-                note_events, bpm=section.get("bpm", 120), primer_offset_ticks=primer_offset_ticks
-            ) if note_events else None
+            forced_streams = None
 
             # HARD CEILING CHECK: total_len = min(config.max_len, max_gen_len
             # + prompt_len) inside generate() — config.max_len (e.g. 1024)
