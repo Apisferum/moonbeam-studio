@@ -72,7 +72,7 @@ class AgenticComposer:
         self.use_motif_memory = use_motif_memory
         self.use_ties = use_ties
         self.use_soft_refiner = use_soft_refiner
-        self.use_hard_scorer = use_hard_scorer
+        self.use_hard_scorer = False
 
         # BUGFIX: StructurePlanner (and the ChordRealizer it owns) was
         # being constructed with ZERO arguments, meaning it silently used
