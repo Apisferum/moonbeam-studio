@@ -69,7 +69,7 @@ class AgenticComposer:
         self.llm = LLMWrapper()
         
         self.use_planner = use_planner
-        self.use_motif_memory = use_motif_memory
+        self.use_motif_memory = False
         self.use_ties = use_ties
         self.use_soft_refiner = use_soft_refiner
         self.use_hard_scorer = use_hard_scorer
