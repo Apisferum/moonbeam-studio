@@ -2,9 +2,15 @@ import sys
 import os
 import gc
 
-moonbeam_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "moonbeam-studio"))
-if moonbeam_root not in sys.path:
-    sys.path.insert(0, moonbeam_root)
+studio_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if studio_root not in sys.path:
+    sys.path.insert(0, studio_root)
+
+codebase_root = os.environ.get("MOONBEAM_CODEBASE_PATH")
+if not codebase_root:
+    codebase_root = os.path.abspath(os.path.join(studio_root, "..", "moonbeam-codebase"))
+if os.path.exists(codebase_root) and codebase_root not in sys.path:
+    sys.path.insert(0, codebase_root)
 
 import torch
 import logging
@@ -33,7 +39,71 @@ from transformers.models.llama.modeling_llama import LlamaForCausalLM_Conditiona
 from recipes.inference.custom_music_generation.generation import MusicLlama
 from llama_recipes.datasets.music_tokenizer import MusicTokenizer
 
-import ties_core
+try:
+    import ties_core
+except ImportError:
+    class PythonTIESMerger:
+        def __init__(self, task_vectors_per_module, density):
+            self.density = density
+            self.task_vectors = task_vectors_per_module
+            self.trimmed_cache = {}
+            self.max_cache_entries = 12
+
+        def merge(self, base_weights, weights):
+            import numpy as np
+            key = tuple(round(w * 1_000_000.0) for w in weights)
+            
+            if key not in self.trimmed_cache:
+                if len(self.trimmed_cache) >= self.max_cache_entries:
+                    self.trimmed_cache.clear()
+                
+                trimmed_by_module = []
+                for module_vecs in self.task_vectors:
+                    trimmed_vecs = []
+                    for tau, w in zip(module_vecs, weights):
+                        weighted = tau * w
+                        if self.density >= 1.0:
+                            trimmed = weighted
+                        else:
+                            k = int(len(weighted) * (1.0 - self.density))
+                            if k == 0:
+                                trimmed = weighted
+                            else:
+                                magnitudes = np.abs(weighted)
+                                threshold = np.partition(magnitudes, k - 1)[k - 1]
+                                trimmed = np.where(magnitudes >= threshold, weighted, 0.0)
+                        trimmed_vecs.append(trimmed)
+                    trimmed_by_module.append(trimmed_vecs)
+                self.trimmed_cache[key] = trimmed_by_module
+
+            trimmed_by_module = self.trimmed_cache[key]
+            
+            results = []
+            for base, trimmed in zip(base_weights, trimmed_by_module):
+                tensors = np.stack(trimmed, axis=0)
+                sums = np.sum(tensors, axis=0)
+                signs = np.where(sums >= 0.0, 1.0, -1.0)
+                
+                mask = (tensors * signs) > 0.0
+                summed = np.sum(np.where(mask, tensors, 0.0), axis=0)
+                count = np.sum(mask, axis=0)
+                delta = np.where(count > 0.0, summed / count, 0.0)
+                
+                results.append(base + delta)
+                
+            return results
+
+        def clear_cache(self):
+            n = len(self.trimmed_cache)
+            self.trimmed_cache.clear()
+            return n
+
+        def cache_size(self):
+            return len(self.trimmed_cache)
+
+    class TiesCoreMock:
+        TIESMerger = PythonTIESMerger
+    ties_core = TiesCoreMock()
 
 logger = logging.getLogger(__name__)
 ADAPTERS = ["commu_lora", "emopia_lora", "slakh_lora"]
@@ -56,8 +126,7 @@ def _write_json(path: str, obj: dict) -> None:
 def _pick_dtype(device: str) -> torch.dtype:
     if device != "cuda" or not torch.cuda.is_available():
         return torch.float32
-    major, _ = torch.cuda.get_device_capability()
-    return torch.bfloat16 if major >= 8 else torch.float16
+    return torch.bfloat16
 
 # TIMING FORCING: real-time tick convention shared with the rest of the
 # pipeline (music_theory_constants.TICKS_PER_SECOND). Kept as a local
@@ -79,22 +148,18 @@ class HarmonyRouter:
         print("🎹 [1/5] Loading Base Model Architecture...")
         self.config = LlamaConfig.from_pretrained(model_config_path)
         self.model = LlamaForCausalLM_Conditional_Generation(self.config)
-        
-        # 🚀 FIX: Move the empty model shell to GPU BEFORE loading weights
-        if self._cuda_ok:
-            self.model.to("cuda")
 
         print("🧠 [2/5] Loading Base Weights...")
-        # 🚀 FIX: Load directly to GPU to prevent CPU RAM duplication (the 12GB+ spike)
-        map_loc = "cuda" if self._cuda_ok else "cpu"
-        ckpt = torch.load(base_model_path, map_location=map_loc, weights_only=True)
+        # Load weights on CPU first to prevent GPU memory duplication/spikes
+        ckpt = torch.load(base_model_path, map_location="cpu", weights_only=True)
         sd = ckpt.get("model_state_dict", ckpt)
         base_sd = {k.replace("module.", ""): v for k, v in sd.items()}
         self.model.load_state_dict(base_sd, strict=False)
 
-        # Cast to target dtype immediately while on GPU
+        # Cast to target dtype on CPU first, then transfer to GPU
+        self.model.to(dtype=self.dtype)
         if self._cuda_ok:
-            self.model.to(dtype=self.dtype)
+            self.model.to("cuda")
 
         self._temp_base_sd = base_sd
         del ckpt, sd, base_sd
