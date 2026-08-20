@@ -127,15 +127,27 @@ def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
     load_dotenv()
 
+    def str2bool(v):
+        if isinstance(v, bool):
+            return v
+        if v.lower() in ('yes', 'true', 't', 'y', '1'):
+            return True
+        elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+            return False
+        else:
+            raise argparse.ArgumentTypeError('Boolean value expected.')
+
     parser = argparse.ArgumentParser(description="Moonbeam AI Record Label Pipeline")
     parser.add_argument("--prompt", type=str, default="Generate a 2-minute epic cinematic track.", help="The user prompt")
     parser.add_argument("--output", type=str, default="masterpiece.mid", help="Output MIDI filename")
     parser.add_argument("--mock_llm", action="store_true", help="Use mock LLM instead of live API tiers")
+    parser.add_argument("--use_mock_llm", type=str2bool, nargs='?', const=True, default=False, help="Use mock LLM instead of live API tiers")
     parser.add_argument("--device", type=str, default="cuda", choices=["cuda", "cpu"], help="Compute device")
     parser.add_argument("--continue_midi", type=str, default=None, help="Path to a seed MIDI file to continue generating from.")
     parser.add_argument("--skip_render", action="store_true", help="Skip the DDSP neural audio render, MIDI only")
     args = parser.parse_args()
 
+    args.mock_llm = args.mock_llm or args.use_mock_llm
     device = _select_device(args.device)
 
     # Resolve checkpoint paths: explicit env vars > Kaggle auto-discovery > local dev fallback.
@@ -145,7 +157,8 @@ def main():
         status = "✅" if os.path.exists(v) else "❌"
         print(f"   {status} {k} = {v}")
 
-    _require_paths(paths)
+    if not args.mock_llm:
+        _require_paths(paths)
 
     print("\n🚀 Booting HarmonyRouter...")
     try:
@@ -155,6 +168,7 @@ def main():
             model_config_path=paths["CONFIG_PATH"],
             master_dict_path=paths["MASTER_DICT_PATH"],
             device=device,
+            use_mock=args.mock_llm,
         )
     except Exception as e:
         logger.error(f"❌ Failed to boot HarmonyRouter: {e}")
