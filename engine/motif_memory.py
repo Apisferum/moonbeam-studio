@@ -11,7 +11,21 @@ class MotifMemoryFAISS:
     """
     def __init__(self):
         self.dim = 28  # 12D Chroma + 12D Intervals + 4D Stats
-        self.index = faiss.IndexFlatIP(self.dim)
+        cpu_index = faiss.IndexFlatIP(self.dim)
+        
+        # Check if CUDA is available and transfer to GPU if so
+        try:
+            import torch
+            if torch.cuda.is_available():
+                res = faiss.StandardGpuResources()
+                # Transfer CPU index to GPU (Device 0)
+                self.index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
+                logger.info("⚡ [FAISS] Successfully initialized GPU index using StandardGpuResources.")
+            else:
+                self.index = cpu_index
+        except Exception as e:
+            logger.warning(f"⚠️ [FAISS] GPU index creation failed ({e}) — falling back to CPU index.")
+            self.index = cpu_index
         self.store = []
 
     def clear(self):
@@ -128,8 +142,16 @@ class MotifMemoryFAISS:
         return self.store[0] if self.store else None
 
     def retrieve_semantic_primer(self, query_input) -> Optional[Dict[str, Any]]:
+        try:
+            from eval.instrumentation.hooks import hook_log_motif
+        except ImportError:
+            def hook_log_motif(*args): pass
+
         if self.index.ntotal == 0 or query_input is None:
-            return self.retrieve_main_theme()
+            theme = self.retrieve_main_theme()
+            if theme:
+                hook_log_motif(theme["name"], 1.0, 0)
+            return theme
 
         # Determine if input is tokens (list) or MIDI object
         if isinstance(query_input, list):
@@ -137,7 +159,10 @@ class MotifMemoryFAISS:
         elif hasattr(query_input, 'instruments'): # pretty_midi fallback
             query_emb = self._extract_embedding(query_input)
         else:
-            return self.retrieve_main_theme()
+            theme = self.retrieve_main_theme()
+            if theme:
+                hook_log_motif(theme["name"], 1.0, 0)
+            return theme
 
         query_emb = self._normalize(query_emb).reshape(1, -1)
 
@@ -147,9 +172,14 @@ class MotifMemoryFAISS:
 
         if similarity > 0.60:
             logger.info(f"💡 [FAISS] Semantic match found! (Cosine Sim: {similarity:.2f})")
-            return self.store[best_idx]
+            res = self.store[best_idx]
+            hook_log_motif(res["name"], float(similarity), int(best_idx))
+            return res
 
-        return self.retrieve_main_theme()
+        theme = self.retrieve_main_theme()
+        if theme:
+            hook_log_motif(theme["name"], float(similarity), 0)
+        return theme
 
     def retrieve_primer(self, query_input) -> Optional[List]:
         entry = self.retrieve_semantic_primer(query_input) if query_input is not None else self.retrieve_main_theme()
