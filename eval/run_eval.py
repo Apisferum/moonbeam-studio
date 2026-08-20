@@ -385,6 +385,7 @@ def main():
     results = {}
 
     for name, cfg_or_runner in configs.items():
+        cfg_or_runner = os.path.abspath(os.path.join(studio_root, cfg_or_runner))
         print(f"\n========================================")
         print(f"🚀 RUNNING CONFIGURATION: {name}")
         print(f"========================================")
