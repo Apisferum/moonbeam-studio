@@ -62,10 +62,35 @@ def generate_song_task(self, task_id: str, prompt: str, use_mock_llm: bool):
             from engine.HarmonyRouter import HarmonyRouter
             from engine.agentic_composer import AgenticComposer
 
-            BASE_MODEL_PATH = "/home/aashishbishow/ProjectX/Moonbeam Pretrained Weightsmoonbeam_checkpoint/moonbeam_839M.pt"
-            LORA_DIR = "/home/aashishbishow/ProjectX/moonbeam_chunk_20260716_140713"
-            CONFIG_PATH = "/home/aashishbishow/ProjectX/moonbeam-codebase/src/llama_recipes/configs/model_config_multi_task.json"
-            MASTER_DICT_PATH = "/home/aashishbishow/ProjectX/Moonbeam Multi-Task Data/ComMU/indexed_tokens_dict.json"
+            # Resolve relative to the repository parent directory (workspace root)
+            workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+
+            def _get_path(candidates):
+                for c in candidates:
+                    if os.path.exists(c):
+                        return c
+                return candidates[-1]
+
+            BASE_MODEL_PATH = _get_path([
+                os.path.join(workspace_root, "Moonbeam Pretrained Weights", "moonbeam_839M.pt"),
+                os.path.join(workspace_root, "moonbeam_checkpoint", "moonbeam_839M.pt"),
+                "/home/aashishbishow/ProjectX/Moonbeam Pretrained Weightsmoonbeam_checkpoint/moonbeam_839M.pt"
+            ])
+            LORA_DIR = _get_path([
+                os.path.join(workspace_root, "moonbeam_chunk_20260716_140713"),
+                os.path.join(workspace_root, "multi_task_lora"),
+                "/home/aashishbishow/ProjectX/moonbeam_chunk_20260716_140713"
+            ])
+            CONFIG_PATH = _get_path([
+                os.path.join(workspace_root, "moonbeam-codebase", "src", "llama_recipes", "configs", "model_config_multi_task.json"),
+                os.path.join(workspace_root, "src", "llama_recipes", "configs", "model_config_multi_task.json"),
+                "/home/aashishbishow/ProjectX/moonbeam-codebase/src/llama_recipes/configs/model_config_multi_task.json"
+            ])
+            MASTER_DICT_PATH = _get_path([
+                os.path.join(workspace_root, "Moonbeam Multi-Task Data", "ComMU", "indexed_tokens_dict.json"),
+                os.path.join(workspace_root, "processed", "ComMU", "indexed_tokens_dict.json"),
+                "/home/aashishbishow/ProjectX/Moonbeam Multi-Task Data/ComMU/indexed_tokens_dict.json"
+            ])
 
             # FIX: was hardcoded device="cuda" — bypassed HarmonyRouter's own
             # auto-detect/fallback entirely. Now defers to actual hardware.
