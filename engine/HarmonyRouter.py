@@ -126,8 +126,7 @@ def _write_json(path: str, obj: dict) -> None:
 def _pick_dtype(device: str) -> torch.dtype:
     if device != "cuda" or not torch.cuda.is_available():
         return torch.float32
-    major, _ = torch.cuda.get_device_capability()
-    return torch.bfloat16 if major >= 8 else torch.float16
+    return torch.bfloat16
 
 # TIMING FORCING: real-time tick convention shared with the rest of the
 # pipeline (music_theory_constants.TICKS_PER_SECOND). Kept as a local
@@ -149,22 +148,18 @@ class HarmonyRouter:
         print("🎹 [1/5] Loading Base Model Architecture...")
         self.config = LlamaConfig.from_pretrained(model_config_path)
         self.model = LlamaForCausalLM_Conditional_Generation(self.config)
-        
-        # 🚀 FIX: Move the empty model shell to GPU BEFORE loading weights
-        if self._cuda_ok:
-            self.model.to("cuda")
 
         print("🧠 [2/5] Loading Base Weights...")
-        # 🚀 FIX: Load directly to GPU to prevent CPU RAM duplication (the 12GB+ spike)
-        map_loc = "cuda" if self._cuda_ok else "cpu"
-        ckpt = torch.load(base_model_path, map_location=map_loc, weights_only=True)
+        # Load weights on CPU first to prevent GPU memory duplication/spikes
+        ckpt = torch.load(base_model_path, map_location="cpu", weights_only=True)
         sd = ckpt.get("model_state_dict", ckpt)
         base_sd = {k.replace("module.", ""): v for k, v in sd.items()}
         self.model.load_state_dict(base_sd, strict=False)
 
-        # Cast to target dtype immediately while on GPU
+        # Cast to target dtype on CPU first, then transfer to GPU
+        self.model.to(dtype=self.dtype)
         if self._cuda_ok:
-            self.model.to(dtype=self.dtype)
+            self.model.to("cuda")
 
         self._temp_base_sd = base_sd
         del ckpt, sd, base_sd
