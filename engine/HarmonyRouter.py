@@ -138,8 +138,30 @@ _TICKS_PER_SECOND = 100
 
 class HarmonyRouter:
     def __init__(self, base_model_path: str, lora_checkpoint_dir: str, model_config_path: str,
-                 master_dict_path: str, density: float = 0.8, device: Optional[str] = None):
+                 master_dict_path: str, density: float = 0.8, device: Optional[str] = None,
+                 use_mock: bool = False):
         
+        self.use_mock = use_mock
+        if self.use_mock:
+            print("🎭 [HarmonyRouter] Booting in MOCK mode (Fast Integration Testing)...")
+            class MockConfig:
+                octave_vocab_size = 9
+                pitch_class_vocab_size = 12
+                instrument_vocab_size = 130
+                onset_vocab_size = 21
+                dur_vocab_size = 1001
+                velocity_vocab_size = 129
+                max_len = 512
+            self.config = MockConfig()
+            self.tokenizer = MusicTokenizer()
+            self.master_dict = {}
+            if master_dict_path and os.path.exists(master_dict_path):
+                self.master_dict = _read_json(master_dict_path)
+                for key, value in self.master_dict.items():
+                    self.tokenizer.add_new_tokens(token_name=key, token_val=value)
+            print("✅ HarmonyRouter is ONLINE in MOCK mode!")
+            return
+
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self._cuda_ok = self.device == "cuda" and torch.cuda.is_available()
         self.dtype = _pick_dtype(self.device)
@@ -302,6 +324,9 @@ class HarmonyRouter:
         return module_task_vectors, module_names
 
     def set_weights(self, weights_dict: dict):
+        if self.use_mock:
+            print(f"🎭 [HarmonyRouter] (Mock Mode) set_weights: {weights_dict}")
+            return
         total_weight = sum(weights_dict.values())
         if total_weight > 0:
             weights_dict = {k: v / total_weight for k, v in weights_dict.items()}
@@ -356,6 +381,25 @@ class HarmonyRouter:
                  temperature: float = 0.8, top_p: float = 0.9,
                  bpm: int = 120, num_measures: int = 8, time_signature: str = "4/4",
                  forced_token_streams: list = None, note_events: list = None):
+        if self.use_mock:
+            print("🎭 [HarmonyRouter] (Mock Mode) generating tokens...")
+            tokens = []
+            if forced_token_streams and len(forced_token_streams) > 0:
+                stream = forced_token_streams[0]
+                while stream:
+                    note = stream.popleft()
+                    octave = self.tokenizer.octave_dict_decode.get(note["octave_tok"], 4)
+                    pitch = self.tokenizer.pitch_dict_decode.get(note["pitch_tok"], 0)
+                    instrument = self.tokenizer.instrument_dict_decode.get(note["instrument_tok"], 0)
+                    onset = note["target_tick"]
+                    duration = note["target_duration_ticks"]
+                    velocity = 90
+                    tokens.append([onset, duration, octave, pitch, instrument, velocity])
+            else:
+                # Generate a few dummy notes if no forced stream
+                for i in range(4):
+                    tokens.append([i * 100, 50, 4, i * 2, 0, 90])
+            return tokens
         
         if not metadata_ids:
             metadata_ids = [-4] * 11
@@ -397,5 +441,8 @@ class HarmonyRouter:
         _write_json(filepath, metadata)
 
     def clear_ties_cache(self):
+        if self.use_mock:
+            print("🎭 [HarmonyRouter] (Mock Mode) clear_ties_cache")
+            return
         freed = self._merger.clear_cache()
         print(f"🧹 TIES cache cleared ({freed} entries freed).")
