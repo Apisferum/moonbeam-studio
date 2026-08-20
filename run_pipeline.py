@@ -40,7 +40,7 @@ def _autodiscover_checkpoints():
     silently falling through to a wrong machine's path.
     """
     search_roots = ["/kaggle/input", "/kaggle/working"]
-    local_fallback = "/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model"
+    workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
     targets = {
         "BASE_MODEL_PATH": "moonbeam_839M.pt",
@@ -70,13 +70,39 @@ def _autodiscover_checkpoints():
             resolved[env_key] = found
         else:
             # 4. Fall back to the original local dev path as a last resort,
-            # so behavior on your actual dev machine (GIDEON) is unchanged.
-            local_guess = {
-                "BASE_MODEL_PATH": f"{local_fallback}/moonbeam_checkpoint/moonbeam_839M.pt",
-                "LORA_DIR": f"{local_fallback}/moonbeam_checkpoint/multi_task_lora",
-                "CONFIG_PATH": f"{local_fallback}/src/llama_recipes/configs/model_config_multi_task.json",
-                "MASTER_DICT_PATH": f"{local_fallback}/processed/ComMU/indexed_tokens_dict.json",
-            }[env_key]
+            # checking dynamic sibling folders first.
+            candidates = []
+            if env_key == "BASE_MODEL_PATH":
+                candidates = [
+                    os.path.join(workspace_root, "Moonbeam Pretrained Weights", "moonbeam_839M.pt"),
+                    os.path.join(workspace_root, "moonbeam_checkpoint", "moonbeam_839M.pt"),
+                    "/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/moonbeam_checkpoint/moonbeam_839M.pt"
+                ]
+            elif env_key == "LORA_DIR":
+                candidates = [
+                    os.path.join(workspace_root, "multi_task_lora"),
+                    os.path.join(workspace_root, "moonbeam_checkpoint", "multi_task_lora"),
+                    "/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/moonbeam_checkpoint/multi_task_lora"
+                ]
+            elif env_key == "CONFIG_PATH":
+                candidates = [
+                    os.path.join(workspace_root, "moonbeam-codebase", "src", "llama_recipes", "configs", "model_config_multi_task.json"),
+                    os.path.join(workspace_root, "src", "llama_recipes", "configs", "model_config_multi_task.json"),
+                    "/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/src/llama_recipes/configs/model_config_multi_task.json"
+                ]
+            elif env_key == "MASTER_DICT_PATH":
+                candidates = [
+                    os.path.join(workspace_root, "Moonbeam Multi-Task Data", "ComMU", "indexed_tokens_dict.json"),
+                    os.path.join(workspace_root, "processed", "ComMU", "indexed_tokens_dict.json"),
+                    "/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/processed/ComMU/indexed_tokens_dict.json"
+                ]
+            
+            # Pick first existing path, otherwise use hardcoded fallback
+            local_guess = candidates[-1]
+            for c in candidates:
+                if os.path.exists(c):
+                    local_guess = c
+                    break
             resolved[env_key] = local_guess
 
     return resolved
