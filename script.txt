@@ -1,6 +1,6 @@
 cd ~/moonbeam-studio
-export PYTHONPATH="${PYTHONPATH}:/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/recipes/inference/custom_music_generation"
-export PYTHONPATH="${PYTHONPATH}:/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/src"
+export PYTHONPATH="${PYTHONPATH}:$(pwd)/../moonbeam-codebase/recipes/inference/custom_music_generation"
+export PYTHONPATH="${PYTHONPATH}:$(pwd)/../moonbeam-codebase/src"
 python run_pipeline.py --prompt "A happy 1-minute jazz piano track in C major"
 
 cd ~/moonbeam-studio
