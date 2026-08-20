@@ -57,48 +57,54 @@ def generate_song_task(self, task_id: str, prompt: str, use_mock_llm: bool):
     global harmony_router, composer
 
     try:
-        if harmony_router is None:
-            self.update_state(state='LOADING_MODELS', meta={'progress': 'Booting 839M Model & Rust TIES Core into VRAM...'})
+        if harmony_router is None or getattr(harmony_router, "use_mock", False) != use_mock_llm:
             from engine.HarmonyRouter import HarmonyRouter
             from engine.agentic_composer import AgenticComposer
 
-            # Resolve relative to the repository parent directory (workspace root)
-            workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+            if use_mock_llm:
+                self.update_state(state='LOADING_MODELS', meta={'progress': 'Booting Mock HarmonyRouter (Fast Mode)...'})
+                harmony_router = HarmonyRouter(
+                    base_model_path="", lora_checkpoint_dir="",
+                    model_config_path="", master_dict_path="",
+                    device=_resolve_device(), use_mock=True
+                )
+            else:
+                self.update_state(state='LOADING_MODELS', meta={'progress': 'Booting 839M Model & Rust TIES Core into VRAM...'})
+                # Resolve relative to the repository parent directory (workspace root)
+                workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-            def _get_path(candidates):
-                for c in candidates:
-                    if os.path.exists(c):
-                        return c
-                return candidates[-1]
+                def _get_path(candidates):
+                    for c in candidates:
+                        if os.path.exists(c):
+                            return c
+                    return candidates[-1]
 
-            BASE_MODEL_PATH = _get_path([
-                os.path.join(workspace_root, "Moonbeam Pretrained Weights", "moonbeam_839M.pt"),
-                os.path.join(workspace_root, "moonbeam_checkpoint", "moonbeam_839M.pt"),
-                "/home/aashishbishow/ProjectX/Moonbeam Pretrained Weightsmoonbeam_checkpoint/moonbeam_839M.pt"
-            ])
-            LORA_DIR = _get_path([
-                os.path.join(workspace_root, "moonbeam_chunk_20260716_140713"),
-                os.path.join(workspace_root, "multi_task_lora"),
-                "/home/aashishbishow/ProjectX/moonbeam_chunk_20260716_140713"
-            ])
-            CONFIG_PATH = _get_path([
-                os.path.join(workspace_root, "moonbeam-codebase", "src", "llama_recipes", "configs", "model_config_multi_task.json"),
-                os.path.join(workspace_root, "src", "llama_recipes", "configs", "model_config_multi_task.json"),
-                "/home/aashishbishow/ProjectX/moonbeam-codebase/src/llama_recipes/configs/model_config_multi_task.json"
-            ])
-            MASTER_DICT_PATH = _get_path([
-                os.path.join(workspace_root, "Moonbeam Multi-Task Data", "ComMU", "indexed_tokens_dict.json"),
-                os.path.join(workspace_root, "processed", "ComMU", "indexed_tokens_dict.json"),
-                "/home/aashishbishow/ProjectX/Moonbeam Multi-Task Data/ComMU/indexed_tokens_dict.json"
-            ])
+                BASE_MODEL_PATH = _get_path([
+                    os.path.join(workspace_root, "Moonbeam Pretrained Weights", "moonbeam_839M.pt"),
+                    os.path.join(workspace_root, "moonbeam_checkpoint", "moonbeam_839M.pt"),
+                    "/home/aashishbishow/ProjectX/Moonbeam Pretrained Weightsmoonbeam_checkpoint/moonbeam_839M.pt"
+                ])
+                LORA_DIR = _get_path([
+                    os.path.join(workspace_root, "moonbeam_chunk_20260716_140713"),
+                    os.path.join(workspace_root, "multi_task_lora"),
+                    "/home/aashishbishow/ProjectX/moonbeam_chunk_20260716_140713"
+                ])
+                CONFIG_PATH = _get_path([
+                    os.path.join(workspace_root, "moonbeam-codebase", "src", "llama_recipes", "configs", "model_config_multi_task.json"),
+                    os.path.join(workspace_root, "src", "llama_recipes", "configs", "model_config_multi_task.json"),
+                    "/home/aashishbishow/ProjectX/moonbeam-codebase/src/llama_recipes/configs/model_config_multi_task.json"
+                ])
+                MASTER_DICT_PATH = _get_path([
+                    os.path.join(workspace_root, "Moonbeam Multi-Task Data", "ComMU", "indexed_tokens_dict.json"),
+                    os.path.join(workspace_root, "processed", "ComMU", "indexed_tokens_dict.json"),
+                    "/home/aashishbishow/ProjectX/Moonbeam Multi-Task Data/ComMU/indexed_tokens_dict.json"
+                ])
 
-            # FIX: was hardcoded device="cuda" — bypassed HarmonyRouter's own
-            # auto-detect/fallback entirely. Now defers to actual hardware.
-            harmony_router = HarmonyRouter(
-                base_model_path=BASE_MODEL_PATH, lora_checkpoint_dir=LORA_DIR,
-                model_config_path=CONFIG_PATH, master_dict_path=MASTER_DICT_PATH,
-                device=_resolve_device()
-            )
+                harmony_router = HarmonyRouter(
+                    base_model_path=BASE_MODEL_PATH, lora_checkpoint_dir=LORA_DIR,
+                    model_config_path=CONFIG_PATH, master_dict_path=MASTER_DICT_PATH,
+                    device=_resolve_device(), use_mock=False
+                )
             composer = AgenticComposer(harmonyrouter=harmony_router, acceptance_threshold=0.75)
             os.makedirs(OUTPUT_DIR, exist_ok=True)
 
