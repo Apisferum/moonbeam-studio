@@ -145,21 +145,44 @@ class HarmonyRouter:
         self.dtype = _pick_dtype(self.device)
         self.density = density
 
-        print("🎹 [1/5] Loading Base Model Architecture...")
-        self.config = LlamaConfig.from_pretrained(model_config_path)
-        self.model = LlamaForCausalLM_Conditional_Generation(self.config)
-
-        print("🧠 [2/5] Loading Base Weights...")
-        # Load weights on CPU first to prevent GPU memory duplication/spikes
-        ckpt = torch.load(base_model_path, map_location="cpu", weights_only=True)
-        sd = ckpt.get("model_state_dict", ckpt)
-        base_sd = {k.replace("module.", ""): v for k, v in sd.items()}
-        self.model.load_state_dict(base_sd, strict=False)
-
-        # Cast to target dtype on CPU first, then transfer to GPU
-        self.model.to(dtype=self.dtype)
+        # Check if we should load directly on GPU (for high-VRAM systems like Kaggle T4)
+        direct_gpu_load = False
         if self._cuda_ok:
-            self.model.to("cuda")
+            try:
+                vram_gb = torch.cuda.get_device_properties(0).total_memory / (1024 ** 3)
+                if vram_gb >= 8.0:
+                    direct_gpu_load = True
+            except Exception:
+                pass
+
+        if direct_gpu_load:
+            print("⚡ [HarmonyRouter] High-VRAM GPU detected (>= 8GB). Loading base weights directly to GPU...")
+            print("🎹 [1/5] Loading Base Model Architecture on CUDA...")
+            self.config = LlamaConfig.from_pretrained(model_config_path)
+            self.model = LlamaForCausalLM_Conditional_Generation(self.config).to("cuda")
+
+            print("🧠 [2/5] Loading Base Weights to CUDA...")
+            ckpt = torch.load(base_model_path, map_location="cuda", weights_only=True)
+            sd = ckpt.get("model_state_dict", ckpt)
+            base_sd = {k.replace("module.", ""): v for k, v in sd.items()}
+            self.model.load_state_dict(base_sd, strict=False)
+            self.model.to(dtype=self.dtype)
+        else:
+            print("🎹 [1/5] Loading Base Model Architecture...")
+            self.config = LlamaConfig.from_pretrained(model_config_path)
+            self.model = LlamaForCausalLM_Conditional_Generation(self.config)
+
+            print("🧠 [2/5] Loading Base Weights...")
+            # Load weights on CPU first to prevent GPU memory duplication/spikes
+            ckpt = torch.load(base_model_path, map_location="cpu", weights_only=True)
+            sd = ckpt.get("model_state_dict", ckpt)
+            base_sd = {k.replace("module.", ""): v for k, v in sd.items()}
+            self.model.load_state_dict(base_sd, strict=False)
+
+            # Cast to target dtype on CPU first, then transfer to GPU
+            self.model.to(dtype=self.dtype)
+            if self._cuda_ok:
+                self.model.to("cuda")
 
         self._temp_base_sd = base_sd
         del ckpt, sd, base_sd
