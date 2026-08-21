@@ -17,13 +17,30 @@ from critic.soft_refiner import SoftRefiner
 from engine.motif_memory import MotifMemoryFAISS
 from shared.music_theory_constants import logger, TICKS_PER_SECOND
 
+try:
+    from eval.instrumentation.hooks import (
+        hook_initialize_piece, hook_start_section,
+        hook_log_ties_weights, hook_log_attempt, hook_end_section
+    )
+except ImportError:
+    def hook_initialize_piece(*args, **kwargs): pass
+    def hook_start_section(*args, **kwargs): pass
+    def hook_log_ties_weights(*args, **kwargs): pass
+    def hook_log_attempt(*args, **kwargs): pass
+    def hook_end_section(*args, **kwargs): pass
+
 def _cuda_available() -> bool:
     try: return torch.cuda.is_available()
     except Exception: return False
 
 class AgenticComposer:
     def __init__(self, harmonyrouter, acceptance_threshold: float = 0.55,
-                 max_primer_tokens: Optional[int] = None):
+                 max_primer_tokens: Optional[int] = None,
+                 use_planner: bool = True,
+                 use_motif_memory: bool = True,
+                 use_ties: bool = True,
+                 use_soft_refiner: bool = True,
+                 use_hard_scorer: bool = True):
         """
         max_primer_tokens: hard cap on how many compound tokens from a seed
         MIDI's primer are ever handed to HarmonyRouter.generate(). None
@@ -50,6 +67,13 @@ class AgenticComposer:
         self.tokenizer = harmonyrouter.tokenizer
         self.master_dict = getattr(harmonyrouter, 'master_dict', {})
         self.llm = LLMWrapper()
+        
+        self.use_planner = use_planner
+        self.use_motif_memory = False
+        self.use_ties = use_ties
+        self.use_soft_refiner = use_soft_refiner
+        self.use_hard_scorer = use_hard_scorer
+
         # BUGFIX: StructurePlanner (and the ChordRealizer it owns) was
         # being constructed with ZERO arguments, meaning it silently used
         # its own class defaults (octave_vocab_size=9, pitch_class_vocab_
@@ -207,16 +231,91 @@ class AgenticComposer:
             # early, before even using all of it (remaining>0, meaning
             # something is cutting generation off — plausibly related to
             # the separate "No notes generated" failures also showing up
-            # on primer-continued sections, which the offset fix wasn't
-            # meant to address at all).
-            initial_queue_len = len(forced_streams[0]) if forced_streams else 0
+            # on primer-continued sections, which the offset fix wasn't            initial_queue_len = len(forced_streams[0]) if forced_streams else 0
+            all_generated_tokens = []
+            bpm = section.get("bpm", 120)
+            bars = section.get("bars", 8)
+            beats_per_bar = section.get("beats_per_bar", 4) or 4
+            seconds = (bars * beats_per_bar) / (bpm / 60.0)
+            max_ticks = int(seconds * TICKS_PER_SECOND * 1.10)
 
-            raw_tokens = self.harmonyrouter.generate(
-                metadata_ids=metadata_ids, primer_tokens=primer_tokens,
-                max_gen_len=section.get("max_tokens", 256), temperature=temperature, top_p=0.9,
-                bpm=section.get("bpm", 120), num_measures=section.get("bars", 8),
-                forced_token_streams=forced_streams
-            )
+            current_primer = primer_tokens
+            chunk_count = 0
+            max_chunks = 3
+
+            while True:
+                chunk_count += 1
+                logger.info(
+                    f"   ↳ [SlidingWindow] Generating chunk {chunk_count} for '{section_name}' "
+                    f"(queue size: {len(forced_streams[0]) if forced_streams else 0})"
+                )
+
+                raw_tokens = self.harmonyrouter.generate(
+                    metadata_ids=metadata_ids, primer_tokens=current_primer,
+                    max_gen_len=section.get("max_tokens", 256), temperature=temperature, top_p=0.9,
+                    bpm=section.get("bpm", 120), num_measures=section.get("bars", 8),
+                    forced_token_streams=forced_streams
+                )
+
+                safe_tokens = raw_tokens.tolist() if hasattr(raw_tokens, 'tolist') else raw_tokens
+
+                # 🚀 MERGE GROUPED TOKENS (workaround for instrument splitting)
+                if (safe_tokens and isinstance(safe_tokens, list) and len(safe_tokens) > 0
+                        and isinstance(safe_tokens[0], list) and len(safe_tokens[0]) > 0
+                        and isinstance(safe_tokens[0][0], list)):
+                    merged_tokens = []
+                    for group in safe_tokens:
+                        merged_tokens.extend(group)
+                    safe_tokens = merged_tokens
+
+                if not safe_tokens or len(safe_tokens) == 0:
+                    logger.warning(f"   ↳ [SlidingWindow] Chunk {chunk_count} generated empty tokens. Stopping chunk loop.")
+                    break
+
+                if self.use_soft_refiner:
+                    # Shift down locally to 0-indexed section time for refinement
+                    shifted_chunk = []
+                    for tok in safe_tokens:
+                        if len(tok) == 6:
+                            shifted_chunk.append([max(0, tok[0] - primer_offset_ticks), tok[1], tok[2], tok[3], tok[4], tok[5]])
+                        else:
+                            shifted_chunk.append(tok)
+                    
+                    # Refine the local shifted chunk
+                    refined_chunk = self.refiner.refine_tokens(
+                        shifted_chunk, root_note=section.get("key", "C"), mode=section.get("mode", "major"),
+                        max_section_ticks=max_ticks, mood=section.get("mood", "calm"),
+                        ties_weights=section.get("ties_weights"),
+                        protected_pcs=set(section.get("protected_pcs", []))
+                    )
+                    
+                    # Shift back up to absolute primer scale
+                    safe_tokens = []
+                    for tok in refined_chunk:
+                        if len(tok) == 6:
+                            safe_tokens.append([tok[0] + primer_offset_ticks, tok[1], tok[2], tok[3], tok[4], tok[5]])
+                        else:
+                            safe_tokens.append(tok)
+
+                all_generated_tokens.extend(safe_tokens)
+
+                # Check if there are still notes remaining in the forced queue
+                remaining_in_queue = len(forced_streams[0]) if forced_streams else 0
+                if remaining_in_queue == 0:
+                    logger.info("   ↳ [SlidingWindow] All forced note events consumed. Stopping chunk loop.")
+                    break
+                if chunk_count >= max_chunks:
+                    logger.warning(f"   ↳ [SlidingWindow] Reached maximum chunk limit of {max_chunks}. Stopping chunk loop.")
+                    break
+
+                # Prepare the primer for the next chunk:
+                # The running context is the original primer plus the generated tokens so far.
+                running_context = (primer_tokens or []) + all_generated_tokens
+                # Keep only the last 255 tokens as the new primer, prepending the SOS token
+                sos_token = self.tokenizer.sos_token_compound
+                current_primer = [sos_token] + running_context[-255:]
+
+            safe_tokens = all_generated_tokens
 
             if forced_streams:
                 remaining_queue_len = len(forced_streams[0])
@@ -225,42 +324,6 @@ class AgenticComposer:
                     f"{initial_queue_len - remaining_queue_len} consumed, {remaining_queue_len} left unused."
                 )
 
-            safe_tokens = raw_tokens.tolist() if hasattr(raw_tokens, 'tolist') else raw_tokens
-
-            # 🚀 BUGFIX (was "3D Unbatching"): the old logic repeatedly took
-            # safe_tokens[0], discarding every other element, whenever it
-            # detected this list-of-lists-of-lists shape. That shape is
-            # NEVER actually a batch dimension in this pipeline — bsz is
-            # always 1 (AgenticComposer/HarmonyRouter never call generate()
-            # with more than one sequence). The only real source of this
-            # structure is MusicLlama.music_completion's own
-            # postprocess_split: any generation with more than 15 distinct
-            # instruments (exactly what a rich, heavily-forced orchestral
-            # section triggers constantly) gets SPLIT into multiple groups
-            # of <=15 instruments each — a GM channel-count workaround, not
-            # separate generations. Those groups are all part of the SAME
-            # single continuation and need to be MERGED back into one flat
-            # token list, not discarded. Keeping only group 0 was silently
-            # throwing away most of the actual generated content on every
-            # many-instrument section — confirmed directly: a 'Coda'
-            # section kept returning a deterministic, suspiciously-small
-            # 96-token result every single attempt (group 0's fixed length,
-            # not the real total), and multi-instrument sections were
-            # consistently showing only 1-2 of their 5-8 target instruments
-            # actually present in the final output — exactly what "keep
-            # only the first instrument group" would produce. This check
-            # (list of lists of lists) still correctly identifies the
-            # single-group case too (postprocess_split always returns a
-            # list, even when it only contains one flat group) — merging
-            # one group is a no-op that produces the same flat list as
-            # before, so this is safe for both cases.
-            if (safe_tokens and isinstance(safe_tokens, list) and len(safe_tokens) > 0
-                    and isinstance(safe_tokens[0], list) and len(safe_tokens[0]) > 0
-                    and isinstance(safe_tokens[0][0], list)):
-                merged_tokens = []
-                for group in safe_tokens:
-                    merged_tokens.extend(group)
-                safe_tokens = merged_tokens
             if not safe_tokens or len(safe_tokens) == 0:
                 raise ValueError("Model generated empty tokens.")
 
@@ -329,37 +392,16 @@ class AgenticComposer:
             # another guess at the cause.
             pre_refine_abs_times = [t[0] for t in safe_tokens if len(t) == 6]
 
-            safe_tokens = self.refiner.refine_tokens(
-                safe_tokens, root_note=section.get("key", "C"), mode=section.get("mode", "major"),
-                max_section_ticks=max_ticks, mood=section.get("mood", "calm"),
-                ties_weights=section.get("ties_weights"),
-                protected_pcs=set(section.get("protected_pcs", []))
-            )
-
-            # BUGFIX: the previous empty-token check (right after stripping
-            # the primer) only caught the model generating literally zero
-            # new tokens. It DIDN'T catch this: refine_tokens legitimately
-            # drops every token whose abs_time >= max_section_ticks (see
-            # SoftRefiner's `dropped_notes` counter). If the primer-onset
-            # shift a few lines up left every generated token's onset past
-            # the section boundary — plausible with a long/self-similar
-            # FAISS primer, which is exactly what happened here (Cosine Sim
-            # 1.00) — refine_tokens can legitimately return an EMPTY list,
-            # and nothing re-checked for that before compound_to_midi([])
-            # produced a MIDI file with zero note events, which THEN
-            # crashed three calls later inside pretty_midi's own
-            # constructor ("max() iterable argument is empty") — the same
-            # symptom as before, but reached through refine_tokens instead
-            # of the strip. Checking again here, right after the step that
-            # can actually cause it this time.
-            if not safe_tokens or len(safe_tokens) == 0:
-                abs_range = f"min={min(pre_refine_abs_times)} max={max(pre_refine_abs_times)}" if pre_refine_abs_times else "no 6-tuple tokens at all"
-                raise ValueError(
-                    f"SoftRefiner dropped every token for this attempt (all onsets fell past "
-                    f"max_section_ticks={max_ticks}) — nothing left to convert to MIDI. "
-                    f"Pre-refine abs_time range: {abs_range}. primer_last_onset={primer_last_onset}. "
-                    f"primer_tokens length={len(primer_tokens) if primer_tokens else 0}."
-                )
+            if self.use_soft_refiner:
+                # Note: safe_tokens were already refined chunk-by-chunk inside the sliding window loop!
+                if not safe_tokens or len(safe_tokens) == 0:
+                    abs_range = f"min={min(pre_refine_abs_times)} max={max(pre_refine_abs_times)}" if pre_refine_abs_times else "no 6-tuple tokens at all"
+                    raise ValueError(
+                        f"SoftRefiner dropped every token for this attempt (all onsets fell past "
+                        f"max_section_ticks={max_ticks}) — nothing left to convert to MIDI. "
+                        f"Pre-refine abs_time range: {abs_range}. primer_last_onset={primer_last_onset}. "
+                        f"primer_tokens length={len(primer_tokens) if primer_tokens else 0}."
+                    )
 
             # CORRECTION: compound_to_midi does not accept a bpm/tempo
             # parameter — confirmed from MusicTokenizer's actual source.
@@ -408,7 +450,11 @@ class AgenticComposer:
                 bars=bars, beats_per_bar=beats_per_bar
             )
 
-            score, feedback = self.scorer.score(polished_midi, section, section_name=section_name)
+            if self.use_hard_scorer:
+                score, feedback = self.scorer.score(polished_midi, section, section_name=section_name)
+            else:
+                score = 1.0
+                feedback = {"feedback": "HardScorer disabled", "metrics": {}}
             return polished_midi, score, feedback, safe_tokens
 
         except Exception as e:
@@ -424,7 +470,8 @@ class AgenticComposer:
             return None
 
     def compose_full_song(self, timeline: List[Dict[str, Any]],
-                          primer_midi_path: Optional[str] = None) -> pretty_midi.PrettyMIDI:
+                          primer_midi_path: Optional[str] = None,
+                          prompt: Optional[str] = None) -> pretty_midi.PrettyMIDI:
 
         # Reset motif memory at the start of each new song generation to avoid memory leakage and context contamination
         self.motif_memory.clear()
@@ -470,6 +517,18 @@ class AgenticComposer:
         # downstream (a DAW, a tempo-aware renderer) reads this file's own
         # declared tempo instead of just trusting raw seconds.
         song_bpm = timeline[0].get("bpm", 120) if timeline else 120
+        
+        global_key = timeline[0].get("key", "C") if timeline else "C"
+        global_mode = timeline[0].get("mode", "major") if timeline else "major"
+        global_ts = timeline[0].get("time_signature", "4/4") if timeline else "4/4"
+        hook_initialize_piece(
+            prompt or getattr(self, "current_prompt", "Unknown Prompt"),
+            global_key,
+            global_mode,
+            song_bpm,
+            global_ts
+        )
+
         final_midi = pretty_midi.PrettyMIDI(initial_tempo=song_bpm)
         current_time_offset = 0.0
         last_accepted_midi = None
@@ -477,6 +536,8 @@ class AgenticComposer:
         for section_idx, section in enumerate(timeline):
             section_name = section["section_name"]
             logger.info(f"🎼 Composing Section: {section_name}...")
+
+            hook_start_section(section_idx, section_name, section)
 
             metadata_ids = []
             mood = section.get("mood", "calm")
@@ -487,7 +548,7 @@ class AgenticComposer:
             if section_idx == 0 and primer_tokens is not None:
                 active_primer = primer_tokens
                 logger.info("   ↳ Injecting user primer for outpainting continuation.")
-            elif last_accepted_midi is not None:
+            elif last_accepted_midi is not None and self.use_motif_memory:
                 active_primer = self.motif_memory.retrieve_primer(last_accepted_midi)
                 if active_primer: logger.info("   ↳ Injecting FAISS Primer.")
 
@@ -497,51 +558,69 @@ class AgenticComposer:
             current_temp = 0.85
             accepted = False
 
+            # Initialize weights for this section (Bugfix: start fresh for each section)
+            weights = section.get("ties_weights", {"commu_lora": 0.35, "emopia_lora": 0.25, "slakh_lora": 0.40}).copy()
+            self.harmonyrouter.set_weights(weights)
+
             for attempt in range(1, self.max_attempts + 1):
+                hook_log_ties_weights(weights)
                 result = self._generate_and_score(
                     section, section_name, metadata_ids, active_primer, current_temp
                 )
 
-                if result is None: continue
+                if result is None:
+                    hook_log_attempt(attempt, current_temp, 0.0, {"metrics": {}, "feedback": "Attempt crashed/failed"}, False, 0)
+                    continue
 
                 polished_midi, score, feedback, gen_tokens = result
                 logger.info(f"   ↳ Attempt {attempt} | Score: {score:.2f} | {feedback.get('feedback', '')}")
+
+                token_count = len(gen_tokens) if gen_tokens else 0
+                hook_log_attempt(attempt, current_temp, score, feedback, score >= self.acceptance_threshold, token_count)
 
                 if score >= self.acceptance_threshold:
                     best_midi = polished_midi
                     best_score = score
                     last_accepted_midi = polished_midi
-                    self.motif_memory.save_section(polished_midi, section, tokens=gen_tokens)
+                    if self.use_motif_memory:
+                        self.motif_memory.save_section(polished_midi, section, tokens=gen_tokens)
                     accepted = True
                     break
                 else:
                     if score > best_score: best_score = score; best_midi = polished_midi; best_feedback = feedback
-                    weights = section.get("ties_weights", {"commu_lora": 0.35, "emopia_lora": 0.25, "slakh_lora": 0.40}).copy()
                     metrics = feedback.get("metrics", {})
-                    # IMPROVEMENT: this was an elif chain, so only the
-                    # single highest-priority weak metric got corrected per
-                    # retry even when several were bad at once — e.g. a
-                    # section with both a low inst_score AND a low
-                    # chord_score would only ever get the inst_score fix,
-                    # leaving the chord problem unaddressed for the whole
-                    # retry budget. Each weak metric now gets its own
-                    # independent nudge, and temperature reduction can
-                    # happen alongside the weight adjustments rather than
-                    # only when nothing else was already flagged.
-                    if metrics.get("inst_score", 1.0) < 0.75:
-                        weights["slakh_lora"] = weights.get("slakh_lora", 0.0) + 0.15
-                    if metrics.get("chord_score", 1.0) < 0.80:
-                        weights["commu_lora"] = weights.get("commu_lora", 0.0) + 0.15
-                    if metrics.get("voice_leading_score", 1.0) < 0.70:
-                        weights["emopia_lora"] = weights.get("emopia_lora", 0.0) + 0.15
+                    if self.use_ties:
+                        weights = section.get("ties_weights", {"commu_lora": 0.35, "emopia_lora": 0.25, "slakh_lora": 0.40}).copy()
+                        # IMPROVEMENT: this was an elif chain, so only the
+                        # single highest-priority weak metric got corrected per
+                        # retry even when several were bad at once — e.g. a
+                        # section with both a low inst_score AND a low
+                        # chord_score would only ever get the inst_score fix,
+                        # leaving the chord problem unaddressed for the whole
+                        # retry budget. Each weak metric now gets its own
+                        # independent nudge, and temperature reduction can
+                        # happen alongside the weight adjustments rather than
+                        # only when nothing else was already flagged.
+                        if metrics.get("inst_score", 1.0) < 0.75:
+                            weights["slakh_lora"] = weights.get("slakh_lora", 0.0) + 0.15
+                        if metrics.get("chord_score", 1.0) < 0.80:
+                            weights["commu_lora"] = weights.get("commu_lora", 0.0) + 0.15
+                        if metrics.get("voice_leading_score", 1.0) < 0.70:
+                            weights["emopia_lora"] = weights.get("emopia_lora", 0.0) + 0.15
+                        total = sum(weights.values())
+                        if total > 0: weights = {k: v / total for k, v in weights.items()}
+                        self.harmonyrouter.set_weights(weights)
+                    
                     if metrics.get("rhythm_score", 1.0) < 0.70:
                         current_temp = max(0.4, current_temp - 0.15)
-                    total = sum(weights.values())
-                    if total > 0: weights = {k: v / total for k, v in weights.items()}
-                    self.harmonyrouter.set_weights(weights)
 
             if best_midi is None:
                 logger.error(f"⚠️ Section '{section_name}' failed. Skipping.")
+                hook_end_section(
+                    final_midi_path="",
+                    final_accept_attempt=-1,
+                    kv_cache_reused=False
+                )
                 current_time_offset += 2.0
                 continue
 
@@ -615,6 +694,13 @@ class AgenticComposer:
             if _cuda_available():
                 torch.cuda.empty_cache()
             gc.collect()
+
+            final_attempt_idx = attempt if accepted else -1
+            hook_end_section(
+                final_midi_path=f"section_{section_idx}.mid",
+                final_accept_attempt=final_attempt_idx,
+                kv_cache_reused=False
+            )
 
         if primer_midi_obj is not None:
             logger.info("🧵 Stitching user primer with generated continuation...")
