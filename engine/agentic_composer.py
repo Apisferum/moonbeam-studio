@@ -69,7 +69,7 @@ class AgenticComposer:
         self.llm = LLMWrapper()
         
         self.use_planner = use_planner
-        self.use_motif_memory = use_motif_memory
+        self.use_motif_memory = False
         self.use_ties = use_ties
         self.use_soft_refiner = use_soft_refiner
         self.use_hard_scorer = use_hard_scorer
@@ -164,7 +164,11 @@ class AgenticComposer:
             duration_beats = event.get('duration_beats', 0.25)
             target_duration_ticks = max(1, int(round(duration_beats * beat_duration_ticks)))
             stream.append({
+                "octave_tok": self.tokenizer.octave_dict.get(event['octave'], 0),
                 "pitch_tok": self.tokenizer.pitch_dict.get(event['pitch_class'], 0),
+                "instrument_tok": self.tokenizer.instrument_dict.get(event['instrument_program'], 0),
+                "target_tick": target_tick,
+                "target_duration_ticks": target_duration_ticks,
             })
         return [stream]
 
@@ -229,6 +233,12 @@ class AgenticComposer:
             # the separate "No notes generated" failures also showing up
             # on primer-continued sections, which the offset fix wasn't            initial_queue_len = len(forced_streams[0]) if forced_streams else 0
             all_generated_tokens = []
+            bpm = section.get("bpm", 120)
+            bars = section.get("bars", 8)
+            beats_per_bar = section.get("beats_per_bar", 4) or 4
+            seconds = (bars * beats_per_bar) / (bpm / 60.0)
+            max_ticks = int(seconds * TICKS_PER_SECOND * 1.10)
+
             current_primer = primer_tokens
             chunk_count = 0
             max_chunks = 3
@@ -261,6 +271,31 @@ class AgenticComposer:
                 if not safe_tokens or len(safe_tokens) == 0:
                     logger.warning(f"   ↳ [SlidingWindow] Chunk {chunk_count} generated empty tokens. Stopping chunk loop.")
                     break
+
+                if self.use_soft_refiner:
+                    # Shift down locally to 0-indexed section time for refinement
+                    shifted_chunk = []
+                    for tok in safe_tokens:
+                        if len(tok) == 6:
+                            shifted_chunk.append([max(0, tok[0] - primer_offset_ticks), tok[1], tok[2], tok[3], tok[4], tok[5]])
+                        else:
+                            shifted_chunk.append(tok)
+                    
+                    # Refine the local shifted chunk
+                    refined_chunk = self.refiner.refine_tokens(
+                        shifted_chunk, root_note=section.get("key", "C"), mode=section.get("mode", "major"),
+                        max_section_ticks=max_ticks, mood=section.get("mood", "calm"),
+                        ties_weights=section.get("ties_weights"),
+                        protected_pcs=set(section.get("protected_pcs", []))
+                    )
+                    
+                    # Shift back up to absolute primer scale
+                    safe_tokens = []
+                    for tok in refined_chunk:
+                        if len(tok) == 6:
+                            safe_tokens.append([tok[0] + primer_offset_ticks, tok[1], tok[2], tok[3], tok[4], tok[5]])
+                        else:
+                            safe_tokens.append(tok)
 
                 all_generated_tokens.extend(safe_tokens)
 
@@ -358,29 +393,7 @@ class AgenticComposer:
             pre_refine_abs_times = [t[0] for t in safe_tokens if len(t) == 6]
 
             if self.use_soft_refiner:
-                safe_tokens = self.refiner.refine_tokens(
-                    safe_tokens, root_note=section.get("key", "C"), mode=section.get("mode", "major"),
-                    max_section_ticks=max_ticks, mood=section.get("mood", "calm"),
-                    ties_weights=section.get("ties_weights"),
-                    protected_pcs=set(section.get("protected_pcs", []))
-                )
-
-                # BUGFIX: the previous empty-token check (right after stripping
-                # the primer) only caught the model generating literally zero
-                # new tokens. It DIDN'T catch this: refine_tokens legitimately
-                # drops every token whose abs_time >= max_section_ticks (see
-                # SoftRefiner's `dropped_notes` counter). If the primer-onset
-                # shift a few lines up left every generated token's onset past
-                # the section boundary — plausible with a long/self-similar
-                # FAISS primer, which is exactly what happened here (Cosine Sim
-                # 1.00) — refine_tokens can legitimately return an EMPTY list,
-                # and nothing re-checked for that before compound_to_midi([])
-                # produced a MIDI file with zero note events, which THEN
-                # crashed three calls later inside pretty_midi's own
-                # constructor ("max() iterable argument is empty") — the same
-                # symptom as before, but reached through refine_tokens instead
-                # of the strip. Checking again here, right after the step that
-                # can actually cause it this time.
+                # Note: safe_tokens were already refined chunk-by-chunk inside the sliding window loop!
                 if not safe_tokens or len(safe_tokens) == 0:
                     abs_range = f"min={min(pre_refine_abs_times)} max={max(pre_refine_abs_times)}" if pre_refine_abs_times else "no 6-tuple tokens at all"
                     raise ValueError(
