@@ -15,6 +15,7 @@ class AttemptTrace:
     voice_leading_score: Optional[float] = None
     rhythm_match: Optional[float] = None
     inst_match: Optional[float] = None
+    generation_time: float = 0.0
 
 @dataclass
 class SectionTrace:
@@ -43,11 +44,31 @@ class PieceTrace:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> Dict[str, Any]:
-        return asdict(self)
+        return sanitize_for_json(asdict(self))
 
     def save(self, filepath: str):
         with open(filepath, 'w') as f:
             json.dump(self.to_dict(), f, indent=2)
+
+def sanitize_for_json(obj):
+    try:
+        import numpy as np
+        has_np = True
+    except ImportError:
+        has_np = False
+
+    if isinstance(obj, dict):
+        return {k: sanitize_for_json(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [sanitize_for_json(x) for x in obj]
+    elif has_np and isinstance(obj, (np.integer, np.int64, np.int32, np.int16, np.int8)):
+        return int(obj)
+    elif has_np and isinstance(obj, (np.floating, np.float64, np.float32, np.float16)):
+        return float(obj)
+    elif has_np and isinstance(obj, np.ndarray):
+        return sanitize_for_json(obj.tolist())
+    else:
+        return obj
 
     @classmethod
     def load(cls, filepath: str) -> 'PieceTrace':

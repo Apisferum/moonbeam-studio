@@ -8,6 +8,7 @@ import traceback
 import pretty_midi
 from collections import deque
 from typing import Dict, Any, List, Optional, Tuple
+import time
 
 from brain.llm_wrapper import LLMWrapper
 from brain.structure_planner import StructurePlanner
@@ -564,19 +565,21 @@ class AgenticComposer:
 
             for attempt in range(1, self.max_attempts + 1):
                 hook_log_ties_weights(weights)
+                attempt_start_time = time.time()
                 result = self._generate_and_score(
                     section, section_name, metadata_ids, active_primer, current_temp
                 )
+                attempt_latency = time.time() - attempt_start_time
 
                 if result is None:
-                    hook_log_attempt(attempt, current_temp, 0.0, {"metrics": {}, "feedback": "Attempt crashed/failed"}, False, 0)
+                    hook_log_attempt(attempt, current_temp, 0.0, {"metrics": {}, "feedback": "Attempt crashed/failed"}, False, 0, attempt_latency)
                     continue
 
                 polished_midi, score, feedback, gen_tokens = result
                 logger.info(f"   ↳ Attempt {attempt} | Score: {score:.2f} | {feedback.get('feedback', '')}")
 
                 token_count = len(gen_tokens) if gen_tokens else 0
-                hook_log_attempt(attempt, current_temp, score, feedback, score >= self.acceptance_threshold, token_count)
+                hook_log_attempt(attempt, current_temp, score, feedback, score >= self.acceptance_threshold, token_count, attempt_latency)
 
                 if score >= self.acceptance_threshold:
                     best_midi = polished_midi
