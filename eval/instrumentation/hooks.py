@@ -59,7 +59,7 @@ class TraceContext:
         if self.current_section:
             self.current_section.ties_weights = weights.copy()
 
-    def log_attempt(self, attempt_idx: int, temp: float, score: float, feedback: Dict[str, Any], accepted: bool, token_count: int):
+    def log_attempt(self, attempt_idx: int, temp: float, score: float, feedback: Dict[str, Any], accepted: bool, token_count: int, generation_time: float = 0.0):
         if self.current_section:
             metrics = feedback.get("metrics", {})
             attempt = AttemptTrace(
@@ -72,7 +72,8 @@ class TraceContext:
                 chord_match=metrics.get("chord_score"),
                 voice_leading_score=metrics.get("voice_leading_score"),
                 rhythm_match=metrics.get("rhythm_score"),
-                inst_match=metrics.get("inst_score")
+                inst_match=metrics.get("inst_score"),
+                generation_time=generation_time
             )
             self.current_section.attempts.append(dataclasses.asdict(attempt))
 
@@ -101,8 +102,8 @@ def hook_log_motif(name: str, similarity: float, idx: int):
 def hook_log_ties_weights(weights: Dict[str, float]):
     TraceContext.get_instance().log_ties_weights(weights)
 
-def hook_log_attempt(attempt_idx: int, temp: float, score: float, feedback: Dict[str, Any], accepted: bool, token_count: int):
-    TraceContext.get_instance().log_attempt(attempt_idx, temp, score, feedback, accepted, token_count)
+def hook_log_attempt(attempt_idx: int, temp: float, score: float, feedback: Dict[str, Any], accepted: bool, token_count: int, generation_time: float = 0.0):
+    TraceContext.get_instance().log_attempt(attempt_idx, temp, score, feedback, accepted, token_count, generation_time)
 
 def hook_end_section(final_midi_path: str, final_accept_attempt: int, kv_cache_reused: bool = False):
     TraceContext.get_instance().end_section(final_midi_path, final_accept_attempt, kv_cache_reused)
