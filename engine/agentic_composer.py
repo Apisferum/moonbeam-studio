@@ -536,7 +536,7 @@ class AgenticComposer:
 
         for section_idx, section in enumerate(timeline):
             section_name = section["section_name"]
-            logger.info(f"🎼 Composing Section: {section_name}...")
+            logger.info(f"🎼 Generating MIDI Notes for Section: {section_name}...")
 
             hook_start_section(section_idx, section_name, section)
 
