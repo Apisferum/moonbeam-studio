@@ -611,6 +611,8 @@ def main():
                 }
                 
                 # Save trace file
+                from eval.instrumentation.trace_schema import sanitize_for_json
+                piece_trace = sanitize_for_json(piece_trace)
                 with open(trace_json_path, 'w') as f:
                     json.dump(piece_trace, f, indent=2)
                 print(f"   ↳ Saved trace details to {trace_json_path}")
@@ -618,9 +620,10 @@ def main():
                 results[name].append(piece_trace)
 
     # Save aggregated results
+    from eval.instrumentation.trace_schema import sanitize_for_json
     agg_json_path = os.path.join(args.results_dir, "aggregate_metrics.json")
     with open(agg_json_path, 'w') as f:
-        json.dump(results, f, indent=2)
+        json.dump(sanitize_for_json(results), f, indent=2)
     print(f"\n🏆 Evaluation driver finished! Aggregated metrics saved to {agg_json_path}")
 
     # Build report tables
