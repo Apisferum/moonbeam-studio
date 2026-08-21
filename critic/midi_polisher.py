@@ -6,13 +6,12 @@ from typing import Optional, List
 from shared.music_theory_constants import logger, NOTE_MAP, CHORD_INTERVALS, ADAPTER_PROFILES
 from shared.gm_instruments import BASS_PROGRAMS, infer_role  # infer_role added for the performance layer below
 
-# GM's "Sound Effects" (96-103: rain, soundtrack, bird tweet, telephone,
-# helicopter, applause, gunshot, etc.) and "Sound Effects 2" (120-127:
-# guitar fret noise through gunshot) ranges are never a legitimate musical
-# choice for any genre this pipeline targets. A note landing here (e.g. the
-# "Percussion" → program 128 → clamped-to-127 "Gunshot" bug seen in
-# practice) gets remapped to Piano rather than left as an audible artifact.
-_JUNK_PROGRAM_RANGES = set(range(96, 104)) | set(range(120, 128))
+# GM's "Sound Effects 2" (120-127: guitar fret noise through gunshot) ranges 
+# are never a legitimate musical choice for any genre this pipeline targets. 
+# A note landing here (e.g. the "Percussion" → program 128 → clamped-to-127 
+# "Gunshot" bug) gets remapped to a cohesive active instrument. 
+# Synth FX (96-103) are preserved as they are musical synth pads.
+_JUNK_PROGRAM_RANGES = set(range(120, 128))
 _JUNK_FALLBACK_PROGRAM = 0  # Acoustic Grand Piano
 
 # ---------------------------------------------------------------------
@@ -117,14 +116,18 @@ class MIDIPolisher:
         rubato_amount = _RUBATO_BY_MOOD.get(mood_key, _DEFAULT_RUBATO)
         articulation_mood_mult = _ARTICULATION_MOOD_ADJUST.get(mood_key, 1.0)
 
+        # Get list of all non-junk programs in the MIDI object to use as cohesive fallback
+        active_clean_programs = [i.program for i in midi_obj.instruments if i.program not in _JUNK_PROGRAM_RANGES and not i.is_drum]
+        fallback_program = active_clean_programs[0] if active_clean_programs else _JUNK_FALLBACK_PROGRAM
+
         for inst in midi_obj.instruments:
             if inst.is_drum: continue
 
             # JUNK INSTRUMENT REMAP — see _JUNK_PROGRAM_RANGES above.
             if inst.program in _JUNK_PROGRAM_RANGES:
                 logger.warning(f"⚠️ [Polish] Instrument program {inst.program} is in GM's Sound Effects "
-                                f"range — remapping to Piano ({_JUNK_FALLBACK_PROGRAM}).")
-                inst.program = _JUNK_FALLBACK_PROGRAM
+                                f"range — remapping to cohesive fallback program ({fallback_program}).")
+                inst.program = fallback_program
 
             # Use functional BASS_PROGRAMS to protect Tuba (58) and Contrabass (43)
             is_bass = inst.program in BASS_PROGRAMS
