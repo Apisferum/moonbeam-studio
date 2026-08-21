@@ -21,9 +21,7 @@ if studio_root not in sys.path:
 codebase_root = os.environ.get("MOONBEAM_CODEBASE_PATH")
 
 if not codebase_root:
-    codebase_root = os.path.expanduser(
-        "~/moon/Moonbeam-MIDI-Foundation-Model"
-    )
+    codebase_root = os.path.abspath(os.path.join(studio_root, "..", "moonbeam-codebase"))
 
 if not os.path.isdir(codebase_root):
     raise FileNotFoundError(
@@ -77,6 +75,7 @@ def _autodiscover_checkpoints():
         workspace_root,
         os.path.join(workspace_root, "Moonbeam Pretrained Weights"),
         os.path.join(workspace_root, "moonbeam_chunk_20260716_140713"),
+        os.path.join(workspace_root, "moonbeam_chunk_20260817_155517"),
         os.path.join(workspace_root, "moonbeam-codebase"),
         os.path.join(workspace_root, "Moonbeam Multi-Task Data"),
         "d:/scmoe",
@@ -128,6 +127,8 @@ def _autodiscover_checkpoints():
                 ]
             elif env_key == "LORA_DIR":
                 candidates = [
+                    os.path.join(workspace_root, "moonbeam_chunk_20260716_140713"),
+                    os.path.join(workspace_root, "moonbeam_chunk_20260817_155517"),
                     os.path.join(workspace_root, "multi_task_lora"),
                     os.path.join(workspace_root, "moonbeam_checkpoint", "multi_task_lora"),
                     "/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/moonbeam_checkpoint/multi_task_lora"
