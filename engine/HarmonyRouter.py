@@ -9,8 +9,12 @@ if studio_root not in sys.path:
 codebase_root = os.environ.get("MOONBEAM_CODEBASE_PATH")
 if not codebase_root:
     codebase_root = os.path.abspath(os.path.join(studio_root, "..", "moonbeam-codebase"))
-if os.path.exists(codebase_root) and codebase_root not in sys.path:
-    sys.path.insert(0, codebase_root)
+if os.path.exists(codebase_root):
+    if codebase_root not in sys.path:
+        sys.path.insert(0, codebase_root)
+    src_dir = os.path.join(codebase_root, "src")
+    if os.path.exists(src_dir) and src_dir not in sys.path:
+        sys.path.insert(0, src_dir)
 
 import torch
 import logging
