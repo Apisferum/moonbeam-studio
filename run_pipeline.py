@@ -80,6 +80,8 @@ def _autodiscover_checkpoints():
                 ]
             elif env_key == "LORA_DIR":
                 candidates = [
+                    os.path.join(workspace_root, "moonbeam_chunk_20260716_140713"),
+                    os.path.join(workspace_root, "moonbeam_chunk_20260817_155517"),
                     os.path.join(workspace_root, "multi_task_lora"),
                     os.path.join(workspace_root, "moonbeam_checkpoint", "multi_task_lora"),
                     "/home/aashishbishow/moon/Moonbeam-MIDI-Foundation-Model/moonbeam_checkpoint/multi_task_lora"
