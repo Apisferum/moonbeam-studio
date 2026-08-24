@@ -307,6 +307,43 @@ class ChordRealizer:
         return events
 
     def _realize_voice(self, voice, tones, root_pc, bass_pc, start_beat, end_beat, density, thin_harmony=False):
+        if voice["program"] == DRUM_PROGRAM:
+            events = []
+            duration_beats = int(end_beat - start_beat)
+            for b in range(duration_beats):
+                bar_beat = b % 4
+                if bar_beat in (0, 2):
+                    events.append({
+                        "start_beat": start_beat + b, "instrument_name": voice["name"],
+                        "instrument_program": voice["program"], "octave": 3, "pitch_class": 0,
+                        "role": "drums", "duration_beats": 0.25,
+                    })
+                elif bar_beat in (1, 3):
+                    events.append({
+                        "start_beat": start_beat + b, "instrument_name": voice["name"],
+                        "instrument_program": voice["program"], "octave": 3, "pitch_class": 2,
+                        "role": "drums", "duration_beats": 0.25,
+                    })
+                
+                if density >= 0.5:
+                    events.append({
+                        "start_beat": start_beat + b, "instrument_name": voice["name"],
+                        "instrument_program": voice["program"], "octave": 3, "pitch_class": 6,
+                        "role": "drums", "duration_beats": 0.25,
+                    })
+                    events.append({
+                        "start_beat": start_beat + b + 0.5, "instrument_name": voice["name"],
+                        "instrument_program": voice["program"], "octave": 3, "pitch_class": 6,
+                        "role": "drums", "duration_beats": 0.25,
+                    })
+                else:
+                    events.append({
+                        "start_beat": start_beat + b, "instrument_name": voice["name"],
+                        "instrument_program": voice["program"], "octave": 3, "pitch_class": 6,
+                        "role": "drums", "duration_beats": 0.25,
+                    })
+            return events
+
         role = voice["role"]
         octave = min(default_octave_for_role(role), self.max_octave)
         duration_beats = max(1, int(end_beat - start_beat))
