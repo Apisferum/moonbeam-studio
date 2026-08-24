@@ -34,6 +34,63 @@ def _cuda_available() -> bool:
     try: return torch.cuda.is_available()
     except Exception: return False
 
+def sanitize_compound_tokens(tokens):
+    """
+    Sanitizes a list or numpy array of compound tokens to ensure they don't cause crashes 
+    in MusicTokenizer.compound_to_midi (ValueError: data byte must be in range 0..127 or channel must be in range 0..15).
+    """
+    if tokens is None:
+        return []
+    
+    if hasattr(tokens, 'tolist'):
+        tokens = tokens.tolist()
+        
+    sanitized = []
+    for row in tokens:
+        if len(row) != 6:
+            continue
+            
+        time_in_ticks, duration, octave, pitch, instrument, velocity = row
+        
+        # 1. Skip special/sentinel tokens (which have negative values)
+        if time_in_ticks < 0 or duration < 0 or octave < 0 or pitch < 0 or instrument < 0 or velocity < 0:
+            continue
+            
+        # 2. Clamp velocity to MIDI range (0..127)
+        velocity = max(0, min(127, int(velocity)))
+        
+        # 3. Clamp instrument to valid program range (0..127, or 128 for drums)
+        instrument = int(instrument)
+        if instrument != 128:
+            instrument = max(0, min(127, instrument))
+            
+        # 4. Clamp note pitch (octave * 12 + pitch) to MIDI range (0..127)
+        octave = max(0, min(10, int(octave)))
+        pitch = max(0, min(11, int(pitch)))
+        note = octave * 12 + pitch
+        if note > 127:
+            # Adjust octave down so note is <= 127
+            octave = (127 - pitch) // 12
+            
+        sanitized.append([int(time_in_ticks), int(duration), int(octave), int(pitch), instrument, velocity])
+        
+    # 5. Limit the number of unique non-drum instruments to 15 to avoid channel overflow (0..15)
+    non_drum_insts = [row[4] for row in sanitized if row[4] != 128]
+    unique_non_drum = list(set(non_drum_insts))
+    
+    if len(unique_non_drum) > 15:
+        from collections import Counter
+        counts = Counter(non_drum_insts)
+        top_15 = [inst for inst, _ in counts.most_common(15)]
+        
+        # Map any other instrument to the closest top-15 instrument
+        for row in sanitized:
+            if row[4] != 128 and row[4] not in top_15:
+                closest = min(top_15, key=lambda x: abs(x - row[4]))
+                row[4] = closest
+
+    return sanitized
+
 class AgenticComposer:
     def __init__(self, harmonyrouter, acceptance_threshold: float = 0.55,
                  max_primer_tokens: Optional[int] = None,
@@ -269,6 +326,9 @@ class AgenticComposer:
                         merged_tokens.extend(group)
                     safe_tokens = merged_tokens
 
+                # Sanitize tokens to discard invalid special tokens and clamp values
+                safe_tokens = sanitize_compound_tokens(safe_tokens)
+
                 if not safe_tokens or len(safe_tokens) == 0:
                     logger.warning(f"   ↳ [SlidingWindow] Chunk {chunk_count} generated empty tokens. Stopping chunk loop.")
                     break
@@ -414,6 +474,8 @@ class AgenticComposer:
             # 50 ticks/beat * 2 beats/sec at 120 BPM = 100 ticks/sec. This
             # is self-consistent regardless of the section's actual
             # musical bpm; nothing to fix here.
+            # Sanitize final combined tokens to ensure no out-of-range notes or too many instruments
+            safe_tokens = sanitize_compound_tokens(safe_tokens)
             raw_midi_mido = self.tokenizer.compound_to_midi(safe_tokens)
             buffer = io.BytesIO()
             raw_midi_mido.save(file=buffer)
