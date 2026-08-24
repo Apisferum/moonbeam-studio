@@ -53,15 +53,21 @@ class HardScorer:
         section_end_time = bars * beats_per_bar * beat_duration
         chord_timeline = blueprint.get("chord_timeline", [])
 
+        section_type = section_name.lower()
+        is_intro_or_outro = "intro" in section_type or "outro" in section_type
+
         if "target_chords" in blueprint and blueprint["target_chords"]:
             chord_score, chord_fb = self._score_chord_and_bass(
-                midi_obj, blueprint["target_chords"], chord_timeline, section_end_time, beat_duration, beats_per_bar
+                midi_obj, blueprint["target_chords"], chord_timeline, section_end_time, beat_duration, beats_per_bar,
+                is_intro_or_outro=is_intro_or_outro
             )
             metrics["chord_score"] = chord_score
             feedback_strs.append(chord_fb)
 
         if "target_instruments" in blueprint and blueprint["target_instruments"]:
-            inst_score, inst_fb = self._score_instruments_and_register(midi_obj, blueprint["target_instruments"])
+            inst_score, inst_fb = self._score_instruments_and_register(
+                midi_obj, blueprint["target_instruments"], is_intro_or_outro=is_intro_or_outro
+            )
             metrics["inst_score"] = inst_score
             feedback_strs.append(inst_fb)
 
@@ -78,6 +84,8 @@ class HardScorer:
             weights = {"chord": 0.3, "inst": 0.3, "voice_leading": 0.1, "rhythm": 0.3}
         elif "bridge" in section_type:
             weights = {"chord": 0.3, "inst": 0.2, "voice_leading": 0.3, "rhythm": 0.2}
+        elif "intro" in section_type or "outro" in section_type:
+            weights = {"chord": 0.2, "inst": 0.2, "voice_leading": 0.3, "rhythm": 0.3}
         else:
             weights = {"chord": 0.4, "inst": 0.2, "voice_leading": 0.2, "rhythm": 0.2}
 
@@ -95,7 +103,7 @@ class HardScorer:
     # ------------------------------------------------------------------
     def _score_chord_and_bass(self, midi_obj: pretty_midi.PrettyMIDI, target_chords: List[str],
                                chord_timeline: List[dict], section_end: float, beat_dur: float,
-                               beats_per_bar: int = 4) -> Tuple[float, str]:
+                               beats_per_bar: int = 4, is_intro_or_outro: bool = False) -> Tuple[float, str]:
         all_notes = []
         for inst in midi_obj.instruments:
             if not inst.is_drum:
@@ -116,21 +124,41 @@ class HardScorer:
                 downbeat_time = event["start"]
                 # 🚀 FIX: Widen window to catch rubato/strummed chords
                 active_notes = [n for n in all_notes if n.start <= downbeat_time + 0.3 and n.end > downbeat_time - 0.1]
+                
+                # In intros/outros, we allow silence or fade outs/ins, so if no notes are active, we skip scoring this step
+                if is_intro_or_outro and not active_notes:
+                    continue
+                    
                 total_checked += 1
                 if active_notes:
-                    lowest_note = min(active_notes, key=lambda n: n.pitch)
-                    if lowest_note.pitch % 12 == root_pc:
-                        matches += 1
+                    if is_intro_or_outro:
+                        # Lenient match: check if root note is present anywhere in the chord stack
+                        if any(n.pitch % 12 == root_pc for n in active_notes):
+                            matches += 1
+                    else:
+                        lowest_note = min(active_notes, key=lambda n: n.pitch)
+                        if lowest_note.pitch % 12 == root_pc:
+                            matches += 1
         else:
             root_pcs = [self._get_root_pc(c) for c in target_chords if self._get_root_pc(c) != -1]
             for i, target_root in enumerate(root_pcs):
                 downbeat_time = i * beats_per_bar * beat_dur
                 active_notes = [n for n in all_notes if n.start <= downbeat_time + 0.3 and n.end > downbeat_time - 0.1]
+                
+                # In intros/outros, we allow silence or fade outs/ins, so if no notes are active, we skip scoring this step
+                if is_intro_or_outro and not active_notes:
+                    continue
+                    
                 total_checked += 1
                 if active_notes:
-                    lowest_note = min(active_notes, key=lambda n: n.pitch)
-                    if lowest_note.pitch % 12 == target_root:
-                        matches += 1
+                    if is_intro_or_outro:
+                        # Lenient match: check if root note is present anywhere in the chord stack
+                        if any(n.pitch % 12 == target_root for n in active_notes):
+                            matches += 1
+                    else:
+                        lowest_note = min(active_notes, key=lambda n: n.pitch)
+                        if lowest_note.pitch % 12 == target_root:
+                            matches += 1
 
         score = matches / total_checked if total_checked > 0 else 1.0
         return score, f"Chord/Bass Match: {score*100:.0f}%"
@@ -163,7 +191,7 @@ class HardScorer:
     # ------------------------------------------------------------------
     # INSTRUMENT DENSITY & REGISTER SEPARATION
     # ------------------------------------------------------------------
-    def _score_instruments_and_register(self, midi_obj: pretty_midi.PrettyMIDI, target_instruments: List[str]) -> Tuple[float, str]:
+    def _score_instruments_and_register(self, midi_obj: pretty_midi.PrettyMIDI, target_instruments: List[str], is_intro_or_outro: bool = False) -> Tuple[float, str]:
         generated_programs = [inst.program for inst in midi_obj.instruments if not inst.is_drum]
         has_drum_track = any(inst.is_drum for inst in midi_obj.instruments)
 
@@ -201,6 +229,10 @@ class HardScorer:
         mud_penalty = min(mud_penalty, 0.5)
 
         base_score = found_families / total_families if total_families > 0 else 1.0
+        if is_intro_or_outro and found_families > 0:
+            # Give a leniency boost to sparse arrangements
+            base_score = 0.5 + (base_score * 0.5)
+
         final_score = max(0.0, base_score - mud_penalty)
         return final_score, f"Inst: {found_families}/{total_families} (Mud Penalty: {mud_penalty:.1f})"
 
