@@ -707,52 +707,32 @@ class AgenticComposer:
                 )
                 last_accepted_midi = best_midi
 
-            for inst in best_midi.instruments:
-                new_inst = pretty_midi.Instrument(program=inst.program, is_drum=inst.is_drum, name=inst.name)
-                for note in inst.notes:
-                    new_inst.notes.append(pretty_midi.Note(
-                        velocity=note.velocity, pitch=note.pitch,
-                        start=note.start + current_time_offset, end=note.end + current_time_offset,
-                    ))
-                final_midi.instruments.append(new_inst)
-
-            actual_end_time = 0.0
-            for inst in best_midi.instruments:
-                if inst.notes:
-                    actual_end_time = max(actual_end_time, max(n.end for n in inst.notes))
-
-            # BUGFIX (schedule-blowout cap): a single stray note with an
-            # anomalously large end time — a residual artifact even after
-            # every generation-side timing fix, e.g. from the model's
-            # completely unconstrained free-generation tail once the
-            # forced queue empties — used to blow up actual_end_time
-            # arbitrarily. Since current_time_offset accumulates across
-            # EVERY section, one bad outlier note in one section pushes
-            # every SUBSEQUENT section's start time forward by the same
-            # huge amount. This is exactly what a real assembled song
-            # showed: large stretches of near-total silence between
-            # sections, with a later section's content all crammed into a
-            # few seconds far later than it should have started. Capping
-            # actual_end_time at a generous multiple of the section's own
-            # INTENDED duration (already known precisely) bounds how much
-            # damage one outlier note can do to the rest of the song's
-            # schedule, without discarding any of the section's own notes
-            # — this only affects the OFFSET calculation for what comes
-            # after, not the notes actually written into final_midi above.
             bpm = section.get("bpm", 120)
             bars = section.get("bars", 8)
             beats_per_bar = section.get("beats_per_bar", 4) or 4
             intended_seconds = (bars * beats_per_bar) / (bpm / 60.0)
-            max_reasonable_end = max(intended_seconds * 2.0, 5.0)
-            if actual_end_time > max_reasonable_end:
-                logger.warning(
-                    f"⚠️ [Assembly] '{section_name}' actual_end_time={actual_end_time:.2f}s far exceeds "
-                    f"its intended duration ({intended_seconds:.2f}s) — capping to {max_reasonable_end:.2f}s "
-                    f"so this section's own timing drift doesn't push every later section's schedule "
-                    f"forward by the same huge amount. The section's actual notes are unaffected; only "
-                    f"where the NEXT section starts is."
-                )
-            current_time_offset += actual_end_time + 0.2
+
+            for inst in best_midi.instruments:
+                # Merge notes into existing instrument track with same program and is_drum to prevent disjoint tracks
+                existing_inst = next((i for i in final_midi.instruments if i.program == inst.program and i.is_drum == inst.is_drum), None)
+                if existing_inst is None:
+                    existing_inst = pretty_midi.Instrument(program=inst.program, is_drum=inst.is_drum, name=inst.name)
+                    final_midi.instruments.append(existing_inst)
+                
+                for note in inst.notes:
+                    # Clip notes that extend excessively past the section boundary to keep them clean
+                    note_start = note.start + current_time_offset
+                    note_end = note.end + current_time_offset
+                    # Allow a small 0.5 second overlap for natural ring-out/sustain decay
+                    if note_start < current_time_offset + intended_seconds:
+                        note_end = min(note_end, current_time_offset + intended_seconds + 0.5)
+                        existing_inst.notes.append(pretty_midi.Note(
+                            velocity=note.velocity, pitch=note.pitch,
+                            start=note_start, end=note_end
+                        ))
+
+            # Metric-based precise offset to ensure beat-level alignment across sections (no disjoint/broken tempos)
+            current_time_offset += intended_seconds
 
             # Clean up TIES cache, GPU VRAM, and trigger garbage collection between section runs
             self.harmonyrouter.clear_ties_cache()
