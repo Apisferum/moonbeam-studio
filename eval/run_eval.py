@@ -2,6 +2,7 @@ import os
 import sys
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
+import orjson
 import json
 import argparse
 import subprocess
@@ -555,6 +556,7 @@ def main():
                 print("   ↳ Computing metrics...")
                 
                 # Diatonic harmony adherence (average across sections)
+                print("   ↳ Calculating harmony adherence...")
                 harmonies = [harmony_consistency(out_midi_path) for s in piece_trace["sections"]]
                 
                 # Calculate chord match rates based on planned blueprint
@@ -610,20 +612,26 @@ def main():
                     "density_r2": float(np.mean(density_r2_scores)) if density_r2_scores else 0.0
                 }
                 
-                # Save trace file
-                from eval.instrumentation.trace_schema import sanitize_for_json
-                piece_trace = sanitize_for_json(piece_trace)
-                with open(trace_json_path, 'w') as f:
-                    json.dump(piece_trace, f, indent=2)
+                with open(trace_json_path, "wb") as f:
+                    f.write(
+                        orjson.dumps(
+                            piece_trace,
+                            option=orjson.OPT_INDENT_2 | orjson.OPT_SERIALIZE_NUMPY
+                        )
+                    )
                 print(f"   ↳ Saved trace details to {trace_json_path}")
                 
                 results[name].append(piece_trace)
 
     # Save aggregated results
-    from eval.instrumentation.trace_schema import sanitize_for_json
     agg_json_path = os.path.join(args.results_dir, "aggregate_metrics.json")
-    with open(agg_json_path, 'w') as f:
-        json.dump(sanitize_for_json(results), f, indent=2)
+    with open(agg_json_path, "wb") as f:
+        f.write(
+            orjson.dumps(
+                results,
+                option=orjson.OPT_INDENT_2 | orjson.OPT_SERIALIZE_NUMPY
+            )
+        )
     print(f"\n🏆 Evaluation driver finished! Aggregated metrics saved to {agg_json_path}")
 
     # Build report tables
