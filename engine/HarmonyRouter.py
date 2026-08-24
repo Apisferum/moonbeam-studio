@@ -384,7 +384,8 @@ class HarmonyRouter:
     def generate(self, metadata_ids: list, primer_tokens: list = None, max_gen_len: int = 512,
                  temperature: float = 0.8, top_p: float = 0.9,
                  bpm: int = 120, num_measures: int = 8, time_signature: str = "4/4",
-                 forced_token_streams: list = None, note_events: list = None):
+                 forced_token_streams: list = None, note_events: list = None,
+                 past_key_values = None):
         if self.use_mock:
             print("🎭 [HarmonyRouter] (Mock Mode) generating tokens...")
             tokens = []
@@ -403,7 +404,7 @@ class HarmonyRouter:
                 # Generate a few dummy notes if no forced stream
                 for i in range(4):
                     tokens.append([i * 100, 50, 4, i * 2, 0, 90])
-            return tokens
+            return tokens, None
         
         if not metadata_ids:
             metadata_ids = [-4] * 11
@@ -432,14 +433,16 @@ class HarmonyRouter:
             temperature=temperature, top_p=top_p,
             condition_token_lengths=[len(primer_tokens) if primer_tokens else 1],
             chord_dict=None, if_return_chords=False, forced_token_streams=forced_token_streams,
+            past_key_values=past_key_values,
         )
 
         gen_data = results[0]
+        out_kv = gen_data.get("past_key_values", None)
         if 'tokens' in gen_data:
-            return gen_data['tokens']
+            return gen_data['tokens'], out_kv
         if 'generation' in gen_data and isinstance(gen_data['generation'], dict):
-            return gen_data['generation'].get('tokens', gen_data['generation'].get('content', None))
-        return gen_data.get('content', None)
+            return gen_data['generation'].get('tokens', gen_data['generation'].get('content', None)), out_kv
+        return gen_data.get('content', None), out_kv
 
     def save_generation_metadata(self, filepath: str, metadata: dict):
         _write_json(filepath, metadata)

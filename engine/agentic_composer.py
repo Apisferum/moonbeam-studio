@@ -231,8 +231,9 @@ class AgenticComposer:
         return [stream]
 
     def _generate_and_score(self, section: Dict[str, Any], section_name: str,
-                             metadata_ids: List[int], primer_tokens, temperature: float
-                             ) -> Optional[Tuple[pretty_midi.PrettyMIDI, float, dict, list]]:
+                             metadata_ids: List[int], primer_tokens, temperature: float,
+                             past_key_values = None
+                             ) -> Optional[Tuple[pretty_midi.PrettyMIDI, float, dict, list, Any]]:
         try:
             note_events = section.get("note_events", [])
             # Computed here (not just later, at the post-hoc shift step) so
@@ -308,12 +309,14 @@ class AgenticComposer:
                     f"(queue size: {len(forced_streams[0]) if forced_streams else 0})"
                 )
 
-                raw_tokens = self.harmonyrouter.generate(
+                raw_tokens, out_kv = self.harmonyrouter.generate(
                     metadata_ids=metadata_ids, primer_tokens=current_primer,
                     max_gen_len=section.get("max_tokens", 256), temperature=temperature, top_p=0.9,
                     bpm=section.get("bpm", 120), num_measures=section.get("bars", 8),
-                    forced_token_streams=forced_streams
+                    forced_token_streams=forced_streams,
+                    past_key_values=past_key_values
                 )
+                past_key_values = out_kv
 
                 safe_tokens = raw_tokens.tolist() if hasattr(raw_tokens, 'tolist') else raw_tokens
 
@@ -518,7 +521,7 @@ class AgenticComposer:
             else:
                 score = 1.0
                 feedback = {"feedback": "HardScorer disabled", "metrics": {}}
-            return polished_midi, score, feedback, safe_tokens
+            return polished_midi, score, feedback, safe_tokens, out_kv
 
         except Exception as e:
             # Was just str(e) — enough to know THAT something failed, not
@@ -595,6 +598,7 @@ class AgenticComposer:
         final_midi = pretty_midi.PrettyMIDI(initial_tempo=song_bpm)
         current_time_offset = 0.0
         last_accepted_midi = None
+        self.current_kv = None
 
         for section_idx, section in enumerate(timeline):
             section_name = section["section_name"]
@@ -625,11 +629,13 @@ class AgenticComposer:
             weights = section.get("ties_weights", {"commu_lora": 0.35, "emopia_lora": 0.25, "slakh_lora": 0.40}).copy()
             self.harmonyrouter.set_weights(weights)
 
+            best_kv_cache = None
             for attempt in range(1, self.max_attempts + 1):
                 hook_log_ties_weights(weights)
                 attempt_start_time = time.time()
                 result = self._generate_and_score(
-                    section, section_name, metadata_ids, active_primer, current_temp
+                    section, section_name, metadata_ids, active_primer, current_temp,
+                    past_key_values=self.current_kv
                 )
                 attempt_latency = time.time() - attempt_start_time
 
@@ -637,7 +643,7 @@ class AgenticComposer:
                     hook_log_attempt(attempt, current_temp, 0.0, {"metrics": {}, "feedback": "Attempt crashed/failed"}, False, 0, attempt_latency)
                     continue
 
-                polished_midi, score, feedback, gen_tokens = result
+                polished_midi, score, feedback, gen_tokens, out_kv = result
                 logger.info(f"   ↳ Attempt {attempt} | Score: {score:.2f} | {feedback.get('feedback', '')}")
 
                 token_count = len(gen_tokens) if gen_tokens else 0
@@ -647,12 +653,17 @@ class AgenticComposer:
                     best_midi = polished_midi
                     best_score = score
                     last_accepted_midi = polished_midi
+                    self.current_kv = out_kv
                     if self.use_motif_memory:
                         self.motif_memory.save_section(polished_midi, section, tokens=gen_tokens)
                     accepted = True
                     break
                 else:
-                    if score > best_score: best_score = score; best_midi = polished_midi; best_feedback = feedback
+                    if score > best_score:
+                        best_score = score
+                        best_midi = polished_midi
+                        best_feedback = feedback
+                        best_kv_cache = out_kv
                     metrics = feedback.get("metrics", {})
                     if self.use_ties:
                         weights = section.get("ties_weights", {"commu_lora": 0.35, "emopia_lora": 0.25, "slakh_lora": 0.40}).copy()
@@ -706,6 +717,7 @@ class AgenticComposer:
                     f"using best-of-{self.max_attempts} (score={best_score:.2f}) instead."
                 )
                 last_accepted_midi = best_midi
+                self.current_kv = best_kv_cache
 
             for inst in best_midi.instruments:
                 new_inst = pretty_midi.Instrument(program=inst.program, is_drum=inst.is_drum, name=inst.name)
@@ -760,11 +772,12 @@ class AgenticComposer:
                 torch.cuda.empty_cache()
             gc.collect()
 
+            reused_flag = (self.current_kv is not None and active_primer is not None)
             final_attempt_idx = attempt if accepted else -1
             hook_end_section(
                 final_midi_path=f"section_{section_idx}.mid",
                 final_accept_attempt=final_attempt_idx,
-                kv_cache_reused=False
+                kv_cache_reused=reused_flag
             )
 
         if primer_midi_obj is not None:
