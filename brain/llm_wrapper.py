@@ -14,26 +14,25 @@ logger = logging.getLogger(__name__)
 # THE STUDIO PALETTE (The ONLY instruments the LLM is allowed to pick)
 # =====================================================================
 STUDIO_INSTRUMENTS = [
-    "Piano", "Electric Piano", "Organ", "Harpsichord",
-    "Acoustic Guitar", "Electric Guitar", "Bass", "Synth Bass",
-    "Violin", "Cello", "Strings", "Synth Strings",
-    "Trumpet", "Trombone", "French Horn", "Brass",
-    "Sax", "Clarinet", "Flute", "Oboe",
-    "Synth Lead", "Synth Pad", "Choir",
-    "Drums", "Percussion"
+    "Violin", "Viola", "Cello", "Double Bass",
+    "Clarinet", "Flute", "Oboe", "Bassoon",
+    "Trumpet", "Trombone", "French Horn", "Tuba",
+    "Percussion"
 ]
 
 # fallback bucket for instruments the fuzzy matcher can't place —
 # prevents an LLM-named instrument from silently vanishing from the section
 INSTRUMENT_FALLBACK_KEYWORDS = {
+    "piano": "Violin", "keyboard": "Violin", "organ": "French Horn",
+    "guitar": "Cello", "bass": "Double Bass", "synth": "Violin",
     "marimba": "Percussion", "xylophone": "Percussion", "timpani": "Percussion",
     "vibraphone": "Percussion", "bongo": "Percussion", "conga": "Percussion",
-    "banjo": "Acoustic Guitar", "ukulele": "Acoustic Guitar", "mandolin": "Acoustic Guitar",
-    "theremin": "Synth Lead", "moog": "Synth Lead", "vocoder": "Synth Lead",
-    "accordion": "Organ", "harmonium": "Organ",
-    "tuba": "Brass", "euphonium": "Brass",
-    "bagpipe": "Oboe", "harmonica": "Oboe",
-    "vocal": "Choir", "voice": "Choir",
+    "tuba": "Tuba", "euphonium": "Tuba",
+    "sax": "Clarinet", "oboe": "Oboe", "flute": "Flute",
+    "violin": "Violin", "cello": "Cello", "bassoon": "Bassoon",
+    "trumpet": "Trumpet", "trombone": "Trombone", "horn": "French Horn",
+    "vocal": "Oboe", "voice": "Oboe", "choir": "French Horn",
+    "drums": "Percussion", "drum": "Percussion"
 }
 
 
@@ -237,7 +236,7 @@ class SongIntent(BaseModel):
                     f"Use 3/4 for waltzes and minuets, 6/8 or 9/8 for compound/lilting meters, 4/4 as the default for pop/cinematic."
     )
     style: str = Field("cinematic", description="Musical style: cinematic, pop, jazz, electronic, classical, orchestral, symphonic")
-    lead_instrument: str = Field("Piano", description=f"The primary instrument. MUST be exactly one of: {', '.join(STUDIO_INSTRUMENTS)}")
+    lead_instrument: str = Field("Violin", description=f"The primary instrument. MUST be exactly one of: {', '.join(STUDIO_INSTRUMENTS)}")
     energy_curve: str = Field("build", description="Overall energy arc: 'build', 'flat', or 'fade'")
     modulations: List[ModulationIntent] = Field(default_factory=list)
     sections: List[SectionIntent] = Field(description="Ordered list of song sections")
@@ -245,10 +244,10 @@ class SongIntent(BaseModel):
     @field_validator('lead_instrument', mode='before')
     @classmethod
     def enforce_lead_instrument(cls, v: str) -> str:
-        if not v:
-            return "Piano"
+                if not v:
+            return "Violin"
         matched = _match_studio_instrument(v)
-        return matched or "Piano"
+        return matched or "Violin"
 
     @field_validator('global_time_signature', mode='before')
     @classmethod
@@ -524,13 +523,13 @@ class LLMWrapper:
     def _rule_based_fallback(self, user_prompt: str) -> dict:
         p = user_prompt.lower()
 
-        instrument_keywords = {
-            "guitar": "Acoustic Guitar", "piano": "Piano", "violin": "Violin", "cello": "Cello",
-            "flute": "Flute", "sax": "Sax", "trumpet": "Trumpet", "strings": "Strings",
-            "synth": "Synth Lead", "organ": "Organ", "drum": "Drums", "bass": "Bass",
-            "choir": "Choir", "horn": "French Horn", "brass": "Brass"
+                instrument_keywords = {
+            "violin": "Violin", "cello": "Cello", "viola": "Viola", "double bass": "Double Bass",
+            "bass": "Double Bass", "clarinet": "Clarinet", "flute": "Flute", "oboe": "Oboe",
+            "bassoon": "Bassoon", "trumpet": "Trumpet", "trombone": "Trombone", "horn": "French Horn",
+            "tuba": "Tuba", "guitar": "Cello", "piano": "Violin", "synth": "Violin", "drums": "Percussion"
         }
-        lead_instrument = "Piano"
+        lead_instrument = "Violin"
         for kw, name in instrument_keywords.items():
             if kw in p:
                 lead_instrument = name
@@ -595,8 +594,8 @@ class LLMWrapper:
             "modulations": [],
             "sections": [
                 {"name": "Intro", "mood": primary_mood, "length": "short", "instruments": [lead_instrument]},
-                {"name": "Verse", "mood": primary_mood, "length": "medium", "instruments": [lead_instrument, "Bass"]},
-                {"name": "Chorus", "mood": "heroic" if primary_mood != "calm" else "calm", "length": "long", "instruments": [lead_instrument, "Bass", "Strings", "Drums"]},
+                {"name": "Verse", "mood": primary_mood, "length": "medium", "instruments": [lead_instrument, "Double Bass"]},
+                {"name": "Chorus", "mood": "heroic" if primary_mood != "calm" else "calm", "length": "long", "instruments": [lead_instrument, "Double Bass", "Cello", "Percussion"]},
                 {"name": "Outro", "mood": "calm", "length": "short", "instruments": [lead_instrument]},
             ],
         }
