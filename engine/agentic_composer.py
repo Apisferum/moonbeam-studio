@@ -623,7 +623,7 @@ class AgenticComposer:
             best_midi = None
             best_score = -1.0
             best_feedback = {}
-            current_temp = 0.85
+            current_temp = 0.75
             accepted = False
 
             # Initialize weights for this section (Bugfix: start fresh for each section)
@@ -688,8 +688,8 @@ class AgenticComposer:
                         if total > 0: weights = {k: v / total for k, v in weights.items()}
                         self.harmonyrouter.set_weights(weights)
                     
-                    if metrics.get("rhythm_score", 1.0) < 0.70:
-                        current_temp = max(0.4, current_temp - 0.15)
+                    # Reduce temperature on retry to increase structural and chord adherence
+                    current_temp = max(0.4, current_temp - 0.10)
 
             if best_midi is None:
                 logger.error(f"⚠️ Section '{section_name}' failed. Skipping.")
