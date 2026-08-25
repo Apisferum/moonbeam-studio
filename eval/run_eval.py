@@ -580,20 +580,18 @@ def main():
                 current_offset_seconds = 0.0
                 for idx, s_trace in enumerate(piece_trace["sections"]):
                     target_template = s_trace.get("blueprint_rhythm_template", [])
-                    if idx < len(prompt["sections"]):
-                        p_sec = prompt["sections"][idx]
-                        bpm = prompt.get("global_bpm", 120)
-                        length_str = p_sec.get("length", "medium")
-                        bars = 8
-                        if length_str == "short":
-                            bars = 4
-                        elif length_str == "medium":
-                            bars = 8
-                        elif length_str == "long":
-                            bars = 16
+                    bpm = prompt.get("global_bpm", 120)
+                    bars = 8
+                    if blueprint and "timeline" in blueprint and idx < len(blueprint["timeline"]):
+                        bp_sec = blueprint["timeline"][idx]
+                        bpm = bp_sec.get("bpm", bpm)
+                        bars = bp_sec.get("bars", bars)
                     else:
-                        bpm = 120
-                        bars = 8
+                        if idx < len(prompt["sections"]):
+                            p_sec = prompt["sections"][idx]
+                            length_str = p_sec.get("length", "medium")
+                            raw_bars = {"short": 4, "medium": 8, "long": 16}.get(length_str, 8)
+                            bars = max(4, int(raw_bars * 1.5))
 
                     res_density = density_adherence_metrics(
                         out_midi_path, 
