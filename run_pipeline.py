@@ -166,6 +166,8 @@ def _chunk_and_render_ddsp(midi_path, ddsp_output_dir, env, chunk_seconds=20.0, 
 
         chunk_pm = pretty_midi.PrettyMIDI()
         for inst in pm.instruments:
+            if inst.is_drum:
+                continue
             new_inst = pretty_midi.Instrument(program=inst.program, is_drum=inst.is_drum, name=inst.name)
             for note in inst.notes:
                 if note.start < end and note.end > start:
