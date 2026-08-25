@@ -305,6 +305,13 @@ def main():
             print("⚠️ midi_ddsp_synthesize CLI not found in PATH.")
         except subprocess.TimeoutExpired:
             print("⚠️ DDSP synthesis timed out.")
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️ DDSP rendering failed with exit code {e.returncode}.")
+            print("--- DDSP Stdout ---")
+            print(e.stdout)
+            print("--- DDSP Stderr ---")
+            print(e.stderr)
+            print("-------------------")
         except Exception as e:
             print(f"⚠️ DDSP rendering failed ({e}).")
 
