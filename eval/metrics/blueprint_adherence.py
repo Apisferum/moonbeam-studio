@@ -170,7 +170,7 @@ def orchestration_match(midi_path: str, blueprint_instruments: List[str]) -> Dic
         return {"precision": 0.0, "recall": 0.0, "f1": 0.0}
 
 
-def density_adherence_metrics(midi_path: str, blueprint_rhythm_template: List[float], bpm: float, bars: int, beats_per_bar: int = 4) -> Dict[str, float]:
+def density_adherence_metrics(midi_path: str, blueprint_rhythm_template: List[float], bpm: float, bars: int, beats_per_bar: int = 4, time_offset: float = 0.0) -> Dict[str, float]:
     """
     Computes MSE, RMSE, MAE, and R^2 between the blueprint's target density/rhythm template (y_true)
     and the actual generated MIDI's note density per bar (y_pred).
@@ -202,8 +202,8 @@ def density_adherence_metrics(midi_path: str, blueprint_rhythm_template: List[fl
         step_duration = (bars * bar_duration) / max(1, n_steps)
         
         for i in range(n_steps):
-            start = i * step_duration
-            end = (i + 1) * step_duration
+            start = time_offset + i * step_duration
+            end = time_offset + (i + 1) * step_duration
             notes_in_step = sum(1 for n in all_notes if start <= n.start < end)
             
             # Normalize actual density: notes per beat, capped at 4.0 notes/beat (16th notes density)
