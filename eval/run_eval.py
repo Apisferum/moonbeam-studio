@@ -365,8 +365,7 @@ def main():
     parser.add_argument("--mock", action="store_true", help="Run in mock simulation mode")
     parser.add_argument("--prompts_limit", type=int, default=3, help="Max number of prompts to run")
     parser.add_argument("--results_dir", type=str, default="eval/results", help="Directory to save evaluation results")
-    parser.add_argument("--config", type=str, default=None, help="Only run this configuration (e.g., full_system, nosoft_nohard)")
-    parser.add_argument("--prompt_id", type=int, default=None, help="Only run this specific prompt ID")
+    parser.add_argument("--config", type=str, default=None, help="Specific configuration name to run (e.g. full_system, no_planner)")
     args = parser.parse_args()
 
     load_dotenv()
@@ -374,13 +373,7 @@ def main():
     os.makedirs(args.results_dir, exist_ok=True)
     os.makedirs(os.path.join(args.results_dir, "midi"), exist_ok=True)
 
-    if args.prompt_id is not None:
-        eval_set = [p for p in get_default_eval_set() if p["id"] == args.prompt_id]
-        if not eval_set:
-            print(f"❌ Prompt ID {args.prompt_id} not found in eval set.")
-            sys.exit(1)
-    else:
-        eval_set = get_default_eval_set()[:args.prompts_limit]
+    eval_set = get_default_eval_set()[:args.prompts_limit]
 
     configs = {
         "full_system": "eval/ablations/configs/full.yaml",
@@ -389,7 +382,6 @@ def main():
         "single_adapter": "eval/ablations/configs/single_adapter.yaml",
         "no_soft": "eval/ablations/configs/no_soft.yaml",
         "no_hard": "eval/ablations/configs/no_hard.yaml",
-        "nosoft_nohard": "eval/ablations/configs/nosoft_nohard.yaml",
         "vanilla_moonbeam": "eval/baselines/vanilla_moonbeam.py",
         "midi_rwkv": "eval/baselines/midi_rwkv_runner.py",
         "music_transformer": "eval/baselines/museformer_runner.py",
@@ -397,9 +389,9 @@ def main():
         "cascaded_diff": "eval/baselines/cascaded_diff_reimpl.py"
     }
 
-    if args.config is not None:
+    if args.config:
         if args.config not in configs:
-            print(f"❌ Configuration '{args.config}' not found. Available: {list(configs.keys())}")
+            print(f"❌ Invalid config name: {args.config}. Must be one of: {list(configs.keys())}")
             sys.exit(1)
         configs = {args.config: configs[args.config]}
 
