@@ -264,11 +264,11 @@ class AgenticComposer:
             primer_len = len(primer_tokens) if primer_tokens else 1
             if config_max_len is not None:
                 if requested_len + primer_len > config_max_len:
-                    logger.warning(
-                        f"⚠️ [MaxLen] '{section_name}' requested max_tokens={requested_len} "
+                    logger.info(
+                        f"ℹ️ [MaxLen] '{section_name}' requested max_tokens={requested_len} "
                         f"(+{primer_len} primer) = {requested_len + primer_len}, exceeding this "
-                        f"model's max_len={config_max_len}. Generation WILL be silently clamped down "
-                        f"to {max(0, config_max_len - primer_len)} note-positions regardless of budget."
+                        f"model's max_len={config_max_len}. This will be dynamically chunked using "
+                        f"sliding window generation (cap: 512 tokens per chunk)."
                     )
                 if note_events and len(note_events) > config_max_len:
                     logger.warning(
