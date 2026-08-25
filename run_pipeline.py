@@ -234,6 +234,38 @@ def main():
             os.makedirs(ddsp_output_dir, exist_ok=True)
 
             print("   🎻 Running Magenta DDSP (Neural Physics Synthesis)...")
+            print("   🎻 Preparing MIDI for DDSP (Mapping instruments)...")
+            temp_midi_path = output_path
+            try:
+                import pretty_midi
+                pm = pretty_midi.PrettyMIDI(output_path)
+                supported_ddsp_programs = {40, 41, 42, 43, 73, 68, 71, 70, 56, 60, 57, 58}
+                mapped_count = 0
+                for inst in pm.instruments:
+                    if inst.is_drum:
+                        continue
+                    if inst.program not in supported_ddsp_programs:
+                        prog = inst.program
+                        if 32 <= prog <= 39:
+                            inst.program = 43  # Double Bass
+                        elif 48 <= prog <= 55:
+                            inst.program = 40  # Violin
+                        elif 56 <= prog <= 63:
+                            inst.program = 56  # Trumpet
+                        elif 64 <= prog <= 71:
+                            inst.program = 71  # Clarinet
+                        elif 72 <= prog <= 79:
+                            inst.program = 73  # Flute
+                        else:
+                            inst.program = 40  # Default to Violin
+                        mapped_count += 1
+                if mapped_count > 0:
+                    temp_midi_path = "./temp_ddsp_input.mid"
+                    pm.write(temp_midi_path)
+            except Exception as e:
+                print(f"⚠️ Failed to map MIDI programs for DDSP: {e}. Using original MIDI.")
+
+            print("   🎻 Running Magenta DDSP (Neural Physics Synthesis)...")
             env = os.environ.copy()
             env["TF_USE_LEGACY_KERAS"] = "1"
             try:
@@ -247,9 +279,15 @@ def main():
                 pass
 
             subprocess.run([
-                "midi_ddsp_synthesize", "--midi_path", output_path,
+                "midi_ddsp_synthesize", "--midi_path", temp_midi_path,
                 "--output_dir", ddsp_output_dir,
             ], check=True, capture_output=True, text=True, timeout=600, env=env)
+
+            if temp_midi_path != output_path and os.path.exists(temp_midi_path):
+                try:
+                    os.remove(temp_midi_path)
+                except Exception:
+                    pass
 
             print("   🎛️ Mixing Neural Stems...")
             stem_files = sorted(f for f in os.listdir(ddsp_output_dir) if f.endswith(".wav"))
