@@ -175,7 +175,7 @@ def density_adherence_metrics(midi_path: str, blueprint_rhythm_template: List[fl
     Computes MSE, RMSE, MAE, and R^2 between the blueprint's target density/rhythm template (y_true)
     and the actual generated MIDI's note density per bar (y_pred).
     """
-    default_vals = {"mse": 1.0, "rmse": 1.0, "mae": 1.0, "r2": 0.0}
+    default_vals = {"mse": 1.0, "rmse": 1.0, "mae": 1.0, "r2": 0.0, "y_true": [], "y_pred": []}
     if pretty_midi is None or not os.path.exists(midi_path) or not blueprint_rhythm_template:
         return default_vals
         
@@ -241,7 +241,9 @@ def density_adherence_metrics(midi_path: str, blueprint_rhythm_template: List[fl
             "mse": float(mse),
             "rmse": float(rmse),
             "mae": float(mae),
-            "r2": float(r2)
+            "r2": float(r2),
+            "y_true": [float(v) for v in blueprint_rhythm_template],
+            "y_pred": [float(v) for v in actual_densities]
         }
     except Exception:
         return default_vals
