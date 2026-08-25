@@ -97,12 +97,12 @@ MINOR_QUALITIES = {"i": "min7", "ii°": "dim", "III": "maj7", "iv": "min7", "v":
 
 ARRANGEMENT_PROFILES = {
     "build": {
-        "Intro": ["Piano"], "Verse": ["Piano", "Strings"], "Pre-Chorus": ["Piano", "Strings", "Bass"],
-        "Chorus": ["Piano", "Strings", "Brass", "Percussion"], "Bridge": ["Strings", "Reed"], "Outro": ["Piano", "Strings"]
+        "Intro": ["Violin"], "Verse": ["Violin", "Cello"], "Pre-Chorus": ["Violin", "Cello", "Double Bass"],
+        "Chorus": ["Violin", "Cello", "French Horn", "Percussion"], "Bridge": ["Cello", "Clarinet"], "Outro": ["Violin", "Cello"]
     },
     "sparse_to_dense": {
-        "Intro": ["Piano"], "Verse": ["Piano", "Bass"], "Pre-Chorus": ["Piano", "Bass", "Strings"],
-        "Chorus": ["Piano", "Bass", "Strings", "Percussion"], "Bridge": ["Piano", "Strings"], "Outro": ["Piano"]
+        "Intro": ["Violin"], "Verse": ["Violin", "Double Bass"], "Pre-Chorus": ["Violin", "Double Bass", "Cello"],
+        "Chorus": ["Violin", "Double Bass", "Cello", "Percussion"], "Bridge": ["Violin", "Cello"], "Outro": ["Violin"]
     },
 }
 
@@ -186,11 +186,11 @@ CLASSICAL_MACRO_SKELETONS = {
 # not something fixed by this dict alone.
 ORCHESTRAL_ARRANGEMENT_PROFILES = {
     "orchestral_tutti": {
-        "Exposition": ["Strings", "French Horn", "Cello", "Flute"],
-        "Development": ["Strings", "Cello", "Clarinet", "Brass"],
-        "Recapitulation": ["Strings", "French Horn", "Trumpet", "Cello", "Percussion"],
-        "Theme": ["Strings", "Cello"],
-        "Movement": ["Strings", "French Horn", "Cello", "Oboe"],
+        "Exposition": ["Violin", "French Horn", "Cello", "Flute"],
+        "Development": ["Violin", "Cello", "Clarinet", "French Horn"],
+        "Recapitulation": ["Violin", "French Horn", "Trumpet", "Cello", "Percussion"],
+        "Theme": ["Violin", "Cello"],
+        "Movement": ["Violin", "French Horn", "Cello", "Oboe"],
     }
 }
-ORCHESTRAL_DEFAULT_VOICES = ["Strings", "French Horn", "Cello"]
+ORCHESTRAL_DEFAULT_VOICES = ["Violin", "French Horn", "Cello"]
