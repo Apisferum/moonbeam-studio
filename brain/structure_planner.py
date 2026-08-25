@@ -410,7 +410,7 @@ class StructurePlanner:
         bpm = llm_output.get("global_bpm", 120)
         style = llm_output.get("style", "cinematic")
         energy_curve = llm_output.get("energy_curve", "build")
-        lead_inst = llm_output.get("lead_instrument", "Piano") or "Piano"
+        lead_inst = llm_output.get("lead_instrument", "Violin") or "Violin"
         modulations = llm_output.get("modulations", [])
 
         # SYMPHONIC MODE: resolve time signature once per song. beats_per_bar
@@ -509,7 +509,7 @@ class StructurePlanner:
             if llm_instruments:
                 instruments = list(llm_instruments)
             else:
-                instruments = list(arrangement.get(name, ["Piano"]))
+                instruments = list(arrangement.get(name, ["Violin"]))
 
             if lead_inst not in instruments:
                 instruments.insert(0, lead_inst)
