@@ -365,6 +365,7 @@ def main():
     parser.add_argument("--mock", action="store_true", help="Run in mock simulation mode")
     parser.add_argument("--prompts_limit", type=int, default=3, help="Max number of prompts to run")
     parser.add_argument("--results_dir", type=str, default="eval/results", help="Directory to save evaluation results")
+    parser.add_argument("--config", type=str, default=None, help="Specific configuration name to run (e.g. full_system, no_planner)")
     args = parser.parse_args()
 
     load_dotenv()
@@ -387,6 +388,12 @@ def main():
         "hi_acg": "eval/baselines/hiacg_reimpl.py",
         "cascaded_diff": "eval/baselines/cascaded_diff_reimpl.py"
     }
+
+    if args.config:
+        if args.config not in configs:
+            print(f"❌ Invalid config name: {args.config}. Must be one of: {list(configs.keys())}")
+            sys.exit(1)
+        configs = {args.config: configs[args.config]}
 
     # Discover and boot model if not running in mock mode
     harmony_router = None
