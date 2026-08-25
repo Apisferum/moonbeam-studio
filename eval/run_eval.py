@@ -32,7 +32,7 @@ if not os.path.isdir(codebase_root):
 if codebase_root not in sys.path:
     sys.path.insert(0, codebase_root)
 
-print(f"🔗 Moonbeam codebase: {codebase_root}")
+print(f"Moonbeam codebase: {codebase_root}")
 # Import evaluation metrics
 from eval.metrics.local_quality import harmony_consistency
 from eval.metrics.structure import motif_recurrence_score
@@ -47,7 +47,7 @@ try:
     from eval.instrumentation.hooks import TraceContext
 except ImportError as e:
     import traceback
-    print(f"❌ Project import failed: {e}")
+    print(f"Error: Project import failed: {e}")
     traceback.print_exc()
     raise
 
@@ -59,7 +59,7 @@ def _select_device(requested: str) -> str:
         import torch
         if torch.cuda.is_available():
             return "cuda"
-        print("⚠️ CUDA requested but not available — falling back to CPU.")
+        print("WARNING: CUDA requested but not available - falling back to CPU.")
         return "cpu"
     except ImportError:
         return "cpu"
@@ -172,7 +172,7 @@ def _require_paths(paths: dict) -> None:
     if missing:
         lines = [f"  - {k}: {v}" for k, v in missing.items()]
         msg = (
-            "❌ Missing required checkpoint/config path(s):\n" + "\n".join(lines) +
+            "Error: Missing required checkpoint/config path(s):\n" + "\n".join(lines) +
             "\n\nPlease set environment variables (BASE_MODEL_PATH, LORA_DIR, CONFIG_PATH, MASTER_DICT_PATH) "
             "manually or run from the root containing Moonbeam weights."
         )
@@ -392,7 +392,7 @@ def main():
 
     if args.config:
         if args.config not in configs:
-            print(f"❌ Invalid config name: {args.config}. Must be one of: {list(configs.keys())}")
+            print(f"Error: Invalid config name: {args.config}. Must be one of: {list(configs.keys())}")
             sys.exit(1)
         configs = {args.config: configs[args.config]}
 
@@ -400,11 +400,11 @@ def main():
     harmony_router = None
     paths = {}
     if not args.mock:
-        print("📂 Discovering checkpoints...")
+        print("Discovering checkpoints...")
         paths = _autodiscover_checkpoints()
-        print("📂 Resolved checkpoint paths:")
+        print("Resolved checkpoint paths:")
         for k, v in paths.items():
-            status = "✅" if os.path.exists(v) else "❌"
+            status = "[OK]" if os.path.exists(v) else "[MISSING]"
             print(f"   {status} {k} = {v}")
         _require_paths(paths)
 
@@ -412,7 +412,7 @@ def main():
             raise ImportError("Cannot run live evaluation: project imports missing.")
 
         device = _select_device("cuda")
-        print(f"\n🚀 Booting HarmonyRouter (single instance) on {device}...")
+        print(f"\nBooting HarmonyRouter (single instance) on {device}...")
         harmony_router = HarmonyRouter(
             base_model_path=paths["BASE_MODEL_PATH"],
             lora_checkpoint_dir=paths["LORA_DIR"],
@@ -426,7 +426,7 @@ def main():
     for name, cfg_or_runner in configs.items():
         cfg_or_runner = os.path.abspath(os.path.join(studio_root, cfg_or_runner))
         print(f"\n========================================")
-        print(f"🚀 RUNNING CONFIGURATION: {name}")
+        print(f"RUNNING CONFIGURATION: {name}")
         print(f"========================================")
         
         results[name] = []
@@ -448,14 +448,14 @@ def main():
                 use_soft_refiner = cfg.get("use_soft_refiner", True)
                 use_hard_scorer = cfg.get("use_hard_scorer", True)
             except Exception as e:
-                print(f"⚠️ Error reading config file {cfg_or_runner}: {e}")
+                print(f"Warning: Error reading config file {cfg_or_runner}: {e}")
 
         # Deterministic single adapter weights: commu only
         single_adapter_weights = {"commu_lora": 1.0, "emopia_lora": 0.0, "slakh_lora": 0.0}
 
         for prompt in eval_set:
             prompt_id = prompt["id"]
-            print(f"\n📝 Prompt {prompt_id}: '{prompt['prompt']}'")
+            print(f"\nPrompt {prompt_id}: '{prompt['prompt']}'")
             
             out_midi_path = os.path.abspath(os.path.join(args.results_dir, "midi", f"{name}_prompt_{prompt_id}.mid"))
             trace_json_path = os.path.abspath(os.path.join(args.results_dir, f"{name}_prompt_{prompt_id}_trace.json"))
@@ -653,14 +653,14 @@ def main():
                 option=orjson.OPT_INDENT_2 | orjson.OPT_SERIALIZE_NUMPY
             )
         )
-    print(f"\n🏆 Evaluation driver finished! Aggregated metrics saved to {agg_json_path}")
+    print(f"\nEvaluation driver finished! Aggregated metrics saved to {agg_json_path}")
 
     # Build report tables
     try:
         from eval.report.aggregate import build_summary_table
         build_summary_table(agg_json_path, os.path.join(args.results_dir, "summary_table.md"))
     except Exception as e:
-        print(f"⚠️ Summary table aggregation skipped/failed: {e}")
+        print(f"Warning: Summary table aggregation skipped/failed: {e}")
 
 if __name__ == "__main__":
     main()
