@@ -6,8 +6,17 @@ if hasattr(sys.stdout, 'reconfigure'):
 import json
 import time
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'moonbeam-studio')))
+studio_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+sys.path.append(studio_root)
+sys.path.append(os.path.abspath(os.path.join(studio_root, 'moonbeam-studio')))
+
+codebase_root = os.environ.get("MOONBEAM_CODEBASE_PATH")
+if not codebase_root:
+    codebase_root = os.path.abspath(os.path.join(studio_root, "..", "moonbeam-codebase"))
+
+if os.path.isdir(codebase_root):
+    sys.path.insert(0, codebase_root)
+    sys.path.insert(0, os.path.join(codebase_root, "src", "llama_recipes"))
 
 try:
     import pretty_midi
