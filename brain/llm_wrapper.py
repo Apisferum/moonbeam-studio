@@ -415,6 +415,8 @@ class LLMWrapper:
         gemini_api_key: Optional[str] = None,
         fireworks_api_key: Optional[str] = None,
         fireworks_api_base: Optional[str] = None,
+        qwen_api_key: Optional[str] = None,
+        qwen_api_base: Optional[str] = None,
         qwen_model: str = "accounts/fireworks/models/qwen3p7-plus",
         kimi_model: str = "accounts/fireworks/models/kimi-k2p7-code",
         glm_model: str = "accounts/fireworks/models/glm-5p2",
@@ -428,7 +430,15 @@ class LLMWrapper:
         self.fireworks_api_base = fireworks_api_base or os.environ.get(
             "FIREWORKS_API_BASE", "https://api.fireworks.ai/inference/v1/chat/completions"
         )
-        self.qwen_model = qwen_model
+        self.qwen_api_key = qwen_api_key or os.environ.get("QWEN_API_KEY") or self.fireworks_api_key
+        self.qwen_api_base = qwen_api_base or os.environ.get(
+            "QWEN_API_BASE", "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions"
+        )
+        self.qwen_model = os.environ.get("QWEN_MODEL") or qwen_model
+        # Automatically map model ID to qwen-plus if Aliyun is selected as Qwen base URL
+        if "aliyuncs.com" in self.qwen_api_base or "dashscope" in self.qwen_api_base:
+            if self.qwen_model.startswith("accounts/fireworks"):
+                self.qwen_model = "qwen-plus"
         self.kimi_model = kimi_model
         self.glm_model = glm_model
 
@@ -442,7 +452,7 @@ class LLMWrapper:
         tiers = [
             ("Grok 4.5", self.grok_api_key, self._call_grok),
             ("Gemini 3.6 Flash", self.gemini_api_key, self._call_gemini),
-            ("Qwen 3.7 Plus", self.fireworks_api_key, lambda p: self._call_fireworks(p, self.qwen_model, "Qwen 3.7 Plus")),
+            ("Qwen 3.7 Plus", self.qwen_api_key, self._call_qwen),
             ("Kimi K2.7 Code", self.fireworks_api_key, lambda p: self._call_fireworks(p, self.kimi_model, "Kimi K2.7 Code")),
             ("GLM-5.2", self.fireworks_api_key, lambda p: self._call_fireworks(p, self.glm_model, "GLM-5.2")),
         ]
@@ -499,6 +509,25 @@ class LLMWrapper:
         resp.raise_for_status()
         data = resp.json()
         text = data["candidates"][0]["content"]["parts"][0]["text"]
+        return json.loads(text)
+
+    def _call_qwen(self, user_prompt: str) -> dict:
+        """Dedicated caller for Qwen served OpenAI-compatible via DashScope/Aliyun."""
+        headers = {"Authorization": f"Bearer {self.qwen_api_key}", "Content-Type": "application/json"}
+        payload = {
+            "model": self.qwen_model,
+            "messages": [
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_prompt},
+            ],
+            "response_format": {"type": "json_object"},
+            "temperature": 0.7,
+        }
+        resp = requests.post(self.qwen_api_base, headers=headers, json=payload, timeout=300)
+        _log_http_error_body(resp, "Qwen 3.7 Plus")
+        resp.raise_for_status()
+        data = resp.json()
+        text = data["choices"][0]["message"]["content"]
         return json.loads(text)
 
     def _call_fireworks(self, user_prompt: str, model_id: str, tier_name: str = "Fireworks") -> dict:
