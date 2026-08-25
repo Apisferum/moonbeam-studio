@@ -236,7 +236,7 @@ def main():
             print("   🎻 Running Magenta DDSP (Neural Physics Synthesis)...")
             subprocess.run([
                 "midi_ddsp_synthesize", "--midi_path", output_path,
-                "--output_dir", ddsp_output_dir, "--skip_expression_generator",
+                "--output_dir", ddsp_output_dir, 
             ], check=True, capture_output=True, text=True, timeout=600)
 
             print("   🎛️ Mixing Neural Stems...")
