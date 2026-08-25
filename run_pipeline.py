@@ -233,7 +233,6 @@ def main():
                 shutil.rmtree(ddsp_output_dir)
             os.makedirs(ddsp_output_dir, exist_ok=True)
 
-            print("   🎻 Running Magenta DDSP (Neural Physics Synthesis)...")
             print("   🎻 Preparing MIDI for DDSP (Mapping instruments)...")
             temp_midi_path = output_path
             try:
@@ -268,6 +267,7 @@ def main():
             print("   🎻 Running Magenta DDSP (Neural Physics Synthesis)...")
             env = os.environ.copy()
             env["TF_USE_LEGACY_KERAS"] = "1"
+            env["CUDA_VISIBLE_DEVICES"] = ""  # Force CPU to avoid GPU Out-Of-Memory (OOM) crashes
             try:
                 import nvidia.cudnn
                 cudnn_file = getattr(nvidia.cudnn, "__file__", None)
@@ -281,7 +281,7 @@ def main():
             subprocess.run([
                 "midi_ddsp_synthesize", "--midi_path", temp_midi_path,
                 "--output_dir", ddsp_output_dir,
-            ], check=True, text=True, timeout=600, env=env)
+            ], check=True, capture_output=True, text=True, timeout=600, env=env)
 
             if temp_midi_path != output_path and os.path.exists(temp_midi_path):
                 try:
@@ -308,13 +308,11 @@ def main():
             print("⚠️ DDSP synthesis timed out.")
         except subprocess.CalledProcessError as e:
             print(f"⚠️ DDSP rendering failed with exit code {e.returncode}.")
-            if e.stdout:
-                print("--- DDSP Stdout ---")
-                print(e.stdout)
-            if e.stderr:
-                print("--- DDSP Stderr ---")
-                print(e.stderr)
-                print("-------------------")
+            print("--- DDSP Stdout ---")
+            print(e.stdout)
+            print("--- DDSP Stderr ---")
+            print(e.stderr)
+            print("-------------------")
         except Exception as e:
             print(f"⚠️ DDSP rendering failed ({e}).")
 
