@@ -244,7 +244,7 @@ class SongIntent(BaseModel):
     @field_validator('lead_instrument', mode='before')
     @classmethod
     def enforce_lead_instrument(cls, v: str) -> str:
-                if not v:
+        if not v:
             return "Violin"
         matched = _match_studio_instrument(v)
         return matched or "Violin"
@@ -523,7 +523,7 @@ class LLMWrapper:
     def _rule_based_fallback(self, user_prompt: str) -> dict:
         p = user_prompt.lower()
 
-                instrument_keywords = {
+        instrument_keywords = {
             "violin": "Violin", "cello": "Cello", "viola": "Viola", "double bass": "Double Bass",
             "bass": "Double Bass", "clarinet": "Clarinet", "flute": "Flute", "oboe": "Oboe",
             "bassoon": "Bassoon", "trumpet": "Trumpet", "trombone": "Trombone", "horn": "French Horn",
