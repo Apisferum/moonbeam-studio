@@ -234,10 +234,12 @@ def main():
             os.makedirs(ddsp_output_dir, exist_ok=True)
 
             print("   🎻 Running Magenta DDSP (Neural Physics Synthesis)...")
+            env = os.environ.copy()
+            env["TF_USE_LEGACY_KERAS"] = "1"
             subprocess.run([
                 "midi_ddsp_synthesize", "--midi_path", output_path,
-                "--output_dir", ddsp_output_dir, 
-            ], check=True, capture_output=True, text=True, timeout=600)
+                "--output_dir", ddsp_output_dir,
+            ], check=True, capture_output=True, text=True, timeout=600, env=env)
 
             print("   🎛️ Mixing Neural Stems...")
             stem_files = sorted(f for f in os.listdir(ddsp_output_dir) if f.endswith(".wav"))
