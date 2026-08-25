@@ -195,20 +195,41 @@ def density_adherence_metrics(midi_path: str, blueprint_rhythm_template: List[fl
         if not all_notes:
             return default_vals
             
+        def map_rate_to_density(notes_per_beat: float) -> float:
+            if notes_per_beat <= 0.25:
+                return notes_per_beat * 0.8
+            elif notes_per_beat <= 1.0:
+                return 0.2 + (notes_per_beat - 0.25) * (0.3 / 0.75)
+            elif notes_per_beat <= 2.0:
+                return 0.5 + (notes_per_beat - 1.0) * (0.2 / 1.0)
+            elif notes_per_beat <= 4.0:
+                return 0.7 + (notes_per_beat - 2.0) * (0.2 / 2.0)
+            else:
+                return min(1.0, 0.9 + (notes_per_beat - 4.0) * 0.05)
+                
         # Segment actual notes into bars
         actual_densities = []
         n_steps = len(blueprint_rhythm_template)
         # Calculate step duration (matching each element of the rhythm template)
         step_duration = (bars * bar_duration) / max(1, n_steps)
         
+        # Isolate lead melody notes (octave 5 and above, i.e., pitch >= 60)
+        lead_notes = [n for n in all_notes if n.pitch >= 60]
+        # Fallback: if no lead notes found in octave 5+, use all non-bass notes (pitch >= 48)
+        if not lead_notes:
+            lead_notes = [n for n in all_notes if n.pitch >= 48]
+        if not lead_notes:
+            lead_notes = all_notes
+            
         for i in range(n_steps):
             start = time_offset + i * step_duration
             end = time_offset + (i + 1) * step_duration
-            notes_in_step = sum(1 for n in all_notes if start <= n.start < end)
+            notes_in_step = sum(1 for n in lead_notes if start <= n.start < end)
             
-            # Normalize actual density: notes per beat, capped at 4.0 notes/beat (16th notes density)
+            # Calculate notes per beat
             notes_per_beat = notes_in_step / max(0.1, step_duration / beat_duration)
-            normalized_density = min(1.0, notes_per_beat / 4.0)
+            # Map note rate to target density scale
+            normalized_density = map_rate_to_density(notes_per_beat)
             actual_densities.append(normalized_density)
             
         mse = calculate_mse(blueprint_rhythm_template, actual_densities)
