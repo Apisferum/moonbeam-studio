@@ -577,6 +577,7 @@ def main():
                 density_mae_scores = []
                 density_r2_scores = []
                 
+                current_offset_seconds = 0.0
                 for idx, s_trace in enumerate(piece_trace["sections"]):
                     target_template = s_trace.get("blueprint_rhythm_template", [])
                     if idx < len(prompt["sections"]):
@@ -599,11 +600,17 @@ def main():
                         target_template, 
                         bpm=bpm, 
                         bars=bars, 
-                        beats_per_bar=4
+                        beats_per_bar=4,
+                        time_offset=current_offset_seconds
                     )
                     density_rmse_scores.append(res_density["rmse"])
                     density_mae_scores.append(res_density["mae"])
                     density_r2_scores.append(res_density["r2"])
+                    
+                    # Accumulate offset for the next section
+                    beat_duration = 60.0 / bpm
+                    bar_duration = 4 * beat_duration
+                    current_offset_seconds += bars * bar_duration
                 
                 # Log metrics in trace dictionary for aggregation
                 piece_trace["metrics"] = {

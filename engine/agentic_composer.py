@@ -303,14 +303,22 @@ class AgenticComposer:
 
             while True:
                 chunk_count += 1
+                remaining_budget = section.get("max_tokens", 256) - len(all_generated_tokens)
+                if remaining_budget <= 0:
+                    logger.info("   ↳ [SlidingWindow] Section budget fully satisfied. Stopping chunk loop.")
+                    break
+                
+                # Cap chunk generation budget to fit within config.max_len limits
+                chunk_max_gen_len = min(512, remaining_budget)
+                
                 logger.info(
                     f"   ↳ [SlidingWindow] Generating chunk {chunk_count} for '{section_name}' "
-                    f"(queue size: {len(forced_streams[0]) if forced_streams else 0})"
+                    f"(budget: {chunk_max_gen_len}, queue size: {len(forced_streams[0]) if forced_streams else 0})"
                 )
 
                 raw_tokens = self.harmonyrouter.generate(
                     metadata_ids=metadata_ids, primer_tokens=current_primer,
-                    max_gen_len=section.get("max_tokens", 256), temperature=temperature, top_p=0.9,
+                    max_gen_len=chunk_max_gen_len, temperature=temperature, top_p=0.9,
                     bpm=section.get("bpm", 120), num_measures=section.get("bars", 8),
                     forced_token_streams=forced_streams
                 )
