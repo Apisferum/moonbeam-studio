@@ -2,7 +2,6 @@ import os
 import sys
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
-import orjson
 import json
 import orjson
 import argparse
@@ -173,8 +172,7 @@ def _require_paths(paths: dict) -> None:
     if missing:
         lines = [f"  - {k}: {v}" for k, v in missing.items()]
         msg = (
-            "Error: Missing required checkpoint/config path(s):
-" + "\n".join(lines) +
+            "Error: Missing required checkpoint/config path(s):\n" + "\n".join(lines) +
             "\n\nPlease set environment variables (BASE_MODEL_PATH, LORA_DIR, CONFIG_PATH, MASTER_DICT_PATH) "
             "manually or run from the root containing Moonbeam weights."
         )
@@ -414,8 +412,7 @@ def main():
             raise ImportError("Cannot run live evaluation: project imports missing.")
 
         device = _select_device("cuda")
-        print(f"
-Booting HarmonyRouter (single instance) on {device}...")
+        print(f"\nBooting HarmonyRouter (single instance) on {device}...")
         harmony_router = HarmonyRouter(
             base_model_path=paths["BASE_MODEL_PATH"],
             lora_checkpoint_dir=paths["LORA_DIR"],
@@ -458,8 +455,7 @@ Booting HarmonyRouter (single instance) on {device}...")
 
         for prompt in eval_set:
             prompt_id = prompt["id"]
-            print(f"
-Prompt {prompt_id}: '{prompt['prompt']}'")
+            print(f"\nPrompt {prompt_id}: '{prompt['prompt']}'")
             
             out_midi_path = os.path.abspath(os.path.join(args.results_dir, "midi", f"{name}_prompt_{prompt_id}.mid"))
             trace_json_path = os.path.abspath(os.path.join(args.results_dir, f"{name}_prompt_{prompt_id}_trace.json"))
@@ -567,7 +563,6 @@ Prompt {prompt_id}: '{prompt['prompt']}'")
                 print("   ↳ Computing metrics...")
                 
                 # Diatonic harmony adherence (average across sections)
-                print("   ↳ Calculating harmony adherence...")
                 harmonies = [harmony_consistency(out_midi_path) for s in piece_trace["sections"]]
                 
                 # Calculate chord match rates based on planned blueprint
@@ -603,7 +598,7 @@ Prompt {prompt_id}: '{prompt['prompt']}'")
                         target_template, 
                         bpm=bpm, 
                         bars=bars, 
-                        beats_per_bar=4, 
+                        beats_per_bar=4,
                         time_offset=current_offset_seconds
                     )
                     all_y_true.extend(res_density.get("y_true", []))
@@ -637,6 +632,7 @@ Prompt {prompt_id}: '{prompt['prompt']}'")
                     "density_r2": float(global_r2)
                 }
                 
+                # Save trace file
                 with open(trace_json_path, "wb") as f:
                     f.write(
                         orjson.dumps(
@@ -657,8 +653,7 @@ Prompt {prompt_id}: '{prompt['prompt']}'")
                 option=orjson.OPT_INDENT_2 | orjson.OPT_SERIALIZE_NUMPY
             )
         )
-    print(f"
-Evaluation driver finished! Aggregated metrics saved to {agg_json_path}")
+    print(f"\nEvaluation driver finished! Aggregated metrics saved to {agg_json_path}")
 
     # Build report tables
     try:
