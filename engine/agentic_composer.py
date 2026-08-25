@@ -650,9 +650,10 @@ class AgenticComposer:
                 logger.info(f"   ↳ Attempt {attempt} | Score: {score:.2f} | {feedback.get('feedback', '')}")
 
                 token_count = len(gen_tokens) if gen_tokens else 0
-                hook_log_attempt(attempt, current_temp, score, feedback, score >= self.acceptance_threshold, token_count, attempt_latency)
+                attempt_accepted = (score >= self.acceptance_threshold and feedback.get("metrics", {}).get("chord_score", 1.0) >= 0.75)
+                hook_log_attempt(attempt, current_temp, score, feedback, attempt_accepted, token_count, attempt_latency)
 
-                if score >= self.acceptance_threshold:
+                if attempt_accepted:
                     best_midi = polished_midi
                     best_score = score
                     last_accepted_midi = polished_midi
