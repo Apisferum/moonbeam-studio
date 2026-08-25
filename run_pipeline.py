@@ -267,6 +267,7 @@ def main():
             print("   🎻 Running Magenta DDSP (Neural Physics Synthesis)...")
             env = os.environ.copy()
             env["TF_USE_LEGACY_KERAS"] = "1"
+            env["CUDA_VISIBLE_DEVICES"] = ""  # Force CPU to avoid GPU Out-Of-Memory (OOM) crashes
             try:
                 import nvidia.cudnn
                 cudnn_file = getattr(nvidia.cudnn, "__file__", None)
