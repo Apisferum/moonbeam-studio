@@ -1,0 +1,6 @@
+name: "No Soft and No Hard"
+use_planner: true
+use_motif_memory: true
+use_ties: true
+use_soft_refiner: false
+use_hard_scorer: false
