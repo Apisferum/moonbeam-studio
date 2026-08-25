@@ -125,6 +125,28 @@ def _require_paths(paths: dict) -> None:
         sys.exit(msg)
 
 
+def _split_drums(pm):
+    """Return (melodic_pm, drum_pm) — melodic_pm has drum tracks removed
+    entirely (DDSP can't synthesize percussion), drum_pm has only them."""
+    import pretty_midi
+    tempos = pm.get_tempo_changes()
+    initial_tempo = tempos[1][0] if len(tempos[1]) else 120
+    melodic_pm = pretty_midi.PrettyMIDI(initial_tempo=initial_tempo)
+    drum_pm = pretty_midi.PrettyMIDI(initial_tempo=initial_tempo)
+    for inst in pm.instruments:
+        (drum_pm if inst.is_drum else melodic_pm).instruments.append(inst)
+    return melodic_pm, drum_pm
+
+
+def _render_drums_fluidsynth(drum_midi_path, out_wav_path, soundfont_path):
+    import subprocess
+    subprocess.run(
+        ["fluidsynth", "-ni", soundfont_path, drum_midi_path,
+         "-F", out_wav_path, "-r", "44100"],
+        check=True, capture_output=True, text=True, timeout=300,
+    )
+
+
 def _chunk_and_render_ddsp(midi_path, ddsp_output_dir, env, chunk_seconds=20.0, overlap_seconds=1.0):
     """
     Render a MIDI file through DDSP in short time-windows to avoid OOM in
@@ -349,10 +371,11 @@ def main():
 
             import pretty_midi
             pm = pretty_midi.PrettyMIDI(output_path)
+            melodic_pm, drum_pm = _split_drums(pm)
             supported_ddsp_programs = {40, 41, 42, 43, 73, 68, 71, 70, 56, 60, 57, 58}
 
-            for inst in pm.instruments:
-                if inst.is_drum or not inst.notes:
+            for inst in melodic_pm.instruments:
+                if not inst.notes:
                     continue
 
                 # Map instrument program if not supported by DDSP
@@ -372,34 +395,70 @@ def main():
                         inst.program = 40  # Default to Violin
 
             temp_midi_path = "./temp_mapped_input.mid"
-            pm.write(temp_midi_path)
+            melodic_pm.write(temp_midi_path)
+
+            has_drums = len(drum_pm.instruments) > 0 and any(len(i.notes) for i in drum_pm.instruments)
+            drum_midi_path = "./temp_drums.mid"
+            if has_drums:
+                drum_pm.write(drum_midi_path)
 
             print(f"   🎻 Running time-chunked DDSP GPU synthesis (chunk size: 20s)...")
             _chunk_and_render_ddsp(temp_midi_path, ddsp_output_dir, env, chunk_seconds=20.0, overlap_seconds=1.0)
 
-            if os.path.exists(temp_midi_path):
-                try:
-                    os.remove(temp_midi_path)
-                except Exception:
-                    pass
-
             print("   🎛️ Mixing Neural Stems...")
+            drums_wav = "./temp_drums.wav"
+            drums_rendered = False
+            if has_drums:
+                try:
+                    sf2_path = os.environ.get("GM_SOUNDFONT", "/usr/share/sounds/sf2/FluidR3_GM.sf2")
+                    print(f"   🥁 Rendering drums via FluidSynth (SoundFont: {sf2_path})...")
+                    _render_drums_fluidsynth(drum_midi_path, drums_wav, soundfont_path=sf2_path)
+                    if os.path.exists(drums_wav):
+                        drums_rendered = True
+                except Exception as e:
+                    print(f"⚠️ Drum render failed ({e}), continuing without drums.")
+
             full_mix_path = os.path.join(ddsp_output_dir, "full_mix.wav")
             if os.path.exists(full_mix_path):
-                shutil.copy(full_mix_path, wav_path)
-                print(f"🏆 NEURAL MASTERPIECE RENDERED: {wav_path}")
+                if drums_rendered:
+                    try:
+                        mix_audio = AudioSegment.from_wav(full_mix_path)
+                        drums_audio = AudioSegment.from_wav(drums_wav)
+                        mix_audio = mix_audio.overlay(drums_audio - 2)
+                        mix_audio.export(wav_path, format="wav")
+                        print(f"🏆 NEURAL MASTERPIECE RENDERED WITH DRUMS: {wav_path}")
+                    except Exception as e:
+                        print(f"⚠️ Failed to mix drums with full_mix.wav ({e}). Saving mix without drums.")
+                        shutil.copy(full_mix_path, wav_path)
+                else:
+                    shutil.copy(full_mix_path, wav_path)
+                    print(f"🏆 NEURAL MASTERPIECE RENDERED: {wav_path}")
             else:
-                stem_files = sorted(f for f in os.listdir(ddsp_output_dir) if f.endswith(".wav"))
-                if not stem_files:
+                stem_files = sorted(f for f in os.listdir(ddsp_output_dir) if f.endswith(".wav") and f != "temp_drums.wav" and f != "full_mix.wav")
+                if not stem_files and not drums_rendered:
                     print(f"⚠️ DDSP produced no .wav stems. Skipping mix.")
                 else:
                     master_mix = AudioSegment.silent(duration=0)
                     for stem_file in stem_files:
                         stem_audio = AudioSegment.from_wav(os.path.join(ddsp_output_dir, stem_file))
                         master_mix = master_mix.overlay(stem_audio - 3)
+                    if drums_rendered:
+                        try:
+                            drums_audio = AudioSegment.from_wav(drums_wav)
+                            master_mix = master_mix.overlay(drums_audio - 2)
+                        except Exception as e:
+                            print(f"⚠️ Failed to overlay drums on stem mix ({e}).")
                     master_mix = effects.normalize(master_mix)
                     master_mix.export(wav_path, format="wav")
                     print(f"🏆 NEURAL MASTERPIECE RENDERED: {wav_path}")
+
+            # Clean up temporary files
+            for temp_file in [temp_midi_path, drum_midi_path, drums_wav]:
+                if os.path.exists(temp_file):
+                    try:
+                        os.remove(temp_file)
+                    except Exception:
+                        pass
 
         except FileNotFoundError:
             print("⚠️ midi_ddsp_synthesize CLI not found in PATH.")
