@@ -125,6 +125,103 @@ def _require_paths(paths: dict) -> None:
         sys.exit(msg)
 
 
+def _chunk_and_render_ddsp(midi_path, ddsp_output_dir, env, chunk_seconds=20.0, overlap_seconds=1.0):
+    """
+    Render a MIDI file through DDSP in short time-windows to avoid OOM in
+    ddsp.core.upsample_with_windows / overlap_and_add, whose intermediate
+    tensor scales with total frame count (i.e. song length). Chunks are
+    rendered separately then crossfaded back together.
+    """
+    import pretty_midi
+    import subprocess
+    import shutil
+    import os
+    from pydub import AudioSegment
+
+    pm = pretty_midi.PrettyMIDI(midi_path)
+    total_duration = pm.get_end_time()
+
+    if total_duration <= chunk_seconds:
+        # Short enough to render in one shot.
+        subprocess.run(
+            ["midi_ddsp_synthesize", "--midi_path", midi_path, "--output_dir", ddsp_output_dir],
+            check=True, capture_output=True, text=True, timeout=600, env=env,
+        )
+        return
+
+    chunk_dir = os.path.join(os.path.dirname(ddsp_output_dir) or ".", "_ddsp_chunks")
+    if os.path.exists(chunk_dir):
+        shutil.rmtree(chunk_dir)
+    os.makedirs(chunk_dir, exist_ok=True)
+
+    starts = []
+    t = 0.0
+    while t < total_duration:
+        starts.append(t)
+        t += chunk_seconds
+
+    rendered_segments = []
+    for i, start in enumerate(starts):
+        end = min(start + chunk_seconds + overlap_seconds, total_duration)
+
+        chunk_pm = pretty_midi.PrettyMIDI()
+        for inst in pm.instruments:
+            new_inst = pretty_midi.Instrument(program=inst.program, is_drum=inst.is_drum, name=inst.name)
+            for note in inst.notes:
+                if note.start < end and note.end > start:
+                    new_inst.notes.append(pretty_midi.Note(
+                        velocity=note.velocity,
+                        pitch=note.pitch,
+                        start=max(0.0, note.start - start),
+                        end=min(end, note.end) - start,
+                    ))
+            if new_inst.notes:
+                chunk_pm.instruments.append(new_inst)
+
+        if not chunk_pm.instruments:
+            continue
+
+        chunk_midi_path = os.path.join(chunk_dir, f"chunk_{i:03d}.mid")
+        chunk_pm.write(chunk_midi_path)
+
+        chunk_out_dir = os.path.join(chunk_dir, f"out_{i:03d}")
+        os.makedirs(chunk_out_dir, exist_ok=True)
+
+        print(f"      ↳ Rendering chunk {i+1}/{len(starts)} ({start:.1f}s–{end:.1f}s)...")
+        subprocess.run(
+            ["midi_ddsp_synthesize", "--midi_path", chunk_midi_path, "--output_dir", chunk_out_dir],
+            check=True, capture_output=True, text=True, timeout=600, env=env,
+        )
+
+        chunk_wavs = sorted(f for f in os.listdir(chunk_out_dir) if f.endswith(".wav"))
+        if not chunk_wavs:
+            continue
+
+        chunk_mix = AudioSegment.silent(duration=int(end - start) * 1000 + 1000)
+        for f in chunk_wavs:
+            chunk_mix = chunk_mix.overlay(AudioSegment.from_wav(os.path.join(chunk_out_dir, f)))
+
+        rendered_segments.append((start, chunk_mix))
+
+    if not rendered_segments:
+        return
+
+    os.makedirs(ddsp_output_dir, exist_ok=True)
+    crossfade_ms = int(overlap_seconds * 1000)
+    full_mix = rendered_segments[0][1]
+    for start, seg in rendered_segments[1:]:
+        full_mix = full_mix.append(seg, crossfade=min(crossfade_ms, len(full_mix), len(seg)))
+
+    full_mix.export(os.path.join(ddsp_output_dir, "full_mix.wav"), format="wav")
+
+    # Cleanup chunk directory
+    if os.path.exists(chunk_dir):
+        try:
+            shutil.rmtree(chunk_dir)
+        except Exception:
+            pass
+
+
 def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s", datefmt="%H:%M:%S")
     load_dotenv()
@@ -252,12 +349,9 @@ def main():
             pm = pretty_midi.PrettyMIDI(output_path)
             supported_ddsp_programs = {40, 41, 42, 43, 73, 68, 71, 70, 56, 60, 57, 58}
 
-            for i, inst in enumerate(pm.instruments):
+            for inst in pm.instruments:
                 if inst.is_drum or not inst.notes:
                     continue
-
-                # Create a single track MIDI
-                single_pm = pretty_midi.PrettyMIDI()
 
                 # Map instrument program if not supported by DDSP
                 if inst.program not in supported_ddsp_programs:
@@ -275,34 +369,35 @@ def main():
                     else:
                         inst.program = 40  # Default to Violin
 
-                single_pm.instruments.append(inst)
-                temp_track_path = os.path.join(ddsp_output_dir, f"temp_track_{i}.mid")
-                single_pm.write(temp_track_path)
+            temp_midi_path = "./temp_mapped_input.mid"
+            pm.write(temp_midi_path)
 
-                print(f"   🎻 Running DDSP on GPU for track {i} (Program {inst.program})...")
-                subprocess.run([
-                    "midi_ddsp_synthesize", "--midi_path", temp_track_path,
-                    "--output_dir", ddsp_output_dir,
-                ], check=True, capture_output=True, text=True, timeout=600, env=env)
+            print(f"   🎻 Running time-chunked DDSP GPU synthesis (chunk size: 20s)...")
+            _chunk_and_render_ddsp(temp_midi_path, ddsp_output_dir, env, chunk_seconds=20.0, overlap_seconds=1.0)
 
-                if os.path.exists(temp_track_path):
-                    try:
-                        os.remove(temp_track_path)
-                    except Exception:
-                        pass
+            if os.path.exists(temp_midi_path):
+                try:
+                    os.remove(temp_midi_path)
+                except Exception:
+                    pass
 
             print("   🎛️ Mixing Neural Stems...")
-            stem_files = sorted(f for f in os.listdir(ddsp_output_dir) if f.endswith(".wav"))
-            if not stem_files:
-                print(f"⚠️ DDSP produced no .wav stems. Skipping mix.")
-            else:
-                master_mix = AudioSegment.silent(duration=0)
-                for stem_file in stem_files:
-                    stem_audio = AudioSegment.from_wav(os.path.join(ddsp_output_dir, stem_file))
-                    master_mix = master_mix.overlay(stem_audio - 3)
-                master_mix = effects.normalize(master_mix)
-                master_mix.export(wav_path, format="wav")
+            full_mix_path = os.path.join(ddsp_output_dir, "full_mix.wav")
+            if os.path.exists(full_mix_path):
+                shutil.copy(full_mix_path, wav_path)
                 print(f"🏆 NEURAL MASTERPIECE RENDERED: {wav_path}")
+            else:
+                stem_files = sorted(f for f in os.listdir(ddsp_output_dir) if f.endswith(".wav"))
+                if not stem_files:
+                    print(f"⚠️ DDSP produced no .wav stems. Skipping mix.")
+                else:
+                    master_mix = AudioSegment.silent(duration=0)
+                    for stem_file in stem_files:
+                        stem_audio = AudioSegment.from_wav(os.path.join(ddsp_output_dir, stem_file))
+                        master_mix = master_mix.overlay(stem_audio - 3)
+                    master_mix = effects.normalize(master_mix)
+                    master_mix.export(wav_path, format="wav")
+                    print(f"🏆 NEURAL MASTERPIECE RENDERED: {wav_path}")
 
         except FileNotFoundError:
             print("⚠️ midi_ddsp_synthesize CLI not found in PATH.")
