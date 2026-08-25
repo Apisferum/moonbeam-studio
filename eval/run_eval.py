@@ -575,10 +575,9 @@ def main():
                 voice_leadings = [voice_leading_score(out_midi_path) for _ in prompt["sections"]]
                 
                 # Calculate density adherence metrics across sections
-                density_rmse_scores = []
-                density_mae_scores = []
-                density_r2_scores = []
-
+                all_y_true = []
+                all_y_pred = []
+                
                 current_offset_seconds = 0.0
                 for idx, s_trace in enumerate(piece_trace["sections"]):
                     target_template = s_trace.get("blueprint_rhythm_template", [])
@@ -594,23 +593,33 @@ def main():
                             length_str = p_sec.get("length", "medium")
                             raw_bars = {"short": 4, "medium": 8, "long": 16}.get(length_str, 8)
                             bars = max(4, int(raw_bars * 1.5))
-
+                        
                     res_density = density_adherence_metrics(
                         out_midi_path, 
                         target_template, 
                         bpm=bpm, 
                         bars=bars, 
-                        beats_per_bar=4,
+                        beats_per_bar=4, 
                         time_offset=current_offset_seconds
                     )
-                    density_rmse_scores.append(res_density["rmse"])
-                    density_mae_scores.append(res_density["mae"])
-                    density_r2_scores.append(res_density["r2"])
-
+                    all_y_true.extend(res_density.get("y_true", []))
+                    all_y_pred.extend(res_density.get("y_pred", []))
+                    
                     # Accumulate offset for the next section
                     beat_duration = 60.0 / bpm
                     bar_duration = 4 * beat_duration
                     current_offset_seconds += bars * bar_duration
+                
+                # Calculate global density metrics across the entire song
+                from eval.metrics.regression import calculate_rmse, calculate_mae, calculate_r2
+                if all_y_true and all_y_pred:
+                    global_rmse = calculate_rmse(all_y_true, all_y_pred)
+                    global_mae = calculate_mae(all_y_true, all_y_pred)
+                    global_r2 = calculate_r2(all_y_true, all_y_pred)
+                else:
+                    global_rmse = 1.0
+                    global_mae = 1.0
+                    global_r2 = 0.0
                 
                 # Log metrics in trace dictionary for aggregation
                 piece_trace["metrics"] = {
@@ -619,9 +628,9 @@ def main():
                     "voice_leading_score": float(np.mean(voice_leadings)) if voice_leadings else 1.0,
                     "motif_recurrence": float(motif_recurrence_score(piece_trace)),
                     "efficiency": compute_efficiency_stats(piece_trace["sections"]),
-                    "density_rmse": float(np.mean(density_rmse_scores)) if density_rmse_scores else 1.0,
-                    "density_mae": float(np.mean(density_mae_scores)) if density_mae_scores else 1.0,
-                    "density_r2": float(np.mean(density_r2_scores)) if density_r2_scores else 0.0
+                    "density_rmse": float(global_rmse),
+                    "density_mae": float(global_mae),
+                    "density_r2": float(global_r2)
                 }
                 
                 with open(trace_json_path, "wb") as f:
