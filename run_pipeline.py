@@ -238,9 +238,11 @@ def main():
             env["TF_USE_LEGACY_KERAS"] = "1"
             try:
                 import nvidia.cudnn
-                cudnn_lib_dir = os.path.join(os.path.dirname(nvidia.cudnn.__file__), "lib")
-                if os.path.exists(cudnn_lib_dir):
-                    env["LD_LIBRARY_PATH"] = cudnn_lib_dir + (f":{env['LD_LIBRARY_PATH']}" if "LD_LIBRARY_PATH" in env else "")
+                cudnn_file = getattr(nvidia.cudnn, "__file__", None)
+                if cudnn_file is not None:
+                    cudnn_lib_dir = os.path.join(os.path.dirname(cudnn_file), "lib")
+                    if os.path.exists(cudnn_lib_dir):
+                        env["LD_LIBRARY_PATH"] = cudnn_lib_dir + (f":{env['LD_LIBRARY_PATH']}" if "LD_LIBRARY_PATH" in env else "")
             except ImportError:
                 pass
 
