@@ -4,6 +4,7 @@ if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 import orjson
 import json
+import orjson
 import argparse
 import subprocess
 import time
