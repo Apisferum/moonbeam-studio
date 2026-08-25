@@ -382,7 +382,7 @@ class LLMWrapper:
     """
     Routing (in order, first success wins):
       1. Grok 4.5           - xAI flagship (api.x.ai)
-      2. Gemini 3.5 Flash   - native schema-constrained decoding (Google AI Studio)
+      2. Gemini 3.6 Flash   - native schema-constrained decoding (Google AI Studio)
       3. Qwen 3.7 Plus      - via Fireworks (OpenAI-compatible)
       4. Kimi K2.7 Code     - via Fireworks (OpenAI-compatible)
       5. GLM-5.2            - via Fireworks (OpenAI-compatible)
@@ -441,7 +441,7 @@ class LLMWrapper:
 
         tiers = [
             ("Grok 4.5", self.grok_api_key, self._call_grok),
-            ("Gemini 3.5 Flash", self.gemini_api_key, self._call_gemini),
+            ("Gemini 3.6 Flash", self.gemini_api_key, self._call_gemini),
             ("Qwen 3.7 Plus", self.fireworks_api_key, lambda p: self._call_fireworks(p, self.qwen_model, "Qwen 3.7 Plus")),
             ("Kimi K2.7 Code", self.fireworks_api_key, lambda p: self._call_fireworks(p, self.kimi_model, "Kimi K2.7 Code")),
             ("GLM-5.2", self.fireworks_api_key, lambda p: self._call_fireworks(p, self.glm_model, "GLM-5.2")),
@@ -484,7 +484,7 @@ class LLMWrapper:
         return json.loads(data["choices"][0]["message"]["content"])
 
     def _call_gemini(self, user_prompt: str) -> dict:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key={self.gemini_api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key={self.gemini_api_key}"
         payload = {
             "system_instruction": {"parts": [{"text": SYSTEM_PROMPT}]},
             "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
@@ -495,7 +495,7 @@ class LLMWrapper:
             },
         }
         resp = requests.post(url, json=payload, timeout=300)
-        _log_http_error_body(resp, "Gemini 3.5 Flash")
+        _log_http_error_body(resp, "Gemini 3.6 Flash")
         resp.raise_for_status()
         data = resp.json()
         text = data["candidates"][0]["content"]["parts"][0]["text"]
