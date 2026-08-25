@@ -280,7 +280,7 @@ def main():
             subprocess.run([
                 "midi_ddsp_synthesize", "--midi_path", temp_midi_path,
                 "--output_dir", ddsp_output_dir,
-            ], check=True, capture_output=True, text=True, timeout=600, env=env)
+            ], check=True, text=True, timeout=600, env=env)
 
             if temp_midi_path != output_path and os.path.exists(temp_midi_path):
                 try:
@@ -307,11 +307,13 @@ def main():
             print("⚠️ DDSP synthesis timed out.")
         except subprocess.CalledProcessError as e:
             print(f"⚠️ DDSP rendering failed with exit code {e.returncode}.")
-            print("--- DDSP Stdout ---")
-            print(e.stdout)
-            print("--- DDSP Stderr ---")
-            print(e.stderr)
-            print("-------------------")
+            if e.stdout:
+                print("--- DDSP Stdout ---")
+                print(e.stdout)
+            if e.stderr:
+                print("--- DDSP Stderr ---")
+                print(e.stderr)
+                print("-------------------")
         except Exception as e:
             print(f"⚠️ DDSP rendering failed ({e}).")
 
