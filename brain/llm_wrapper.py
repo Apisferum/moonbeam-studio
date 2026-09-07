@@ -421,8 +421,11 @@ class LLMWrapper:
         kimi_model: str = "accounts/fireworks/models/kimi-k2p7-code",
         glm_model: str = "accounts/fireworks/models/glm-5p2",
         use_mock: bool = False,
+        api_key: Optional[str] = None,
+        **kwargs,
     ):
         self.use_mock = use_mock
+        self.api_key = api_key
         self.grok_api_key = grok_api_key or os.environ.get("GROK_API_KEY")
         self.gemini_api_key = gemini_api_key or os.environ.get("GEMINI_API_KEY")
         # Fireworks hosts Qwen, Kimi, and GLM behind one OpenAI-compatible endpoint/key
