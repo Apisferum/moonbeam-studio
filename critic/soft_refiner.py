@@ -78,8 +78,11 @@ class SoftRefiner:
                     clipped_dur += 1
                 
                 if inst in self.drum_ids or inst == 128:
-                    if pc not in self.valid_drum_pitches:
-                        pc = 36 if random.random() < 0.5 else 38 
+                    raw_pitch = oct * 12 + pc
+                    if raw_pitch not in self.valid_drum_pitches:
+                        target_drum = 36 if random.random() < 0.5 else 38
+                        oct = target_drum // 12
+                        pc = target_drum % 12
                         sanitized_drums += 1
                 elif pc not in valid_pcs:
                     if pc in protected:
