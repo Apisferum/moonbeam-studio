@@ -10,3 +10,4 @@ temp_*.mid
 .vscode/
 .idea/
 *.log
+.env
