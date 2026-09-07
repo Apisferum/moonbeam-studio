@@ -127,7 +127,7 @@ class AgenticComposer:
         self.llm = LLMWrapper()
         
         self.use_planner = use_planner
-        self.use_motif_memory = False
+        self.use_motif_memory = use_motif_memory
         self.use_ties = use_ties
         self.use_soft_refiner = use_soft_refiner
         self.use_hard_scorer = use_hard_scorer
@@ -165,15 +165,92 @@ class AgenticComposer:
 
     def _map_mood_to_emo_token(self, mood: str) -> int:
         quadrant_map = {
-            "happy": "emo_q1", "heroic": "emo_q1", "excited": "emo_q1",
-            "tension": "emo_q2", "angry": "emo_q2", "dark": "emo_q2",
-            "sad": "emo_q3", "melancholy": "emo_q3", "grief": "emo_q3",
-            "calm": "emo_q4", "peaceful": "emo_q4", "tender": "emo_q4"
+            "happy": "emo_q1", "heroic": "emo_q1", "excited": "emo_q1", "q1": "emo_q1", "emo_q1": "emo_q1",
+            "tension": "emo_q2", "angry": "emo_q2", "dark": "emo_q2", "q2": "emo_q2", "emo_q2": "emo_q2",
+            "sad": "emo_q3", "melancholy": "emo_q3", "grief": "emo_q3", "q3": "emo_q3", "emo_q3": "emo_q3",
+            "calm": "emo_q4", "peaceful": "emo_q4", "tender": "emo_q4", "q4": "emo_q4", "emo_q4": "emo_q4",
         }
-        q_token = quadrant_map.get(mood.lower(), "emo_q4")
+        q_token = quadrant_map.get(str(mood).lower(), "emo_q4")
         for key, val in self.master_dict.items():
             if q_token in key.lower(): return val
         return -4
+
+    def _build_metadata_tokens(self, section: dict, ties_weights: Optional[dict] = None) -> List[int]:
+        """
+        Dynamically constructs the 11 metadata conditioning tokens expected by the sub-GRU condition layer
+        (Linear(11 * hidden_size, hidden_size)) based on the active LoRA routes and section attributes:
+        - EMOPIA: trained with the quadrant emotion token repeated 11 times.
+        - CoMMU: trained with [key, pitch_range, measures, bpm, genre, track_role, inst, rhythm, time_sig, min_vel, max_vel].
+        - Slakh: trained with orchestration profile and section flags.
+        - Hybrid/TIES: balanced multi-task conditioning preserving emotion, orchestration, and structural keys.
+        """
+        mood = section.get("mood", "calm")
+        emo_tok = self._map_mood_to_emo_token(mood)
+        soc_tok = self.master_dict.get("soc_token_compound", -4)
+
+        weights = ties_weights or section.get("ties_weights") or {"commu_lora": 0.35, "emopia_lora": 0.35, "slakh_lora": 0.30}
+        emopia_w = weights.get("emopia_lora", 0.0)
+        slakh_w = weights.get("slakh_lora", 0.0)
+        commu_w = weights.get("commu_lora", 0.0)
+
+        # 1. Pure or dominant EMOPIA adapter (>= 0.6)
+        if emopia_w >= 0.6:
+            return [emo_tok] * 11
+
+        tokens = [emo_tok]
+
+        # 2. Slakh Orchestration tokens if Slakh is active
+        if slakh_w > 0.15:
+            orch_token_name = "<slakh_orch_chamber>" if "chamber" in section.get("style", "").lower() else "<slakh_orch_full>"
+            orch_tok = self.master_dict.get(orch_token_name, soc_tok)
+            tokens.append(orch_tok)
+
+            target_insts = [str(i).lower() for i in section.get("target_instruments", [])]
+            sec_token_name = None
+            if any("string" in i or "violin" in i or "cello" in i for i in target_insts):
+                sec_token_name = "<slakh_sec_Strings>"
+            elif any("brass" in i or "trumpet" in i or "horn" in i for i in target_insts):
+                sec_token_name = "<slakh_sec_Brass_Winds>"
+            elif any("percussion" in i or "drum" in i for i in target_insts):
+                sec_token_name = "<slakh_sec_Rhythm>"
+            if sec_token_name and sec_token_name in self.master_dict:
+                tokens.append(self.master_dict[sec_token_name])
+
+        # 3. CoMMU structural tokens if CoMMU is active
+        if commu_w > 0.15:
+            key_name = f"audio_key_{section.get('key', 'C').lower()}{section.get('mode', 'major').lower()}"
+            if key_name in self.master_dict:
+                tokens.append(self.master_dict[key_name])
+
+            bpm_val = int(section.get("bpm", 120))
+            bpm_key = f"bpm_{bpm_val}"
+            if bpm_key in self.master_dict:
+                tokens.append(self.master_dict[bpm_key])
+            else:
+                avail_bpms = [int(k.split("_")[1]) for k in self.master_dict if k.startswith("bpm_") and k.split("_")[1].isdigit()]
+                if avail_bpms:
+                    closest_bpm = min(avail_bpms, key=lambda b: abs(b - bpm_val))
+                    tokens.append(self.master_dict.get(f"bpm_{closest_bpm}", soc_tok))
+
+            genre_key = f"genre_{section.get('style', 'cinematic').lower()}"
+            if genre_key in self.master_dict:
+                tokens.append(self.master_dict[genre_key])
+
+            ts = section.get("time_signature", "4/4")
+            ts_key = f"time_signature_{ts}"
+            if ts_key in self.master_dict:
+                tokens.append(self.master_dict[ts_key])
+
+            bars = section.get("bars", 8)
+            bars_key = f"num_measures_{bars}"
+            if bars_key in self.master_dict:
+                tokens.append(self.master_dict[bars_key])
+
+        fill_token = emo_tok if emopia_w >= 0.3 else soc_tok
+        while len(tokens) < 11:
+            tokens.append(fill_token)
+
+        return tokens[:11]
 
     def _build_forced_streams(self, note_events: List[Dict], bpm: float = 120, primer_offset_ticks: int = 0) -> List[deque]:
         """
@@ -611,28 +688,12 @@ class AgenticComposer:
 
             hook_start_section(section_idx, section_name, section)
 
-            metadata_ids = []
-            mood = section.get("mood", "calm")
-            metadata_ids.append(self._map_mood_to_emo_token(mood))
-            while len(metadata_ids) < 11: metadata_ids.append(-4)
-
-            active_primer = None
-            if section_idx == 0 and primer_tokens is not None:
-                active_primer = primer_tokens
-                logger.info("   ↳ Injecting user primer for outpainting continuation.")
-            elif last_accepted_midi is not None and self.use_motif_memory:
-                active_primer = self.motif_memory.retrieve_primer(last_accepted_midi)
-                if active_primer: logger.info("   ↳ Injecting FAISS Primer.")
-
-            best_midi = None
-            best_score = -1.0
-            best_feedback = {}
-            current_temp = 0.75
-            accepted = False
-
             # Initialize weights for this section (Bugfix: start fresh for each section)
             weights = section.get("ties_weights", {"commu_lora": 0.35, "emopia_lora": 0.25, "slakh_lora": 0.40}).copy()
             self.harmonyrouter.set_weights(weights)
+            metadata_ids = self._build_metadata_tokens(section, weights)
+
+            active_primer = None
 
             for attempt in range(1, self.max_attempts + 1):
                 hook_log_ties_weights(weights)
