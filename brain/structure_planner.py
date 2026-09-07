@@ -238,7 +238,8 @@ class StructurePlanner:
         if dur is None:
             return None
         try:
-            octave = int(octave_str)
+            # Convert scientific pitch notation (SPN: C4 = MIDI 60) to Tokenizer Octave (60 // 12 = 5)
+            octave = max(0, min(8, int(octave_str) + 1))
         except ValueError:
             return None
         return {"is_rest": False, "pitch_class": NOTE_MAP[root_str], "octave": octave, "duration_beats": dur}
