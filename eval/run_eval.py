@@ -77,6 +77,7 @@ def _autodiscover_checkpoints():
         os.path.join(workspace_root, "Moonbeam Pretrained Weights"),
         os.path.join(workspace_root, "moonbeam_chunk_20260716_140713"),
         os.path.join(workspace_root, "moonbeam_chunk_20260817_155517"),
+        os.path.join(workspace_root, "moonbeam_chunk_20260816_170434"),
         os.path.join(workspace_root, "moonbeam-codebase"),
         os.path.join(workspace_root, "Moonbeam Multi-Task Data"),
         "d:/scmoe",
@@ -367,6 +368,7 @@ def main():
     parser.add_argument("--prompts_limit", type=int, default=3, help="Max number of prompts to run")
     parser.add_argument("--results_dir", type=str, default="eval/results", help="Directory to save evaluation results")
     parser.add_argument("--config", type=str, default=None, help="Specific configuration name to run (e.g. full_system, no_planner)")
+    parser.add_argument("--max_attempts", type=int, default=None, help="Override composer max_attempts per section")
     args = parser.parse_args()
 
     load_dotenv()
@@ -421,7 +423,14 @@ def main():
             device=device,
         )
 
+    agg_json_path = os.path.join(args.results_dir, "aggregate_metrics.json")
     results = {}
+    if os.path.exists(agg_json_path):
+        try:
+            with open(agg_json_path, "r") as f:
+                results = json.load(f)
+        except Exception:
+            results = {}
 
     for name, cfg_or_runner in configs.items():
         cfg_or_runner = os.path.abspath(os.path.join(studio_root, cfg_or_runner))
@@ -490,6 +499,8 @@ def main():
                         use_soft_refiner=use_soft_refiner,
                         use_hard_scorer=use_hard_scorer
                     )
+                    if args.max_attempts is not None:
+                        composer.max_attempts = args.max_attempts
                     
                     # Ensure mock LLM is false for real eval
                     composer.llm.use_mock = False

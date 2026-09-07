@@ -432,7 +432,7 @@ class LLMWrapper:
         )
         self.qwen_api_key = qwen_api_key or os.environ.get("QWEN_API_KEY") or self.fireworks_api_key
         self.qwen_api_base = qwen_api_base or os.environ.get(
-            "QWEN_API_BASE", "https://dashscope-intl.aliyuncs.com/compatible-mode/v1/chat/completions"
+            "QWEN_API_BASE", "https://openrouter.ai/api/v1/chat/completions"
         )
         self.qwen_model = os.environ.get("QWEN_MODEL") or qwen_model
         # Automatically map model ID to qwen-plus if Aliyun is selected as Qwen base URL

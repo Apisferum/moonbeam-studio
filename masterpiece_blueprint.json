@@ -1,0 +1,6225 @@
+{
+  "llm_intent": {
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 120,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "lead_instrument": "Flute",
+    "energy_curve": "build",
+    "modulations": [],
+    "sections": [
+      {
+        "name": "Intro",
+        "mood": "energetic",
+        "length": "short",
+        "instruments": [
+          "Flute",
+          "Percussion",
+          "Cello"
+        ],
+        "explicit_chords": null,
+        "explicit_chord_durations": null,
+        "explicit_melody": null,
+        "riff": false,
+        "solo_instrument": null
+      },
+      {
+        "name": "Verse",
+        "mood": "happy",
+        "length": "medium",
+        "instruments": [
+          "Flute",
+          "Violin",
+          "Double Bass",
+          "Percussion"
+        ],
+        "explicit_chords": null,
+        "explicit_chord_durations": null,
+        "explicit_melody": null,
+        "riff": false,
+        "solo_instrument": null
+      },
+      {
+        "name": "Chorus",
+        "mood": "bright and joyful",
+        "length": "medium",
+        "instruments": [
+          "Flute",
+          "Violin",
+          "Trumpet",
+          "Cello",
+          "Double Bass",
+          "Percussion"
+        ],
+        "explicit_chords": null,
+        "explicit_chord_durations": null,
+        "explicit_melody": null,
+        "riff": false,
+        "solo_instrument": null
+      },
+      {
+        "name": "Outro",
+        "mood": "uplifting",
+        "length": "short",
+        "instruments": [
+          "Flute",
+          "Violin",
+          "Percussion"
+        ],
+        "explicit_chords": null,
+        "explicit_chord_durations": null,
+        "explicit_melody": null,
+        "riff": false,
+        "solo_instrument": null
+      }
+    ]
+  },
+  "dense_blueprint": {
+    "global_settings": {
+      "key": "C",
+      "mode": "major",
+      "bpm": 120,
+      "style": "pop",
+      "time_signature": "4/4"
+    },
+    "timeline": [
+      {
+        "section_name": "Intro",
+        "bars": 6,
+        "key": "C",
+        "mode": "major",
+        "bpm": 120,
+        "style": "pop",
+        "mood": "energetic",
+        "energy_curve": "build",
+        "riff_mode": false,
+        "solo_instrument": null,
+        "time_signature": "4/4",
+        "beats_per_bar": 4,
+        "progression": [
+          {
+            "symbol": "Amin7",
+            "degree": "vi",
+            "quality": "min7",
+            "root_pc": 9,
+            "duration_beats": 4,
+            "start_beat": 0,
+            "end_beat": 4
+          },
+          {
+            "symbol": "Amin7",
+            "degree": "vi",
+            "quality": "min7",
+            "root_pc": 9,
+            "duration_beats": 4,
+            "start_beat": 4,
+            "end_beat": 8
+          },
+          {
+            "symbol": "Emin7",
+            "degree": "iii",
+            "quality": "min7",
+            "root_pc": 4,
+            "duration_beats": 4,
+            "start_beat": 8,
+            "end_beat": 12
+          },
+          {
+            "symbol": "Cmaj7",
+            "degree": "I",
+            "quality": "maj7",
+            "root_pc": 0,
+            "duration_beats": 4,
+            "start_beat": 12,
+            "end_beat": 16
+          },
+          {
+            "symbol": "Bdim",
+            "degree": "vii\u00b0",
+            "quality": "dim",
+            "root_pc": 11,
+            "duration_beats": 2,
+            "start_beat": 16,
+            "end_beat": 18
+          },
+          {
+            "symbol": "Cmaj7",
+            "degree": "I",
+            "quality": "maj7",
+            "root_pc": 0,
+            "duration_beats": 4,
+            "start_beat": 18,
+            "end_beat": 22
+          }
+        ],
+        "target_chords": [
+          "Amin7",
+          "Amin7",
+          "Emin7",
+          "Cmaj7",
+          "Bdim",
+          "Cmaj7"
+        ],
+        "chord_timeline": [
+          {
+            "start": 0.0,
+            "end": 2.0,
+            "chord": "Amin7"
+          },
+          {
+            "start": 2.0,
+            "end": 4.0,
+            "chord": "Amin7"
+          },
+          {
+            "start": 4.0,
+            "end": 6.0,
+            "chord": "Emin7"
+          },
+          {
+            "start": 6.0,
+            "end": 8.0,
+            "chord": "Cmaj7"
+          },
+          {
+            "start": 8.0,
+            "end": 9.0,
+            "chord": "Bdim"
+          },
+          {
+            "start": 9.0,
+            "end": 11.0,
+            "chord": "Cmaj7"
+          }
+        ],
+        "target_instruments": [
+          "Flute",
+          "Percussion",
+          "Cello"
+        ],
+        "harmony_source": "generated",
+        "melody_pattern": [],
+        "protected_pcs": [],
+        "ties_weights": {
+          "commu_lora": 0.4,
+          "emopia_lora": 0.3,
+          "slakh_lora": 0.3
+        },
+        "density_curve": [
+          0.1,
+          0.156,
+          0.22399999999999998,
+          0.30400000000000005,
+          0.396,
+          0.5
+        ],
+        "max_tokens": 98,
+        "motif_action": "generate_and_save_seed",
+        "note_events": [
+          {
+            "start_beat": 0,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 0,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 0,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 0.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 4.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 8.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 2,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 12.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 16.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 6,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 20.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          }
+        ]
+      },
+      {
+        "section_name": "Verse",
+        "bars": 12,
+        "key": "C",
+        "mode": "major",
+        "bpm": 120,
+        "style": "pop",
+        "mood": "happy",
+        "energy_curve": "build",
+        "riff_mode": false,
+        "solo_instrument": null,
+        "time_signature": "4/4",
+        "beats_per_bar": 4,
+        "progression": [
+          {
+            "symbol": "Amin7",
+            "degree": "vi",
+            "quality": "min7",
+            "root_pc": 9,
+            "duration_beats": 4,
+            "start_beat": 0,
+            "end_beat": 4
+          },
+          {
+            "symbol": "Amin7",
+            "degree": "vi",
+            "quality": "min7",
+            "root_pc": 9,
+            "duration_beats": 4,
+            "start_beat": 4,
+            "end_beat": 8
+          },
+          {
+            "symbol": "Fmaj7",
+            "degree": "IV",
+            "quality": "maj7",
+            "root_pc": 5,
+            "duration_beats": 4,
+            "start_beat": 8,
+            "end_beat": 12
+          },
+          {
+            "symbol": "Fmaj7",
+            "degree": "IV",
+            "quality": "maj7",
+            "root_pc": 5,
+            "duration_beats": 4,
+            "start_beat": 12,
+            "end_beat": 16
+          },
+          {
+            "symbol": "Emin7",
+            "degree": "iii",
+            "quality": "min7",
+            "root_pc": 4,
+            "duration_beats": 4,
+            "start_beat": 16,
+            "end_beat": 20
+          },
+          {
+            "symbol": "Cmaj7",
+            "degree": "I",
+            "quality": "maj7",
+            "root_pc": 0,
+            "duration_beats": 4,
+            "start_beat": 20,
+            "end_beat": 24
+          },
+          {
+            "symbol": "Bdim",
+            "degree": "vii\u00b0",
+            "quality": "dim",
+            "root_pc": 11,
+            "duration_beats": 2,
+            "start_beat": 24,
+            "end_beat": 26
+          },
+          {
+            "symbol": "Bdim",
+            "degree": "vii\u00b0",
+            "quality": "dim",
+            "root_pc": 11,
+            "duration_beats": 2,
+            "start_beat": 26,
+            "end_beat": 28
+          },
+          {
+            "symbol": "Amin7",
+            "degree": "vi",
+            "quality": "min7",
+            "root_pc": 9,
+            "duration_beats": 4,
+            "start_beat": 28,
+            "end_beat": 32
+          },
+          {
+            "symbol": "Cmaj7",
+            "degree": "I",
+            "quality": "maj7",
+            "root_pc": 0,
+            "duration_beats": 4,
+            "start_beat": 32,
+            "end_beat": 36
+          },
+          {
+            "symbol": "Bdim",
+            "degree": "vii\u00b0",
+            "quality": "dim",
+            "root_pc": 11,
+            "duration_beats": 2,
+            "start_beat": 36,
+            "end_beat": 38
+          },
+          {
+            "symbol": "Emin7",
+            "degree": "iii",
+            "quality": "min7",
+            "root_pc": 4,
+            "duration_beats": 4,
+            "start_beat": 38,
+            "end_beat": 42
+          }
+        ],
+        "target_chords": [
+          "Amin7",
+          "Amin7",
+          "Fmaj7",
+          "Fmaj7",
+          "Emin7",
+          "Cmaj7",
+          "Bdim",
+          "Bdim",
+          "Amin7",
+          "Cmaj7",
+          "Bdim",
+          "Emin7"
+        ],
+        "chord_timeline": [
+          {
+            "start": 0.0,
+            "end": 2.0,
+            "chord": "Amin7"
+          },
+          {
+            "start": 2.0,
+            "end": 4.0,
+            "chord": "Amin7"
+          },
+          {
+            "start": 4.0,
+            "end": 6.0,
+            "chord": "Fmaj7"
+          },
+          {
+            "start": 6.0,
+            "end": 8.0,
+            "chord": "Fmaj7"
+          },
+          {
+            "start": 8.0,
+            "end": 10.0,
+            "chord": "Emin7"
+          },
+          {
+            "start": 10.0,
+            "end": 12.0,
+            "chord": "Cmaj7"
+          },
+          {
+            "start": 12.0,
+            "end": 13.0,
+            "chord": "Bdim"
+          },
+          {
+            "start": 13.0,
+            "end": 14.0,
+            "chord": "Bdim"
+          },
+          {
+            "start": 14.0,
+            "end": 16.0,
+            "chord": "Amin7"
+          },
+          {
+            "start": 16.0,
+            "end": 18.0,
+            "chord": "Cmaj7"
+          },
+          {
+            "start": 18.0,
+            "end": 19.0,
+            "chord": "Bdim"
+          },
+          {
+            "start": 19.0,
+            "end": 21.0,
+            "chord": "Emin7"
+          }
+        ],
+        "target_instruments": [
+          "Flute",
+          "Violin",
+          "Double Bass",
+          "Percussion"
+        ],
+        "harmony_source": "generated",
+        "melody_pattern": [],
+        "protected_pcs": [],
+        "ties_weights": {
+          "commu_lora": 0.364,
+          "emopia_lora": 0.273,
+          "slakh_lora": 0.364
+        },
+        "density_curve": [
+          0.25,
+          0.2727272727272727,
+          0.29545454545454547,
+          0.3181818181818182,
+          0.34090909090909094,
+          0.36363636363636365,
+          0.38636363636363635,
+          0.40909090909090906,
+          0.4318181818181818,
+          0.4545454545454546,
+          0.4772727272727273,
+          0.5
+        ],
+        "max_tokens": 384,
+        "motif_action": "retrieve_seed",
+        "note_events": [
+          {
+            "start_beat": 0,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 0,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 0,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 0.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 1.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 2.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 3.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 4.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 5.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 6.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 7.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 9.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 10.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 11.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 13.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 14.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 15.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 17.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 18.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 19.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 20.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 21.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 22,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 22,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 22,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 22.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 23,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 23,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 23,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 23.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 24,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 24,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 24,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 24.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 25,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 6,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 25,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 25,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 25.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 26,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 26,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 26,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 26.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 27,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 6,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 27,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 27,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 27.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 28,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 28,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 28,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 28.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 29,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 29,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 29,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 29.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 30,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 30,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 30,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 30.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 31,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 31,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 31,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 31.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 32,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 32,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 32,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 32.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 33,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 33,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 33,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 33.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 34,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 34,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 34,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 34.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 35,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 35,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 35,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 35.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 36,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 36,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 36,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 36.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 37,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 6,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 37,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 37,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 37.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 38,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 38,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 38,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 38.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 39,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 39,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 39,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 39.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 40,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 40,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 40,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 40.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 41,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 41,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 41,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 41.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 42.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 43.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 2,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 44.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 4,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 45.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 2,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 46.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 47.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 1.0,
+            "role": "lead"
+          }
+        ]
+      },
+      {
+        "section_name": "Chorus",
+        "bars": 12,
+        "key": "C",
+        "mode": "major",
+        "bpm": 120,
+        "style": "pop",
+        "mood": "bright and joyful",
+        "energy_curve": "build",
+        "riff_mode": false,
+        "solo_instrument": null,
+        "time_signature": "4/4",
+        "beats_per_bar": 4,
+        "progression": [
+          {
+            "symbol": "Fmaj7",
+            "degree": "IV",
+            "quality": "maj7",
+            "root_pc": 5,
+            "duration_beats": 4,
+            "start_beat": 0,
+            "end_beat": 4
+          },
+          {
+            "symbol": "Fmaj7",
+            "degree": "IV",
+            "quality": "maj7",
+            "root_pc": 5,
+            "duration_beats": 4,
+            "start_beat": 4,
+            "end_beat": 8
+          },
+          {
+            "symbol": "Amin7",
+            "degree": "vi",
+            "quality": "min7",
+            "root_pc": 9,
+            "duration_beats": 4,
+            "start_beat": 8,
+            "end_beat": 12
+          },
+          {
+            "symbol": "Amin7",
+            "degree": "vi",
+            "quality": "min7",
+            "root_pc": 9,
+            "duration_beats": 4,
+            "start_beat": 12,
+            "end_beat": 16
+          },
+          {
+            "symbol": "Fmaj7",
+            "degree": "IV",
+            "quality": "maj7",
+            "root_pc": 5,
+            "duration_beats": 4,
+            "start_beat": 16,
+            "end_beat": 20
+          },
+          {
+            "symbol": "Dmin7",
+            "degree": "ii",
+            "quality": "min7",
+            "root_pc": 2,
+            "duration_beats": 4,
+            "start_beat": 20,
+            "end_beat": 24
+          },
+          {
+            "symbol": "G7",
+            "degree": "V",
+            "quality": "7",
+            "root_pc": 7,
+            "duration_beats": 2,
+            "start_beat": 24,
+            "end_beat": 26
+          },
+          {
+            "symbol": "Cmaj7",
+            "degree": "I",
+            "quality": "maj7",
+            "root_pc": 0,
+            "duration_beats": 4,
+            "start_beat": 26,
+            "end_beat": 30
+          },
+          {
+            "symbol": "Fmaj7",
+            "degree": "IV",
+            "quality": "maj7",
+            "root_pc": 5,
+            "duration_beats": 4,
+            "start_beat": 30,
+            "end_beat": 34
+          },
+          {
+            "symbol": "Dmin7",
+            "degree": "ii",
+            "quality": "min7",
+            "root_pc": 2,
+            "duration_beats": 4,
+            "start_beat": 34,
+            "end_beat": 38
+          },
+          {
+            "symbol": "Bdim",
+            "degree": "vii\u00b0",
+            "quality": "dim",
+            "root_pc": 11,
+            "duration_beats": 2,
+            "start_beat": 38,
+            "end_beat": 40
+          },
+          {
+            "symbol": "Amin7",
+            "degree": "vi",
+            "quality": "min7",
+            "root_pc": 9,
+            "duration_beats": 4,
+            "start_beat": 40,
+            "end_beat": 44
+          }
+        ],
+        "target_chords": [
+          "Fmaj7",
+          "Fmaj7",
+          "Amin7",
+          "Amin7",
+          "Fmaj7",
+          "Dmin7",
+          "G7",
+          "Cmaj7",
+          "Fmaj7",
+          "Dmin7",
+          "Bdim",
+          "Amin7"
+        ],
+        "chord_timeline": [
+          {
+            "start": 0.0,
+            "end": 2.0,
+            "chord": "Fmaj7"
+          },
+          {
+            "start": 2.0,
+            "end": 4.0,
+            "chord": "Fmaj7"
+          },
+          {
+            "start": 4.0,
+            "end": 6.0,
+            "chord": "Amin7"
+          },
+          {
+            "start": 6.0,
+            "end": 8.0,
+            "chord": "Amin7"
+          },
+          {
+            "start": 8.0,
+            "end": 10.0,
+            "chord": "Fmaj7"
+          },
+          {
+            "start": 10.0,
+            "end": 12.0,
+            "chord": "Dmin7"
+          },
+          {
+            "start": 12.0,
+            "end": 13.0,
+            "chord": "G7"
+          },
+          {
+            "start": 13.0,
+            "end": 15.0,
+            "chord": "Cmaj7"
+          },
+          {
+            "start": 15.0,
+            "end": 17.0,
+            "chord": "Fmaj7"
+          },
+          {
+            "start": 17.0,
+            "end": 19.0,
+            "chord": "Dmin7"
+          },
+          {
+            "start": 19.0,
+            "end": 20.0,
+            "chord": "Bdim"
+          },
+          {
+            "start": 20.0,
+            "end": 22.0,
+            "chord": "Amin7"
+          }
+        ],
+        "target_instruments": [
+          "Flute",
+          "Violin",
+          "Trumpet",
+          "Cello",
+          "Double Bass",
+          "Percussion"
+        ],
+        "harmony_source": "generated",
+        "melody_pattern": [],
+        "protected_pcs": [],
+        "ties_weights": {
+          "commu_lora": 0.32,
+          "emopia_lora": 0.24,
+          "slakh_lora": 0.44
+        },
+        "density_curve": [
+          0.35,
+          0.42791987293768846,
+          0.5094772358216741,
+          0.5897340096494492,
+          0.6633338172316061,
+          0.7250519509558399,
+          0.7703676978905799,
+          0.7960005806779271,
+          0.8003532988099669,
+          0.7838111320333447,
+          0.7488597776409549,
+          0.7
+        ],
+        "max_tokens": 576,
+        "motif_action": "retrieve_seed",
+        "note_events": [
+          {
+            "start_beat": 0,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 0,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 0,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 0,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 0.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 0.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 2,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 1.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 1.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 2.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 2.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 3.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 3.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 2,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 4.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 4.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 2,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 5.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 5.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 6.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 6.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 7.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 7.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 2,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 8.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 9.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 9.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 9.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 10.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 10.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 10.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 11.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 11.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 11.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 12.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 13.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 13.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 13.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 14.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 14.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 14.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 15.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 15.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 15.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 16.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 17.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 17.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 17.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 18.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 18.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 18.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 19.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 19.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 19.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 0,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 2,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 20,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 20.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 20.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 20.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 0,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 21,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 21.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 21.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 21.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 22,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 0,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 22,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 2,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 22,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 22,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 22.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 22.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 22.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 23,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 0,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 23,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 23,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 23,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 23.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 23.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 23.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 24,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 5,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 24,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 24,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 24,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 24.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 24.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 24.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 25,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 5,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 25,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 2,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 25,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 25,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 25.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 25.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 25.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 26,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 11,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 26,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 26,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 26,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 26.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 26.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 26.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 27,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 11,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 27,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 27,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 27,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 27.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 27.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 27.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 28,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 11,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 28,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 28,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 28,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 28.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 28.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 28.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 29,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 11,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 29,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 7,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 29,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 29,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 29.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 29.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 29.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 30,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 30,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 30,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 30,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 30.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 30.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 30.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 31,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 31,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 31,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 31,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 31.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 31.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 31.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 7,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 32,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 32,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 5,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 32,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 32,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 32.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 32.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 32.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 33,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 4,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 33,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 0,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 33,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 33,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 33.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 33.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 33.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 34,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 0,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 34,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 2,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 34,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 34,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 34.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 34.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 34.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 35,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 0,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 35,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 35,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 35,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 35.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 35.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 35.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 36,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 0,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 36,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 2,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 36,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 36,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 36.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 36.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 36.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 37,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 0,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 37,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 37,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 37,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 37.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 37.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 37.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 38,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 5,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 38,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 11,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 38,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 38,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 38.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 38.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 38.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 39,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 5,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 39,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 6,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 39,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 39,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 39.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 39.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 39.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 40,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 40,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 40,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 40,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 40.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 40.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 40.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 41,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 41,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 41,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 41,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 41.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 41.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 41.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 2,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 42,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 42,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 9,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 42,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 42,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 42.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 42.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 42.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 2,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 43,
+            "instrument_name": "Cello",
+            "instrument_program": 42,
+            "octave": 4,
+            "pitch_class": 7,
+            "role": "harmony",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 43,
+            "instrument_name": "Double Bass",
+            "instrument_program": 43,
+            "octave": 1,
+            "pitch_class": 4,
+            "role": "bass",
+            "duration_beats": 1.0
+          },
+          {
+            "start_beat": 43,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 43,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 43.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 43.5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 43.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 44.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 9,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 44.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 45.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 45.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 2,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 46.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 4,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 46.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 2,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 47.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 6,
+            "pitch_class": 0,
+            "duration_beats": 0.5,
+            "role": "lead"
+          },
+          {
+            "start_beat": 47.5,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 11,
+            "duration_beats": 0.5,
+            "role": "lead"
+          }
+        ]
+      },
+      {
+        "section_name": "Outro",
+        "bars": 6,
+        "key": "C",
+        "mode": "major",
+        "bpm": 120,
+        "style": "pop",
+        "mood": "uplifting",
+        "energy_curve": "build",
+        "riff_mode": false,
+        "solo_instrument": null,
+        "time_signature": "4/4",
+        "beats_per_bar": 4,
+        "progression": [
+          {
+            "symbol": "Cmaj7",
+            "degree": "I",
+            "quality": "maj7",
+            "root_pc": 0,
+            "duration_beats": 4,
+            "start_beat": 0,
+            "end_beat": 4
+          },
+          {
+            "symbol": "Dmin7",
+            "degree": "ii",
+            "quality": "min7",
+            "root_pc": 2,
+            "duration_beats": 4,
+            "start_beat": 4,
+            "end_beat": 8
+          },
+          {
+            "symbol": "G7",
+            "degree": "V",
+            "quality": "7",
+            "root_pc": 7,
+            "duration_beats": 2,
+            "start_beat": 8,
+            "end_beat": 10
+          },
+          {
+            "symbol": "Cmaj7",
+            "degree": "I",
+            "quality": "maj7",
+            "root_pc": 0,
+            "duration_beats": 4,
+            "start_beat": 10,
+            "end_beat": 14
+          },
+          {
+            "symbol": "G7",
+            "degree": "V",
+            "quality": "7",
+            "root_pc": 7,
+            "duration_beats": 2,
+            "start_beat": 14,
+            "end_beat": 16
+          },
+          {
+            "symbol": "Amin7",
+            "degree": "vi",
+            "quality": "min7",
+            "root_pc": 9,
+            "duration_beats": 4,
+            "start_beat": 16,
+            "end_beat": 20
+          }
+        ],
+        "target_chords": [
+          "Cmaj7",
+          "Dmin7",
+          "G7",
+          "Cmaj7",
+          "G7",
+          "Amin7"
+        ],
+        "chord_timeline": [
+          {
+            "start": 0.0,
+            "end": 2.0,
+            "chord": "Cmaj7"
+          },
+          {
+            "start": 2.0,
+            "end": 4.0,
+            "chord": "Dmin7"
+          },
+          {
+            "start": 4.0,
+            "end": 5.0,
+            "chord": "G7"
+          },
+          {
+            "start": 5.0,
+            "end": 7.0,
+            "chord": "Cmaj7"
+          },
+          {
+            "start": 7.0,
+            "end": 8.0,
+            "chord": "G7"
+          },
+          {
+            "start": 8.0,
+            "end": 10.0,
+            "chord": "Amin7"
+          }
+        ],
+        "target_instruments": [
+          "Flute",
+          "Violin",
+          "Percussion"
+        ],
+        "harmony_source": "generated",
+        "melody_pattern": [],
+        "protected_pcs": [],
+        "ties_weights": {
+          "commu_lora": 0.4,
+          "emopia_lora": 0.3,
+          "slakh_lora": 0.3
+        },
+        "density_curve": [
+          0.3,
+          0.288,
+          0.252,
+          0.19199999999999995,
+          0.10799999999999997,
+          0.1
+        ],
+        "max_tokens": 96,
+        "motif_action": "retrieve_seed",
+        "note_events": [
+          {
+            "start_beat": 0,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 0,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 0.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 1,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 2,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 3,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 4,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 4.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 0,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 5,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 6,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 7,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 8.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 2,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 9,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 10,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 11,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 12.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 5,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 13,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 14,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 15,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 16.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 4.0,
+            "role": "lead"
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 17,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 0,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 18,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 2,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 19,
+            "instrument_name": "Percussion",
+            "instrument_program": 128,
+            "octave": 3,
+            "pitch_class": 6,
+            "role": "drums",
+            "duration_beats": 0.25
+          },
+          {
+            "start_beat": 20.0,
+            "instrument_name": "Flute",
+            "instrument_program": 73,
+            "octave": 5,
+            "pitch_class": 4,
+            "duration_beats": 4.0,
+            "role": "lead"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.mid
+*.midi
+*.wav
+*.mp3
+_ddsp_chunks/
+temp_*.mid
+.vscode/
+.idea/
+*.log

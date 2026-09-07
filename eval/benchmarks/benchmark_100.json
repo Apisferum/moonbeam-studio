@@ -1,0 +1,3102 @@
+[
+  {
+    "id": 1,
+    "prompt": "A vibrant energetic dance pop track with bright synths and driving bass in C major, 115 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 115,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "happy"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "prompt": "A warm uplifting acoustic pop ballad with emotional chords in A major, 85 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 85,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "romantic"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "prompt": "A gentle lo-fi chill pop groove with mellow electric piano in Bb major, 75 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 75,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "prompt": "A heart-wrenching emotional breakup pop song with tender piano in A minor, 70 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 70,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "sad"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "prompt": "A vibrant energetic dance pop track with bright synths and driving bass in C major, 120 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 120,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "happy"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "prompt": "A warm uplifting acoustic pop ballad with emotional chords in A major, 95 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 95,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "romantic"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "prompt": "A gentle lo-fi chill pop groove with mellow electric piano in Bb major, 80 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 80,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "prompt": "A heart-wrenching emotional breakup pop song with tender piano in A minor, 78 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 78,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "sad"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "prompt": "A vibrant energetic dance pop track with bright synths and driving bass in C major, 128 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 128,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "happy"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "prompt": "A warm uplifting acoustic pop ballad with emotional chords in A major, 105 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 105,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "romantic"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "prompt": "A gentle lo-fi chill pop groove with mellow electric piano in Bb major, 88 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 88,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "prompt": "A heart-wrenching emotional breakup pop song with tender piano in A minor, 85 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 85,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "sad"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "prompt": "A vibrant energetic dance pop track with bright synths and driving bass in C major, 115 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 115,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "happy"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "prompt": "A warm uplifting acoustic pop ballad with emotional chords in A major, 85 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 85,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "romantic"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "prompt": "A gentle lo-fi chill pop groove with mellow electric piano in Bb major, 75 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 75,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "prompt": "A heart-wrenching emotional breakup pop song with tender piano in A minor, 70 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 70,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "sad"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "prompt": "A vibrant energetic dance pop track with bright synths and driving bass in C major, 120 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 120,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "happy"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "prompt": "A warm uplifting acoustic pop ballad with emotional chords in A major, 95 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 95,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "romantic"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "prompt": "A gentle lo-fi chill pop groove with mellow electric piano in Bb major, 80 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 80,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "prompt": "A heart-wrenching emotional breakup pop song with tender piano in A minor, 78 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 78,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "sad"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "prompt": "A vibrant energetic dance pop track with bright synths and driving bass in C major, 128 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 128,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "happy"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "prompt": "A warm uplifting acoustic pop ballad with emotional chords in A major, 105 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 105,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "romantic"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "prompt": "A gentle lo-fi chill pop groove with mellow electric piano in Bb major, 88 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 88,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "prompt": "A heart-wrenching emotional breakup pop song with tender piano in A minor, 85 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 85,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "sad"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "prompt": "A vibrant energetic dance pop track with bright synths and driving bass in C major, 115 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 115,
+    "global_time_signature": "4/4",
+    "style": "pop",
+    "sections": [
+      {
+        "name": "Intro",
+        "length": "short",
+        "mood": "happy"
+      },
+      {
+        "name": "Verse",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Chorus",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Outro",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "prompt": "A solemn melancholic classical piano nocturne with delicate phrasing in C major, 65 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 65,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "sad"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "prompt": "A serene contemplative pastoral string quartet in baroque counterpoint in A major, 70 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 70,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "calm"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "prompt": "A virtuosic dramatic sonata movement with bold harmonic tensions in Bb major, 100 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 100,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "dramatic"
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "prompt": "A joyful classical rondo with playful staccato melody and bright harmony in A minor, 120 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 120,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "happy"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "prompt": "A solemn melancholic classical piano nocturne with delicate phrasing in C major, 72 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 72,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "sad"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "prompt": "A serene contemplative pastoral string quartet in baroque counterpoint in A major, 78 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 78,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "calm"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "prompt": "A virtuosic dramatic sonata movement with bold harmonic tensions in Bb major, 112 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 112,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "dramatic"
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "prompt": "A joyful classical rondo with playful staccato melody and bright harmony in A minor, 130 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 130,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "happy"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "prompt": "A solemn melancholic classical piano nocturne with delicate phrasing in C major, 80 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 80,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "sad"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "prompt": "A serene contemplative pastoral string quartet in baroque counterpoint in A major, 84 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 84,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "calm"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "prompt": "A virtuosic dramatic sonata movement with bold harmonic tensions in Bb major, 126 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 126,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "dramatic"
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "prompt": "A joyful classical rondo with playful staccato melody and bright harmony in A minor, 140 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 140,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "happy"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "prompt": "A solemn melancholic classical piano nocturne with delicate phrasing in C major, 65 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 65,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "sad"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "prompt": "A serene contemplative pastoral string quartet in baroque counterpoint in A major, 70 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 70,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "calm"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "prompt": "A virtuosic dramatic sonata movement with bold harmonic tensions in Bb major, 100 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 100,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "dramatic"
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "prompt": "A joyful classical rondo with playful staccato melody and bright harmony in A minor, 120 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 120,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "happy"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "prompt": "A solemn melancholic classical piano nocturne with delicate phrasing in C major, 72 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 72,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "sad"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "prompt": "A serene contemplative pastoral string quartet in baroque counterpoint in A major, 78 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 78,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "calm"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "prompt": "A virtuosic dramatic sonata movement with bold harmonic tensions in Bb major, 112 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 112,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "dramatic"
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "prompt": "A joyful classical rondo with playful staccato melody and bright harmony in A minor, 130 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 130,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "happy"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "prompt": "A solemn melancholic classical piano nocturne with delicate phrasing in C major, 80 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 80,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "sad"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "prompt": "A serene contemplative pastoral string quartet in baroque counterpoint in A major, 84 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 84,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "calm"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "prompt": "A virtuosic dramatic sonata movement with bold harmonic tensions in Bb major, 126 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 126,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "dramatic"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "dramatic"
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "prompt": "A joyful classical rondo with playful staccato melody and bright harmony in A minor, 140 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 140,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "happy"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "prompt": "A solemn melancholic classical piano nocturne with delicate phrasing in C major, 65 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 65,
+    "global_time_signature": "4/4",
+    "style": "classical",
+    "sections": [
+      {
+        "name": "Exposition",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Development",
+        "length": "long",
+        "mood": "sad"
+      },
+      {
+        "name": "Recapitulation",
+        "length": "medium",
+        "mood": "sad"
+      },
+      {
+        "name": "Coda",
+        "length": "short",
+        "mood": "sad"
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "prompt": "A high-stakes suspenseful orchestral cue with brooding cellos and ostinato in C major, 105 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 105,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "tense"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "prompt": "A heroic sweeping orchestral fantasy theme with brass fanfares and soaring strings in A major, 120 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 120,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "epic"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "epic"
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "prompt": "A sinister gothic film score with ominous low brass and creeping dissonance in Bb major, 60 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 60,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "dark"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "dark"
+      }
+    ]
+  },
+  {
+    "id": 54,
+    "prompt": "An ethereal celestial ambient soundtrack with shimmering pads and gentle harp in A minor, 68 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 68,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "prompt": "A high-stakes suspenseful orchestral cue with brooding cellos and ostinato in C major, 115 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 115,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "tense"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "prompt": "A heroic sweeping orchestral fantasy theme with brass fanfares and soaring strings in A major, 132 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 132,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "epic"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "epic"
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "prompt": "A sinister gothic film score with ominous low brass and creeping dissonance in Bb major, 72 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 72,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "dark"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "dark"
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "prompt": "An ethereal celestial ambient soundtrack with shimmering pads and gentle harp in A minor, 75 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 75,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "prompt": "A high-stakes suspenseful orchestral cue with brooding cellos and ostinato in C major, 125 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 125,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "tense"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 60,
+    "prompt": "A heroic sweeping orchestral fantasy theme with brass fanfares and soaring strings in A major, 144 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 144,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "epic"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "epic"
+      }
+    ]
+  },
+  {
+    "id": 61,
+    "prompt": "A sinister gothic film score with ominous low brass and creeping dissonance in Bb major, 80 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 80,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "dark"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "dark"
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "prompt": "An ethereal celestial ambient soundtrack with shimmering pads and gentle harp in A minor, 82 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 82,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "prompt": "A high-stakes suspenseful orchestral cue with brooding cellos and ostinato in C major, 105 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 105,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "tense"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 64,
+    "prompt": "A heroic sweeping orchestral fantasy theme with brass fanfares and soaring strings in A major, 120 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 120,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "epic"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "epic"
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "prompt": "A sinister gothic film score with ominous low brass and creeping dissonance in Bb major, 60 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 60,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "dark"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "dark"
+      }
+    ]
+  },
+  {
+    "id": 66,
+    "prompt": "An ethereal celestial ambient soundtrack with shimmering pads and gentle harp in A minor, 68 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 68,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "prompt": "A high-stakes suspenseful orchestral cue with brooding cellos and ostinato in C major, 115 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 115,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "tense"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "prompt": "A heroic sweeping orchestral fantasy theme with brass fanfares and soaring strings in A major, 132 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 132,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "epic"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "epic"
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "prompt": "A sinister gothic film score with ominous low brass and creeping dissonance in Bb major, 72 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 72,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "dark"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "dark"
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "prompt": "An ethereal celestial ambient soundtrack with shimmering pads and gentle harp in A minor, 75 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 75,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "prompt": "A high-stakes suspenseful orchestral cue with brooding cellos and ostinato in C major, 125 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 125,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "tense"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "prompt": "A heroic sweeping orchestral fantasy theme with brass fanfares and soaring strings in A major, 144 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 144,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "epic"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "epic"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "epic"
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "prompt": "A sinister gothic film score with ominous low brass and creeping dissonance in Bb major, 80 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 80,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "dark"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "dark"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "dark"
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "prompt": "An ethereal celestial ambient soundtrack with shimmering pads and gentle harp in A minor, 82 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 82,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "calm"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "prompt": "A high-stakes suspenseful orchestral cue with brooding cellos and ostinato in C major, 105 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 105,
+    "global_time_signature": "4/4",
+    "style": "cinematic",
+    "sections": [
+      {
+        "name": "Prologue",
+        "length": "short",
+        "mood": "tense"
+      },
+      {
+        "name": "Buildup",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Climax",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Resolution",
+        "length": "short",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 76,
+    "prompt": "A swinging upbeat bebop standard with lively syncopated walking bass in C major, 130 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 130,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "prompt": "A smoky midnight modal jazz ballad with lush extended chords in A major, 60 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 60,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "prompt": "A sweet nostalgic bossa nova with acoustic guitar and silky piano voicings in Bb major, 100 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 100,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "prompt": "An intricate hard bop progression with chromatic voice leading and high energy in A minor, 125 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 125,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "prompt": "A swinging upbeat bebop standard with lively syncopated walking bass in C major, 140 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 140,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "prompt": "A smoky midnight modal jazz ballad with lush extended chords in A major, 68 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 68,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "prompt": "A sweet nostalgic bossa nova with acoustic guitar and silky piano voicings in Bb major, 110 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 110,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "prompt": "An intricate hard bop progression with chromatic voice leading and high energy in A minor, 135 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 135,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 84,
+    "prompt": "A swinging upbeat bebop standard with lively syncopated walking bass in C major, 155 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 155,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "prompt": "A smoky midnight modal jazz ballad with lush extended chords in A major, 74 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 74,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 86,
+    "prompt": "A sweet nostalgic bossa nova with acoustic guitar and silky piano voicings in Bb major, 120 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 120,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "prompt": "An intricate hard bop progression with chromatic voice leading and high energy in A minor, 145 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 145,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "prompt": "A swinging upbeat bebop standard with lively syncopated walking bass in C major, 130 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 130,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "prompt": "A smoky midnight modal jazz ballad with lush extended chords in A major, 60 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 60,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "prompt": "A sweet nostalgic bossa nova with acoustic guitar and silky piano voicings in Bb major, 100 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 100,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "prompt": "An intricate hard bop progression with chromatic voice leading and high energy in A minor, 125 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 125,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "prompt": "A swinging upbeat bebop standard with lively syncopated walking bass in C major, 140 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 140,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "prompt": "A smoky midnight modal jazz ballad with lush extended chords in A major, 68 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 68,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "prompt": "A sweet nostalgic bossa nova with acoustic guitar and silky piano voicings in Bb major, 110 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 110,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "prompt": "An intricate hard bop progression with chromatic voice leading and high energy in A minor, 135 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 135,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "prompt": "A swinging upbeat bebop standard with lively syncopated walking bass in C major, 155 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 155,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "happy"
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "prompt": "A smoky midnight modal jazz ballad with lush extended chords in A major, 74 BPM.",
+    "global_key": "A",
+    "global_mode": "major",
+    "global_bpm": 74,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "calm"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "calm"
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "prompt": "A sweet nostalgic bossa nova with acoustic guitar and silky piano voicings in Bb major, 120 BPM.",
+    "global_key": "Bb",
+    "global_mode": "major",
+    "global_bpm": 120,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "romantic"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "romantic"
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "prompt": "An intricate hard bop progression with chromatic voice leading and high energy in A minor, 145 BPM.",
+    "global_key": "A",
+    "global_mode": "minor",
+    "global_bpm": 145,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "tense"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "tense"
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "prompt": "A swinging upbeat bebop standard with lively syncopated walking bass in C major, 130 BPM.",
+    "global_key": "C",
+    "global_mode": "major",
+    "global_bpm": 130,
+    "global_time_signature": "4/4",
+    "style": "jazz",
+    "sections": [
+      {
+        "name": "Head In",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo A",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Solo B",
+        "length": "medium",
+        "mood": "happy"
+      },
+      {
+        "name": "Head Out",
+        "length": "medium",
+        "mood": "happy"
+      }
+    ]
+  }
+]
