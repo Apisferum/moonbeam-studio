@@ -131,30 +131,101 @@ class TestBug4MotifMemoryToggle(unittest.TestCase):
 
 class TestBug5SubGRULoRAMetadataConditioning(unittest.TestCase):
     """Verifies that exactly 11 metadata conditioning tokens are constructed correctly per LoRA."""
-    def test_dynamic_metadata_tokens(self):
+    def setUp(self):
         from engine.agentic_composer import AgenticComposer
-        
-        composer = AgenticComposer.__new__(AgenticComposer)
-        composer.master_dict = {
+        self.composer = AgenticComposer.__new__(AgenticComposer)
+        self.composer.master_dict = {
             "emo_q1": 101, "emo_q2": 102, "emo_q3": 103, "emo_q4": 104,
             "soc_token_compound": 999,
             "<slakh_orch_full>": 201,
-            "<slakh_sec_Strings>": 202,
+            "<slakh_orch_chamber>": 202,
+            "<slakh_sec_Strings>": 203,
+            "<slakh_sec_Brass_Winds>": 204,
+            "<slakh_sec_Rhythm>": 205,
             "audio_key_cmajor": 301,
-            "bpm_120": 302,
-            "genre_cinematic": 303,
-            "time_signature_4/4": 304,
-            "num_measures_8": 305
+            "audio_key_gmajor": 302,
+            "bpm_120": 303,
+            "bpm_110": 304,
+            "genre_cinematic": 305,
+            "genre_pop": 306,
+            "time_signature_4/4": 307,
+            "num_measures_8": 308,
+            "num_measures_4": 309
         }
-        
+
+    def test_pure_emopia_tokens(self):
         # 1. Pure EMOPIA (emopia_lora >= 0.6) -> repeated emotion token 11 times
-        section_emopia = {"mood": "sad", "ties_weights": {"emopia_lora": 0.8, "commu_lora": 0.1, "slakh_lora": 0.1}}
-        tokens_emopia = composer._build_metadata_tokens(section_emopia)
-        self.assertEqual(len(tokens_emopia), 11)
-        self.assertEqual(tokens_emopia, [103] * 11)
-        
-        # 2. Balanced TIES (emopia, slakh, commu active) -> exactly 11 tokens
-        section_ties = {
+        section = {"mood": "sad", "ties_weights": {"emopia_lora": 0.8, "commu_lora": 0.1, "slakh_lora": 0.1}}
+        tokens = self.composer._build_metadata_tokens(section)
+        self.assertEqual(len(tokens), 11)
+        self.assertEqual(tokens, [103] * 11)
+
+    def test_pure_commu_tokens(self):
+        # 2. Pure CoMMU (commu_lora dominant, e.g. 1.0 single adapter)
+        section = {
+            "mood": "calm",
+            "style": "cinematic",
+            "key": "C",
+            "mode": "major",
+            "bpm": 120,
+            "time_signature": "4/4",
+            "bars": 8,
+            "ties_weights": {"commu_lora": 1.0, "emopia_lora": 0.0, "slakh_lora": 0.0}
+        }
+        tokens = self.composer._build_metadata_tokens(section)
+        self.assertEqual(len(tokens), 11)
+        self.assertEqual(tokens[0], 104)  # emo_q4
+        self.assertIn(301, tokens)       # audio_key_cmajor
+        self.assertIn(303, tokens)       # bpm_120
+        self.assertIn(305, tokens)       # genre_cinematic
+        self.assertIn(307, tokens)       # time_signature_4/4
+        self.assertIn(308, tokens)       # num_measures_8
+        self.assertEqual(tokens[-1], 999) # padded with soc_token_compound (commu mode)
+
+    def test_pure_slakh_chamber_tokens(self):
+        # 3. Pure Slakh with Chamber orchestra and Strings
+        section = {
+            "mood": "tension",
+            "style": "chamber",
+            "target_instruments": ["Violin", "Cello"],
+            "ties_weights": {"slakh_lora": 0.8, "emopia_lora": 0.1, "commu_lora": 0.1}
+        }
+        tokens = self.composer._build_metadata_tokens(section)
+        self.assertEqual(len(tokens), 11)
+        self.assertEqual(tokens[0], 102)  # emo_q2
+        self.assertIn(202, tokens)       # <slakh_orch_chamber>
+        self.assertIn(203, tokens)       # <slakh_sec_Strings>
+        self.assertEqual(tokens[-1], 999) # padded with soc_token_compound
+
+    def test_slakh_brass_and_rhythm_tokens(self):
+        # 4. Slakh with Brass & Rhythm
+        section_brass = {
+            "mood": "angry",
+            "style": "orchestral",
+            "target_instruments": ["Trumpet", "French Horn"],
+            "ties_weights": {"slakh_lora": 0.7, "emopia_lora": 0.15, "commu_lora": 0.15}
+        }
+        tokens_brass = self.composer._build_metadata_tokens(section_brass)
+        self.assertEqual(len(tokens_brass), 11)
+        self.assertEqual(tokens_brass[0], 102)  # emo_q2
+        self.assertIn(201, tokens_brass)       # <slakh_orch_full>
+        self.assertIn(204, tokens_brass)       # <slakh_sec_Brass_Winds>
+
+        section_rhythm = {
+            "mood": "heroic",
+            "style": "cinematic",
+            "target_instruments": ["Percussion", "Drums"],
+            "ties_weights": {"slakh_lora": 0.7, "emopia_lora": 0.15, "commu_lora": 0.15}
+        }
+        tokens_rhythm = self.composer._build_metadata_tokens(section_rhythm)
+        self.assertEqual(len(tokens_rhythm), 11)
+        self.assertEqual(tokens_rhythm[0], 101) # emo_q1
+        self.assertIn(201, tokens_rhythm)      # <slakh_orch_full>
+        self.assertIn(205, tokens_rhythm)      # <slakh_sec_Rhythm>
+
+    def test_balanced_ties_tokens(self):
+        # 5. Balanced TIES (emopia, slakh, commu active) -> exactly 11 tokens
+        section = {
             "mood": "happy",
             "style": "cinematic",
             "key": "C",
@@ -165,13 +236,14 @@ class TestBug5SubGRULoRAMetadataConditioning(unittest.TestCase):
             "target_instruments": ["Violin", "Strings"],
             "ties_weights": {"commu_lora": 0.35, "emopia_lora": 0.35, "slakh_lora": 0.30}
         }
-        tokens_ties = composer._build_metadata_tokens(section_ties)
-        self.assertEqual(len(tokens_ties), 11)
-        self.assertEqual(tokens_ties[0], 101)  # emo_q1
-        self.assertIn(201, tokens_ties)       # slakh orch
-        self.assertIn(202, tokens_ties)       # slakh strings section
-        self.assertIn(301, tokens_ties)       # commu key cmajor
-        self.assertIn(302, tokens_ties)       # commu bpm 120
+        tokens = self.composer._build_metadata_tokens(section)
+        self.assertEqual(len(tokens), 11)
+        self.assertEqual(tokens[0], 101)  # emo_q1
+        self.assertIn(201, tokens)       # <slakh_orch_full>
+        self.assertIn(203, tokens)       # <slakh_sec_Strings>
+        self.assertIn(301, tokens)       # audio_key_cmajor
+        self.assertIn(303, tokens)       # bpm_120
+        self.assertEqual(tokens[-1], 101) # emopia >= 0.3 fills with emo_tok (101)
 
 
 class TestBug6DrumPitchDecomposition(unittest.TestCase):
